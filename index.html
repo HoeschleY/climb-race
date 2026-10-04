@@ -60,9 +60,10 @@ footer{color:var(--muted);font-size:.8rem}
 </nav>
 <section id="standings" class="panel"><div class="empty">Loading…</div></section>
 <section id="graph" class="panel chartbox" hidden>
+  <div class="chips" id="gmode" style="margin-bottom:12px"><button data-m="time" aria-pressed="true">By date</button><button data-m="games" aria-pressed="false">By games played</button></div>
   <div class="legend" id="legend"></div>
   <div class="chartwrap" id="chartwrap"></div>
-  <p class="note">A point is recorded each time a player's LP changes (checked every 30 minutes). Riot doesn't provide past LP, so the line goes straight from the Oct 1 starting rank to the first recorded update on Oct 4.</p>
+  <p class="note">Solid lines are real LP, recorded every 30 minutes since Oct 4. Dashed lines are rebuilt from match results (about ±20 LP per game, adjusted so each line ends on the player's real LP), because Riot doesn't provide past LP. Values marked ≈ are estimates.</p>
 </section>
 <section id="matches" hidden>
   <div class="chips" id="pchips" style="margin-bottom:12px"></div>
@@ -119,36 +120,62 @@ function renderStandings(){
   });
 }
 
-// Step chart in SVG
+// LP graph. Before the first real LP reading, the path is rebuilt from match results:
+// ~20 LP per win/loss, plus an even per-game correction so it lands exactly on the real LP.
+let gmode="time";
+function buildSeries(p){
+  const hist=(p.history||[]).map(h=>({t:h.t,s:score(h),r:h}));
+  if(!hist.length)return null;
+  const games=[...p.games].sort((a,b)=>a.at-b.at);
+  const firstReal=hist[1]||null; // hist[0] is the Oct 1 baseline
+  const pts=[{t:hist[0].t,g:0,s:hist[0].s,est:false}];
+  if(firstReal){
+    const pre=games.filter(g=>g.at<=firstReal.t),W=pre.filter(g=>g.win).length,n=pre.length;
+    const corr=n?((firstReal.s-hist[0].s)-20*(W-(n-W)))/n:0;
+    let s=hist[0].s;
+    pre.forEach((g,i)=>{s+=(g.win?20:-20)+corr;pts.push({t:g.at,g:i+1,s:Math.round(s),est:true})});
+    if(!n)pts.push({t:firstReal.t,g:0,s:firstReal.s,est:false});
+    else pts[pts.length-1].s=firstReal.s;
+    hist.slice(2).forEach(h=>pts.push({t:h.t,g:games.filter(g=>g.at<=h.t).length,s:h.s,est:false}));
+  }
+  return{p,pts,total:games.length};
+}
 function renderGraph(){
   const wrap=document.getElementById("chartwrap");if(!players.length||document.getElementById("graph").hidden)return;
   const leg=document.getElementById("legend");leg.innerHTML="";
   players.forEach(p=>{const s=el("span");const i=el("i");i.style.background=p.color;s.append(i,short(p.riotId));leg.append(s)});
-  const series=players.map(p=>({p,pts:(p.history||[]).map(h=>({t:h.t,s:score(h),r:h}))})).filter(x=>x.pts.length);
-  const now=Date.now(),t0=Date.parse(DATA.raceStart);
+  const series=players.map(buildSeries).filter(Boolean);
+  const now=Date.now(),t0=Date.parse(DATA.raceStart),gmax=Math.max(1,...series.map(x=>x.total));
   const all=series.flatMap(x=>x.pts.map(q=>q.s));
   const lo=Math.floor((Math.min(...all)-20)/100)*100,hi=Math.ceil((Math.max(...all)+20)/100)*100;
   const W=Math.max(wrap.clientWidth,560),H=360,L=86,R=14,T=10,B=28;
-  const x=t=>L+(t-t0)/(now-t0)*(W-L-R),y=s=>T+(hi-s)/(hi-lo)*(H-T-B);
-  let svg=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="LP over time per player">`;
-  for(let s=lo;s<=hi;s+=100){svg+=`<line x1="${L}" x2="${W-R}" y1="${y(s)}" y2="${y(s)}" stroke="var(--line)"/><text x="${L-8}" y="${y(s)+4}" text-anchor="end">${label(s)}</text>`}
-  for(let d=new Date(t0);d<=now;d.setDate(d.getDate()+1)){const dd=new Date(d);dd.setHours(0,0,0,0);if(dd<t0)continue;const X=x(+dd);
-    svg+=`<line x1="${X}" x2="${X}" y1="${T}" y2="${H-B}" stroke="var(--line)" stroke-dasharray="2 4"/><text x="${X}" y="${H-8}" text-anchor="middle">${dd.toLocaleDateString("en-GB",{day:"numeric",month:"short"})}</text>`}
-  series.forEach(({p,pts})=>{let d=`M${x(pts[0].t)},${y(pts[0].s)}`;
-    pts.slice(1).forEach(q=>d+=` H${x(q.t)} V${y(q.s)}`);d+=` H${x(now)}`;
-    svg+=`<path d="${d}" fill="none" stroke="${p.color}" stroke-width="2.2" stroke-linejoin="round"/>`;
-    const e=pts[pts.length-1];svg+=`<circle cx="${x(now)}" cy="${y(e.s)}" r="3.5" fill="${p.color}"/>`});
+  const xv=q=>gmode==="time"?q.t:q.g, x0=gmode==="time"?t0:0, x1=gmode==="time"?now:gmax;
+  const X=v=>L+(v-x0)/(x1-x0)*(W-L-R),Y=s=>T+(hi-s)/(hi-lo)*(H-T-B);
+  let svg=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="LP per player">`;
+  for(let s=lo;s<=hi;s+=100)svg+=`<line x1="${L}" x2="${W-R}" y1="${Y(s)}" y2="${Y(s)}" stroke="var(--line)"/><text x="${L-8}" y="${Y(s)+4}" text-anchor="end">${label(s)}</text>`;
+  if(gmode==="time"){for(let d=new Date(t0);d<=now;d.setDate(d.getDate()+1)){const dd=new Date(d);dd.setHours(0,0,0,0);if(dd<t0)continue;const xx=X(+dd);
+    svg+=`<line x1="${xx}" x2="${xx}" y1="${T}" y2="${H-B}" stroke="var(--line)" stroke-dasharray="2 4"/><text x="${xx}" y="${H-8}" text-anchor="middle">${dd.toLocaleDateString("en-GB",{day:"numeric",month:"short"})}</text>`}}
+  else{const step=gmax>40?10:5;for(let g=0;g<=gmax;g+=step){const xx=X(g);svg+=`<line x1="${xx}" x2="${xx}" y1="${T}" y2="${H-B}" stroke="var(--line)" stroke-dasharray="2 4"/><text x="${xx}" y="${H-8}" text-anchor="middle">${g===0?"Start":"Game "+g}</text>`}}
+  series.forEach(({p,pts,total})=>{
+    const path=(arr,endX)=>{let d=`M${X(xv(arr[0]))},${Y(arr[0].s)}`;arr.slice(1).forEach(q=>d+=` H${X(xv(q))} V${Y(q.s)}`);if(endX!=null)d+=` H${endX}`;return d};
+    const lastEst=pts.reduce((k,q,i)=>q.est?i:k,-1);
+    const est=pts.slice(0,lastEst+1),real=pts.slice(Math.max(lastEst,0));
+    const endX=gmode==="time"?X(now):X(total);
+    if(est.length>1)svg+=`<path d="${path(est)}" fill="none" stroke="${p.color}" stroke-width="2" stroke-dasharray="5 4" opacity=".85"/>`;
+    svg+=`<path d="${path(real,endX)}" fill="none" stroke="${p.color}" stroke-width="2.4" stroke-linejoin="round"/>`;
+    svg+=`<circle cx="${endX}" cy="${Y(pts[pts.length-1].s)}" r="3.5" fill="${p.color}"/>`});
   svg+=`<line id="cross" x1="0" x2="0" y1="${T}" y2="${H-B}" stroke="var(--muted)" opacity="0"/></svg>`;
   wrap.innerHTML=svg;const tip=el("div","tip");tip.hidden=true;wrap.append(tip);
   const svgEl=wrap.querySelector("svg"),cross=svgEl.querySelector("#cross");
   svgEl.addEventListener("mousemove",ev=>{const bx=svgEl.getBoundingClientRect(),mx=ev.clientX-bx.left;if(mx<L){tip.hidden=true;cross.setAttribute("opacity",0);return}
-    const t=t0+(mx-L)/(W-L-R)*(now-t0);cross.setAttribute("x1",mx);cross.setAttribute("x2",mx);cross.setAttribute("opacity",.5);
-    tip.innerHTML="";tip.append(el("div","meta",new Date(t).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})));
-    series.map(({p,pts})=>{const q=[...pts].reverse().find(q=>q.t<=t);return q&&{p,q}}).filter(Boolean).sort((a,b)=>b.q.s-a.q.s)
-      .forEach(({p,q})=>{const r=el("div");const i=el("i");i.style.background=p.color;r.append(i,el("b",null,fmt(q.r)),el("span","meta",short(p.riotId)));tip.append(r)});
+    const v=x0+(mx-L)/(W-L-R)*(x1-x0);cross.setAttribute("x1",mx);cross.setAttribute("x2",mx);cross.setAttribute("opacity",.5);
+    tip.innerHTML="";tip.append(el("div","meta",gmode==="time"?new Date(v).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}):"After game "+Math.floor(v)));
+    series.map(({p,pts,total})=>{if(gmode==="games"&&v>total+.5)return null;const q=[...pts].reverse().find(q=>xv(q)<=v);return q&&{p,q}}).filter(Boolean).sort((a,b)=>b.q.s-a.q.s)
+      .forEach(({p,q})=>{const r=el("div");const i=el("i");i.style.background=p.color;r.append(i,el("b",null,(q.est?"≈ ":"")+label(q.s)+" · "+(q.s>=2800?q.s-2800:q.s%100)+" LP"),el("span","meta",short(p.riotId)));tip.append(r)});
     tip.hidden=false;tip.style.left=Math.min(mx+14,W-tip.offsetWidth-4)+"px";tip.style.top="12px"});
   svgEl.addEventListener("mouseleave",()=>{tip.hidden=true;cross.setAttribute("opacity",0)});
 }
+document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dataset.m;document.querySelectorAll("#gmode button").forEach(c=>c.setAttribute("aria-pressed",c===b));renderGraph()});
 
 function renderMatches(){
   if(!players.length)return;if(!players.find(p=>p.riotId===selected))selected=players[0].riotId;
