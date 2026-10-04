@@ -163,6 +163,59 @@ svg text{fill:var(--muted);font:12px var(--body)}
 .spotwrap{margin-top:26px}
 .feat{min-height:150px}
 @media (max-width:760px){.podium{grid-template-columns:1fr}.podium .p1{order:-1}}
+/* Sticky top bar */
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:#0a0e15e8;backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin:0 -16px;padding:0 16px}
+.barin{max-width:1040px;margin:0 auto;display:flex;align-items:center;gap:18px;min-height:60px}
+.brand{display:flex;align-items:center;gap:10px;flex:none}
+.brand h1{font-size:1.45rem;white-space:nowrap}
+.bar .tabs{flex:1;border:0;align-self:stretch;align-items:stretch}
+.bar .tabs button{padding:0 12px}
+.bar .refresh{flex:none}
+main{padding-block:18px 56px}
+/* Home */
+.homegrid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px;align-items:start}
+.homemain{min-width:0}.spotwrap.first{margin-top:0}
+.homemain .spot{grid-template-columns:1fr 1fr}.homemain .awards{grid-template-columns:repeat(2,1fr)}
+.homeside{display:grid;gap:14px}
+.shd{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.lnk{background:none;border:0;color:var(--gold);font:600 .82rem var(--body);cursor:pointer;padding:0}
+.mini{display:flex;align-items:center;gap:10px;padding:9px 16px;border-top:1px solid var(--line);font-size:.9rem}
+.mini:first-child{border-top:0}.mini>div{flex:1;min-width:0}.mini .live{margin:2px 0 0;display:flex;width:fit-content}
+.mini.click{cursor:pointer}.mini.click:hover{background:var(--panel2)}
+.mpos{font-family:var(--display);width:16px;text-align:center;color:var(--muted)}
+.mgain{font-size:.95rem}
+.mini .rec{display:flex;align-items:center;gap:2px}.mini .emb{margin:-4px 0}
+.side .empty{padding:14px 16px}
+.gname{color:var(--muted);font-weight:600}
+.game{cursor:pointer}.game:hover{background-color:var(--panel2)}
+.game .more{display:block;color:var(--gold);font-weight:600;margin-top:2px;opacity:0;transition:opacity .15s}
+.game:hover .more,.game:focus-visible .more{opacity:1}
+/* Match modal */
+.modal{position:fixed;inset:0;z-index:50;background:#05080dcc;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
+.modal[hidden]{display:none}
+.mpanel{position:relative;width:100%;max-width:980px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:22px}
+.mclose{position:absolute;top:12px;right:12px;background:var(--panel);border:1px solid var(--line);color:var(--fg);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:.9rem}
+.mhead{margin-bottom:16px}.mhead h2{font-size:1.4rem;margin:4px 0 2px}
+.team{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:14px}
+.team.tw{border-color:#43c28655}.team.tl{border-color:#e5555f55}
+.thead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:6px 16px;padding:10px 14px;background:var(--panel2)}
+.tw .thead>b{color:var(--win)}.tl .thead>b{color:var(--loss)}
+.obj{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.82rem;color:var(--muted)}.obj b{color:var(--fg)}
+.sb{overflow-x:auto}
+.sbr{display:grid;grid-template-columns:minmax(250px,1.6fr) 90px 110px 70px 56px 230px;gap:10px;align-items:center;padding:7px 14px;border-top:1px solid var(--line);font-size:.86rem;min-width:860px}
+.sbh{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-top:0;padding-block:6px}
+.sbr.mine{background:linear-gradient(90deg,#c8aa6e22,transparent 70%)}.sbr.mine .sbn b{color:var(--gold2)}
+.sbr>div{display:grid;min-width:0}.sbr small{font-size:.75rem}
+.sbp{display:flex!important;align-items:center;gap:8px}
+.sbc{position:relative;flex:none}.sbc img{width:36px;height:36px;border-radius:6px;display:block}
+.lv{position:absolute;bottom:-4px;right:-4px;background:var(--bg);border:1px solid var(--line);border-radius:6px;font-size:.65rem;padding:0 3px}
+.sbs{display:grid;grid-template-columns:repeat(2,17px);gap:2px;flex:none}.sbs img{width:17px;height:17px;border-radius:3px;background:var(--panel2)}
+.sbs .rn{background:none}
+.sbn{display:grid;min-width:0}.sbn b,.sbn span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sbn span{font-size:.75rem}
+.dbar{height:5px;border-radius:3px;background:var(--line);overflow:hidden;margin-top:3px}.dbar span{display:block;height:100%;background:var(--loss)}
+.items{display:flex!important;gap:3px}.it{width:27px;height:27px;border-radius:4px;background:var(--panel2)}
+.it.trinket{border-radius:50%;margin-left:4px}.emptyit{border:1px solid var(--line)}
+@media (max-width:900px){.homegrid{grid-template-columns:1fr}.barin{flex-wrap:wrap;gap:6px 14px;padding-top:8px}.bar .tabs{order:3;flex-basis:100%}.bar .tabs button{padding:10px 12px}}
 footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
 
 @media (max-width:760px){
@@ -173,28 +226,41 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
 </style>
 </head>
 <body>
-<main>
-<header class="top">
-  <div><div class="eyebrow">League of Legends · Ranked Solo/Duo</div><h1>Climb Race</h1><div class="sub num" id="sub">Loading…</div></div>
-  <div class="topr"><span class="daypill num" id="daypill">Day –</span><button class="refresh" id="refresh" type="button"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Refresh</span></button></div>
+<header class="bar">
+  <div class="barin">
+    <div class="brand"><h1>Climb Race</h1><span class="daypill num" id="daypill">Day –</span></div>
+    <nav class="tabs" role="tablist">
+      <button role="tab" data-tab="home" aria-selected="true">Home</button>
+      <button role="tab" data-tab="standings" aria-selected="false">Standings</button>
+      <button role="tab" data-tab="graph" aria-selected="false">LP graph</button>
+      <button role="tab" data-tab="matches" aria-selected="false">Match history</button>
+      <button role="tab" data-tab="h2h" aria-selected="false">Duos &amp; rivalries</button>
+      <button role="tab" data-tab="records" aria-selected="false">Records</button>
+    </nav>
+    <button class="refresh" id="refresh" type="button"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Refresh</span></button>
+  </div>
 </header>
-
-<nav class="tabs" role="tablist">
-  <button role="tab" data-tab="standings" aria-selected="true">Standings</button>
-  <button role="tab" data-tab="graph" aria-selected="false">LP graph</button>
-  <button role="tab" data-tab="matches" aria-selected="false">Match history</button>
-  <button role="tab" data-tab="h2h" aria-selected="false">Duos &amp; rivalries</button>
-  <button role="tab" data-tab="records" aria-selected="false">Records</button>
-</nav>
-
-<section id="standings">
-  <div class="podium" id="podium"></div>
-  <div class="panel" id="stlist"></div>
-  <div class="spotwrap" aria-label="Spotlight">
+<main>
+<div class="sub num" id="sub">Loading…</div>
+<section id="home">
+  <div class="homegrid">
+    <div class="homemain"><div class="spotwrap first" aria-label="Spotlight">
   <div class="eyebrow" id="spotlabel" style="margin-bottom:10px">Today</div>
   <div class="spot" id="spot"></div>
   <div class="awards" id="awards" style="margin-top:12px"></div>
 </div>
+    </div>
+    <aside class="homeside">
+      <div class="panel side"><div class="shd"><span class="eyebrow">Live now</span></div><div id="livenow"></div></div>
+      <div class="panel side"><div class="shd"><span class="eyebrow">Standings</span><button class="lnk" onclick="show('standings')">Full standings ›</button></div><div id="ministand"></div></div>
+    </aside>
+  </div>
+  <div class="panel" style="margin-top:18px"><div class="shd"><span class="eyebrow">Latest games</span><span class="muted" style="font-size:.8rem">Click a game for the full scoreboard</span></div><div id="feed"></div></div>
+</section>
+
+<section id="standings" hidden>
+  <div class="podium" id="podium"></div>
+  <div class="panel" id="stlist"></div>
 </section>
 
 <section id="graph" class="panel chartbox" hidden>
@@ -229,6 +295,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
 
 <footer>Ranked by LP gained since the race start. Data from the Riot Games API, refreshed every 10 minutes; this page reloads its data every 2 minutes. Climb Race isn't endorsed by Riot Games.</footer>
 </main>
+<div class="modal" id="modal" hidden><div class="mpanel" role="dialog" aria-modal="true" aria-label="Match details"><button class="mclose" aria-label="Close">✕</button><div id="mbody"></div></div></div>
 
 <script>
 const TIERS=["IRON","BRONZE","SILVER","GOLD","PLATINUM","EMERALD","DIAMOND","MASTER","GRANDMASTER","CHALLENGER"];
@@ -260,9 +327,9 @@ const splash=c=>`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${c
 function perf(g){const m=Math.max(g.dur||1800,300)/60,kda=(g.k+g.a)/Math.max(1,g.d);
   return 2*Math.min(kda,10)+(g.kp||0)/12+(g.dmg||0)/m/180+(g.cs||0)/m*0.4+(g.vis||0)/m*1.2+(g.win?3:-1)+(g.multi>=3?2:0)+(g.penta||0)*6+(g.solo||0)*0.4-(g.d>=10?g.d-9:0)}
 
-const TABS=["standings","graph","matches","h2h","records"];
+const TABS=["home","standings","graph","matches","h2h","records"];
 function show(tab){document.querySelectorAll("[role=tab]").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
-  TABS.forEach(id=>document.getElementById(id).hidden=id!==tab);history.replaceState(null,"","#"+tab);if(tab==="graph")renderGraph()}
+  TABS.forEach(id=>document.getElementById(id).hidden=id!==tab);window.scrollTo({top:0});history.replaceState(null,"","#"+tab);if(tab==="graph")renderGraph()}
 document.querySelectorAll("[role=tab]").forEach(b=>b.onclick=()=>show(b.dataset.tab));
 document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dataset.m;document.querySelectorAll("#gmode button").forEach(c=>c.setAttribute("aria-pressed",c===b));renderGraph()});
 
@@ -279,7 +346,7 @@ function renderAll(){
   const t0=Date.parse(DATA.raceStart),day=Math.round((dayKey(Date.now())-dayKey(t0))/864e5)+1;
   document.getElementById("daypill").textContent=`Day ${day}`;
   document.getElementById("sub").textContent=`Since ${new Date(t0).toLocaleDateString("en-GB",{day:"numeric",month:"long"})} · ${players.reduce((s,p)=>s+p.games.length,0)} games played · updated ${ago(Date.parse(DATA.updatedAt))} · next update in about ${Math.max(1,10-Math.round((Date.now()-Date.parse(DATA.updatedAt))/6e4)%10)} min`;
-  for(const f of [renderSpotlight,renderStandings,renderGraph,renderMatches,renderH2H,renderRecords]){try{f()}catch(e){console.error(f.name,e)}}
+  for(const f of [renderHome,renderSpotlight,renderStandings,renderGraph,renderMatches,renderH2H,renderRecords]){try{f()}catch(e){console.error(f.name,e)}}
 }
 
 /* LP series, shared by graph, today and records */
@@ -413,18 +480,7 @@ function renderMatches(){
     .forEach(([k,v])=>{const d=el("div");d.append(el("b","num",v),el("span",null,k));sm.append(d)});list.append(sm);
   list.append(profileOf(p));
   const best=Math.max(...p.games.map(perf));
-  p.games.forEach(g=>{const r=el("div","game "+(g.win?"w":"l"));r.append(el("div","bar"));
-    const img=el("img");img.alt=g.champ;img.loading="lazy";img.src=icon(g.champ);r.append(img);
-    const m=el("div"),top=el("div");top.append(el("b",null,g.champ+"  "),el("span","kda num",`${g.k}/${g.d}/${g.a}`));
-    const tag=t=>top.append(" ",el("span","tag",t));
-    if(g.penta)tag("Pentakill");else if(g.multi>=4)tag("Quadra");else if(g.multi===3)tag("Triple");
-    if(perf(g)===best&&n>2)tag("Best game");
-    const duo=(g.mates||[]).filter(x=>x.same),vs=(g.mates||[]).filter(x=>!x.same);
-    if(duo.length)tag("Duo with "+duo.map(x=>short(x.id)).join(", "));if(vs.length)tag("vs "+vs.map(x=>short(x.id)).join(", "));
-    m.append(top);const st=el("div","stats num"),dm=(g.dur||0)/60;
-    [role(g.role),g.cs!=null&&`${g.cs} CS${dm?` (${(g.cs/dm).toFixed(1)})`:""}`,g.dmg!=null&&`${(g.dmg/1000).toFixed(1)}k dmg`,g.kp!=null&&`${g.kp}% KP`,g.vis!=null&&`${g.vis} vision`].filter(Boolean).forEach(t=>st.append(el("span",null,t)));
-    m.append(st);r.append(m);
-    const res=el("div","res");res.append(el("b",null,g.win?"Victory":"Defeat"),el("span",null,`${dm?Math.round(dm)+" min · ":""}${ago(g.at)}`));r.append(res);list.append(r)});
+  p.games.forEach(g=>list.append(gameRow(g,n>2?best:null)));
 }
 
 /* Player profile: champion pool, roles, time of day */
@@ -453,6 +509,83 @@ function profileOf(p){
     const b=el("b","num",x.n?Math.round(x.w/x.n*100)+"%":"–");if(x.n)b.style.color=wrCol(x.w/x.n);c.append(b,el("span","num",x.n?`${x.w}W ${x.n-x.w}L${i===bestI?" · best":""}`:"no games"));grid.append(c)});
   tc.append(grid);box.append(tc);
   return box;
+}
+
+/* Shared game row (match history + home feed); click opens the scoreboard */
+function gameRow(g,best,showName){
+  const r=el("div","game "+(g.win?"w":"l"));r.tabIndex=0;r.setAttribute("role","button");r.onclick=()=>openMatch(g);r.onkeydown=e=>{if(e.key==="Enter")openMatch(g)};
+  r.append(el("div","bar"));const img=el("img");img.alt=g.champ;img.loading="lazy";img.src=icon(g.champ);r.append(img);
+  const m=el("div"),top=el("div");if(showName)top.append(el("span","gname",short(g.riotId)+" · "));
+  top.append(el("b",null,g.champ+"  "),el("span","kda num",`${g.k}/${g.d}/${g.a}`));
+  const tag=t=>top.append(" ",el("span","tag",t));
+  if(g.penta)tag("Pentakill");else if(g.multi>=4)tag("Quadra");else if(g.multi===3)tag("Triple");
+  if(best!=null&&perf(g)===best)tag("Best game");
+  const duo=(g.mates||[]).filter(x=>x.same),vs=(g.mates||[]).filter(x=>!x.same);
+  if(duo.length)tag("Duo with "+duo.map(x=>short(x.id)).join(", "));if(vs.length)tag("vs "+vs.map(x=>short(x.id)).join(", "));
+  m.append(top);const st=el("div","stats num"),dm=(g.dur||0)/60;
+  [role(g.role),g.cs!=null&&`${g.cs} CS${dm?` (${(g.cs/dm).toFixed(1)})`:""}`,g.dmg!=null&&`${(g.dmg/1000).toFixed(1)}k dmg`,g.kp!=null&&`${g.kp}% KP`,g.vis!=null&&`${g.vis} vision`].filter(Boolean).forEach(t=>st.append(el("span",null,t)));
+  m.append(st);r.append(m);
+  const res=el("div","res");res.append(el("b",null,g.win?"Victory":"Defeat"),el("span",null,`${dm?Math.round(dm)+" min · ":""}${ago(g.at)}`),el("span","more","Details ›"));r.append(res);return r}
+
+/* Home */
+function renderHome(){
+  // Live now
+  const lv=document.getElementById("livenow");lv.innerHTML="";const live=players.filter(p=>p.live);
+  if(!live.length)lv.append(el("div","empty","Nobody is in a game right now."));
+  live.forEach(p=>{const r=el("div","mini");r.append(avatar(p,34));const t=el("div");t.append(el("b",null,short(p.riotId)));const lb=liveBadge(p);if(lb)t.append(lb);r.append(t);lv.append(r)});
+  // Mini standings
+  const ms=document.getElementById("ministand");ms.innerHTML="";
+  [...players].sort((a,b)=>(b.gain??-1e9)-(a.gain??-1e9)).forEach((p,i)=>{const r=el("div","mini click");r.onclick=()=>show("standings");
+    r.append(el("span","mpos",i+1),avatar(p,34));const t=el("div");t.append(el("b",null,short(p.riotId)));const rk=el("div","rec");rk.append(emblem(p.current?.tier,22)," "+fmt(p.current));t.append(rk);r.append(t);
+    r.append(el("b","num mgain "+(p.gain>0?"up":p.gain<0?"down":""),p.gain==null?"–":sgn(p.gain)));ms.append(r)});
+  // Latest games feed
+  const feed=document.getElementById("feed");feed.innerHTML="";
+  const all=players.flatMap(p=>p.games).sort((a,b)=>b.at-a.at),seen=new Set();
+  all.filter(g=>{const k=g.id+g.riotId;if(seen.has(k))return false;seen.add(k);return true}).slice(0,10).forEach(g=>feed.append(gameRow(g,null,true)));
+  if(!all.length)feed.append(el("div","empty","No games yet."));
+}
+
+/* Match details modal */
+let ASSETS=null;
+async function assets(){if(ASSETS)return ASSETS;ASSETS={spells:{},runes:{}};
+  try{const [s,r]=await Promise.all([fetch(`https://ddragon.leagueoflegends.com/cdn/${ddv}/data/en_US/summoner.json`).then(x=>x.json()),fetch(`https://ddragon.leagueoflegends.com/cdn/${ddv}/data/en_US/runesReforged.json`).then(x=>x.json())]);
+    for(const v of Object.values(s.data))ASSETS.spells[v.key]={img:v.image.full,name:v.name};
+    for(const st of r){ASSETS.runes[st.id]={icon:st.icon,name:st.name};for(const sl of st.slots)for(const ru of sl.runes)ASSETS.runes[ru.id]={icon:ru.icon,name:ru.name}}}catch{}
+  return ASSETS}
+const modal=document.getElementById("modal"),mbody=document.getElementById("mbody");
+function closeModal(){modal.hidden=true;document.body.style.overflow=""}
+modal.addEventListener("click",e=>{if(e.target===modal||e.target.closest(".mclose"))closeModal()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!modal.hidden)closeModal()});
+async function openMatch(g){
+  modal.hidden=false;document.body.style.overflow="hidden";mbody.innerHTML="";mbody.append(el("div","empty","Loading the scoreboard…"));
+  let m;try{const r=await fetch(`matches/${g.id}.json`);if(!r.ok)throw 0;m=await r.json()}
+  catch{mbody.innerHTML="";mbody.append(el("div","empty","The full scoreboard for this game isn't available yet. It's saved with the next update."));return}
+  const A=await assets();mbody.innerHTML="";
+  const me=m.players.find(x=>x.tracked===g.riotId)||{},myTeam=me.team;
+  const head=el("div","mhead");const t=el("div");t.append(el("div","eyebrow",`Ranked Solo/Duo · patch ${m.patch}`));
+  const h=el("h2",null,`${g.win?"Victory":"Defeat"} · ${short(g.riotId)} on ${g.champ}`);h.className=g.win?"up":"down";t.append(h);
+  t.append(el("div","muted",`${Math.floor(m.dur/60)}:${String(m.dur%60).padStart(2,"0")} · ${new Date(m.at).toLocaleString("en-GB",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}`));
+  head.append(t);mbody.append(head);
+  const maxDmg=Math.max(...m.players.map(x=>x.dmg)),itemImg=id=>{const i=el("img","it");if(id){i.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/item/${id}.png`;i.alt=""}else i.classList.add("emptyit");return i};
+  [...m.teams].sort((a,b)=>(b.id===myTeam)-(a.id===myTeam)).forEach(tm=>{
+    const box=el("div","team "+(tm.win?"tw":"tl"));const th=el("div","thead");
+    th.append(el("b",null,`${tm.win?"Victory":"Defeat"} · ${tm.id===myTeam?"Your team":"Enemy team"}`));
+    const tp=m.players.filter(x=>x.team===tm.id),sum=k=>tp.reduce((s,x)=>s+(x[k]||0),0);
+    const ob=el("div","obj num");[["Kills",`${sum("k")}/${sum("d")}/${sum("a")}`],["Gold",(sum("gold")/1000).toFixed(1)+"k"],["Towers",tm.obj.tower],["Dragons",tm.obj.dragon],["Barons",tm.obj.baron],["Grubs",tm.obj.grubs]].forEach(([k,v])=>{const s=el("span",null,k+" ");s.append(el("b",null,v));ob.append(s)});
+    th.append(ob);box.append(th);
+    const tbl=el("div","sb");const hr=el("div","sbr sbh");["Player","KDA","Damage","CS","Gold","Items"].forEach(x=>hr.append(el("span",null,x)));tbl.append(hr);
+    tp.forEach(x=>{const r=el("div","sbr"+(x.tracked?" mine":""));
+      const pl=el("div","sbp");const ci=el("div","sbc");const im=el("img");im.src=icon(x.champ);im.alt=x.champ;ci.append(im,el("span","lv",x.lvl));pl.append(ci);
+      const sp=el("div","sbs");x.spells.forEach(s=>{const a=A.spells[s];const i=el("img");if(a){i.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/spell/${a.img}`;i.title=a.name}i.alt="";sp.append(i)});
+      [x.rune,x.sub].forEach(id=>{const a=A.runes[id];const i=el("img","rn");if(a){i.src=`https://ddragon.leagueoflegends.com/cdn/img/${a.icon}`;i.title=a.name}i.alt="";sp.append(i)});pl.append(sp);
+      const nm=el("div","sbn");nm.append(el("b",null,x.name.split("#")[0]),el("span","muted",`${x.champ}${role(x.role)?" · "+role(x.role):""}`));pl.append(nm);r.append(pl);
+      const kda=el("div","num");kda.append(el("b",null,`${x.k}/${x.d}/${x.a}`),el("small","muted",x.d?((x.k+x.a)/x.d).toFixed(2)+" KDA":"Perfect"));r.append(kda);
+      const dm=el("div","num");dm.append(el("span",null,(x.dmg/1000).toFixed(1)+"k"));const bar=el("div","dbar"),f=el("span");f.style.width=x.dmg/maxDmg*100+"%";bar.append(f);dm.append(bar);r.append(dm);
+      const cs=el("div","num");cs.append(el("span",null,x.cs),el("small","muted",(x.cs/(m.dur/60)).toFixed(1)+"/min"));r.append(cs);
+      r.append(el("div","num",(x.gold/1000).toFixed(1)+"k"));
+      const it=el("div","items");x.items.slice(0,6).forEach(i=>it.append(itemImg(i)));const tr=itemImg(x.items[6]);tr.classList.add("trinket");it.append(tr);r.append(it);
+      tbl.append(r)});
+    box.append(tbl);mbody.append(box)});
 }
 
 /* Duos & rivalries */
