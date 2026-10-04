@@ -94,15 +94,15 @@ for (const p of cfg.players) {
     }
 
     // Live game (404 = not in game)
-    let live = null;
+    let live = null, liveErr = null;
     try {
       const g = await riot(cfg.platform, `/lol/spectator/v5/active-games/by-summoner/${puuid}`);
       const me = g?.participants?.find(x => x.puuid === puuid);
       if (g && me) live = { champId: me.championId, queue: g.gameQueueConfigId, start: g.gameStartTime || Date.now(),
         mates: g.participants.filter(x => x.puuid !== puuid && tracked[x.puuid]).map(x => ({ id: tracked[x.puuid], same: x.teamId === me.teamId })) };
-    } catch (e) { console.error(`live check failed for ${p.riotId}: ${e.message}`); }
+    } catch (e) { liveErr = e.message; console.error(`live check failed for ${p.riotId}: ${e.message}`); }
 
-    out.players[p.riotId] = { riotId: p.riotId, puuid, start, current, history, matches, live, checkedAt: Date.now() };
+    out.players[p.riotId] = { riotId: p.riotId, puuid, start, current, history, matches, live, liveErr, checkedAt: Date.now() };
     console.log(`OK ${p.riotId}: ${current ? `${current.tier} ${current.division} ${current.lp}LP` : "unranked"}, ${Object.keys(matches).length} games`);
   } catch (e) {
     console.error(`FAIL ${p.riotId}: ${e.message}`);
