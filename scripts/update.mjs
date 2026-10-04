@@ -57,7 +57,7 @@ for (const p of cfg.players) {
       const ids = await riot(cfg.region,
         `/lol/match/v5/matches/by-puuid/${puuid}/ids?queue=420&startTime=${startSec}&start=${start}&count=100`) || [];
       for (const id of ids) {
-        if (matches[id]?.mates) continue; // already stored with full detail
+        if (matches[id]?.v === 3) continue; // already stored with full detail
         const m = await riot(cfg.region, `/lol/match/v5/matches/${id}`);
         const me = m?.info?.participants?.find(x => x.puuid === puuid);
         if (!me || m.info.gameDuration < 300) continue; // skip remakes
@@ -70,6 +70,8 @@ for (const p of cfg.players) {
           kp: teamKills ? Math.round((me.kills + me.assists) / teamKills * 100) : 0,
           mates: m.info.participants.filter(x => x.puuid !== puuid && tracked[x.puuid])
             .map(x => ({ id: tracked[x.puuid], same: x.teamId === me.teamId })),
+          multi: me.largestMultiKill || 0, penta: me.pentaKills || 0, fb: !!me.firstBloodKill,
+          solo: me.challenges?.soloKills ?? 0, taken: me.totalDamageTaken, v: 3,
           dur: m.info.gameDuration, at: m.info.gameEndTimestamp || m.info.gameStartTimestamp,
         };
       }
