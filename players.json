@@ -1,12 +1,12 @@
 {
   "platform": "euw1",
   "region": "europe",
-  "raceStart": "2026-10-01T00:00:00+02:00",
+  "raceStart": "2026-10-01T14:06:00+02:00",
   "players": [
-    { "riotId": "Kohmira#44160" },
-    { "riotId": "Ymine#000" },
-    { "riotId": "wilhump#NAEU" },
-    { "riotId": "Near#974p" },
-    { "riotId": "Lésion carieuse#Dents" }
+    { "riotId": "Kohmira#44160", "start": { "tier": "SILVER", "division": "II", "lp": 55 } },
+    { "riotId": "Ymine#000", "start": { "tier": "GOLD", "division": "II", "lp": 14 } },
+    { "riotId": "wilhump#NAEU", "start": { "tier": "GOLD", "division": "III", "lp": 81 } },
+    { "riotId": "Near#974p", "start": { "tier": "GOLD", "division": "II", "lp": 68 } },
+    { "riotId": "Lésion carieuse#Dents", "start": { "tier": "GOLD", "division": "II", "lp": 45 } }
   ]
 }
