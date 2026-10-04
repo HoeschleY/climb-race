@@ -93,6 +93,11 @@ for (const p of cfg.players) {
       alerts.push(`${up ? "🔼" : "🔽"} **${p.riotId.split("#")[0]}** ${up ? "promoted to" : "demoted to"} **${name(current)}** (${current.lp} LP)`);
     }
 
+    // Profile icon and level (cosmetic; ignore failures)
+    let icon = prev.icon ?? null, level = prev.level ?? null;
+    try { const sm = await riot(cfg.platform, `/lol/summoner/v4/summoners/by-puuid/${puuid}`); if (sm) { icon = sm.profileIconId; level = sm.summonerLevel; } }
+    catch (e) { console.error(`summoner lookup failed for ${p.riotId}: ${e.message}`); }
+
     // Live game (404 = not in game)
     let live = null, liveErr = null;
     try {
@@ -102,7 +107,7 @@ for (const p of cfg.players) {
         mates: g.participants.filter(x => x.puuid !== puuid && tracked[x.puuid]).map(x => ({ id: tracked[x.puuid], same: x.teamId === me.teamId })) };
     } catch (e) { liveErr = e.message; console.error(`live check failed for ${p.riotId}: ${e.message}`); }
 
-    out.players[p.riotId] = { riotId: p.riotId, puuid, start, current, history, matches, live, liveErr, checkedAt: Date.now() };
+    out.players[p.riotId] = { riotId: p.riotId, puuid, start, current, history, matches, live, liveErr, icon, level, checkedAt: Date.now() };
     console.log(`OK ${p.riotId}: ${current ? `${current.tier} ${current.division} ${current.lp}LP` : "unranked"}, ${Object.keys(matches).length} games`);
   } catch (e) {
     console.error(`FAIL ${p.riotId}: ${e.message}`);
