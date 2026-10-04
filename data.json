@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-04T15:20:07.868Z",
+ "updatedAt": "2026-10-04T16:15:19.313Z",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
   "Kohmira#44160": {
@@ -50,6 +50,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 18117,
+     "v": 3,
      "dur": 1542,
      "at": 1791044496859
     },
@@ -71,6 +77,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 32972,
+     "v": 3,
      "dur": 1644,
      "at": 1791042542927
     },
@@ -92,6 +104,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 5029,
+     "v": 3,
      "dur": 1115,
      "at": 1791040586698
     },
@@ -113,6 +131,12 @@
        "same": true
       }
      ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 4,
+     "taken": 34107,
+     "v": 3,
      "dur": 1999,
      "at": 1791039050688
     },
@@ -134,6 +158,12 @@
        "same": true
       }
      ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 27283,
+     "v": 3,
      "dur": 2436,
      "at": 1791036710145
     },
@@ -155,6 +185,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 14414,
+     "v": 3,
      "dur": 1297,
      "at": 1791034021751
     },
@@ -176,6 +212,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 14142,
+     "v": 3,
      "dur": 1334,
      "at": 1791032410295
     },
@@ -192,6 +234,12 @@
      "gold": 12857,
      "kp": 40,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 14250,
+     "v": 3,
      "dur": 1625,
      "at": 1791030394446
     },
@@ -208,6 +256,12 @@
      "gold": 17966,
      "kp": 37,
      "mates": [],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 27905,
+     "v": 3,
      "dur": 2575,
      "at": 1791028312577
     },
@@ -224,6 +278,12 @@
      "gold": 11822,
      "kp": 18,
      "mates": [],
+     "multi": 3,
+     "penta": 0,
+     "fb": false,
+     "solo": 4,
+     "taken": 20570,
+     "v": 3,
      "dur": 1794,
      "at": 1790978931737
     },
@@ -240,6 +300,12 @@
      "gold": 19173,
      "kp": 56,
      "mates": [],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 6,
+     "taken": 40463,
+     "v": 3,
      "dur": 2714,
      "at": 1790976815014
     },
@@ -256,6 +322,12 @@
      "gold": 13568,
      "kp": 46,
      "mates": [],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 24964,
+     "v": 3,
      "dur": 2059,
      "at": 1790871036046
     },
@@ -272,6 +344,12 @@
      "gold": 13316,
      "kp": 34,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": true,
+     "solo": 3,
+     "taken": 19790,
+     "v": 3,
      "dur": 1958,
      "at": 1790868619095
     },
@@ -288,6 +366,12 @@
      "gold": 12576,
      "kp": 34,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 21570,
+     "v": 3,
      "dur": 2197,
      "at": 1790866252594
     }
@@ -341,6 +425,12 @@
        "same": true
       }
      ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 4,
+     "taken": 28602,
+     "v": 3,
      "dur": 2120,
      "at": 1791113850421
     },
@@ -362,6 +452,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 7,
+     "taken": 33053,
+     "v": 3,
      "dur": 1795,
      "at": 1791111201106
     },
@@ -378,6 +474,12 @@
      "gold": 8549,
      "kp": 70,
      "mates": [],
+     "multi": 2,
+     "penta": 0,
+     "fb": true,
+     "solo": 2,
+     "taken": 8463,
+     "v": 3,
      "dur": 980,
      "at": 1791109140063
     },
@@ -394,6 +496,12 @@
      "gold": 19912,
      "kp": 52,
      "mates": [],
+     "multi": 3,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 29560,
+     "v": 3,
      "dur": 1930,
      "at": 1791066192071
     },
@@ -410,6 +518,12 @@
      "gold": 19863,
      "kp": 81,
      "mates": [],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 25630,
+     "v": 3,
      "dur": 2071,
      "at": 1791062742942
     },
@@ -431,6 +545,12 @@
        "same": true
       }
      ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 33187,
+     "v": 3,
      "dur": 1910,
      "at": 1791059511386
     },
@@ -452,6 +572,12 @@
        "same": true
       }
      ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 7,
+     "taken": 38525,
+     "v": 3,
      "dur": 2062,
      "at": 1791057346861
     },
@@ -468,6 +594,12 @@
      "gold": 10689,
      "kp": 39,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 20085,
+     "v": 3,
      "dur": 1644,
      "at": 1791052600214
     },
@@ -489,6 +621,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 7973,
+     "v": 3,
      "dur": 913,
      "at": 1791045422070
     },
@@ -510,6 +648,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": true,
+     "solo": 1,
+     "taken": 30120,
+     "v": 3,
      "dur": 1585,
      "at": 1791044087699
     },
@@ -531,6 +675,12 @@
        "same": true
       }
      ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 66341,
+     "v": 3,
      "dur": 2195,
      "at": 1791042259265
     },
@@ -547,6 +697,12 @@
      "gold": 19574,
      "kp": 59,
      "mates": [],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 17326,
+     "v": 3,
      "dur": 1998,
      "at": 1791033113231
     },
@@ -563,6 +719,12 @@
      "gold": 10534,
      "kp": 35,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 4,
+     "taken": 22856,
+     "v": 3,
      "dur": 1504,
      "at": 1790986072038
     },
@@ -579,6 +741,12 @@
      "gold": 18980,
      "kp": 53,
      "mates": [],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 21660,
+     "v": 3,
      "dur": 1912,
      "at": 1790984086627
     },
@@ -595,6 +763,12 @@
      "gold": 15981,
      "kp": 58,
      "mates": [],
+     "multi": 5,
+     "penta": 1,
+     "fb": false,
+     "solo": 2,
+     "taken": 16555,
+     "v": 3,
      "dur": 1411,
      "at": 1790972963477
     },
@@ -611,6 +785,12 @@
      "gold": 13096,
      "kp": 34,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 4,
+     "taken": 25039,
+     "v": 3,
      "dur": 1792,
      "at": 1790971284773
     },
@@ -627,6 +807,12 @@
      "gold": 27050,
      "kp": 45,
      "mates": [],
+     "multi": 3,
+     "penta": 0,
+     "fb": false,
+     "solo": 4,
+     "taken": 40386,
+     "v": 3,
      "dur": 2948,
      "at": 1790870469781
     }
@@ -675,6 +861,12 @@
      "gold": 13779,
      "kp": 25,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 45701,
+     "v": 3,
      "dur": 2512,
      "at": 1791063933119
     },
@@ -691,6 +883,12 @@
      "gold": 6993,
      "kp": 31,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 14685,
+     "v": 3,
      "dur": 1144,
      "at": 1791061104968
     },
@@ -712,6 +910,12 @@
        "same": true
       }
      ],
+     "multi": 2,
+     "penta": 0,
+     "fb": true,
+     "solo": 2,
+     "taken": 30142,
+     "v": 3,
      "dur": 1910,
      "at": 1791059511386
     },
@@ -733,6 +937,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 29376,
+     "v": 3,
      "dur": 2062,
      "at": 1791057346861
     },
@@ -754,6 +964,12 @@
        "same": true
       }
      ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 10313,
+     "v": 3,
      "dur": 913,
      "at": 1791045422070
     },
@@ -775,6 +991,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 27370,
+     "v": 3,
      "dur": 1585,
      "at": 1791044087699
     },
@@ -796,6 +1018,12 @@
        "same": true
       }
      ],
+     "multi": 4,
+     "penta": 0,
+     "fb": true,
+     "solo": 3,
+     "taken": 31533,
+     "v": 3,
      "dur": 2195,
      "at": 1791042259265
     },
@@ -817,6 +1045,12 @@
        "same": true
       }
      ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 21418,
+     "v": 3,
      "dur": 1120,
      "at": 1791039296186
     },
@@ -838,6 +1072,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 5,
+     "taken": 31967,
+     "v": 3,
      "dur": 1693,
      "at": 1791037897729
     },
@@ -859,6 +1099,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 32636,
+     "v": 3,
      "dur": 2282,
      "at": 1791030675964
     },
@@ -880,6 +1126,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": true,
+     "solo": 0,
+     "taken": 28344,
+     "v": 3,
      "dur": 1449,
      "at": 1791028080741
     },
@@ -901,6 +1153,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 27881,
+     "v": 3,
      "dur": 2233,
      "at": 1791026185366
     },
@@ -917,6 +1175,12 @@
      "gold": 9653,
      "kp": 46,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 23335,
+     "v": 3,
      "dur": 2041,
      "at": 1791018736834
     },
@@ -933,6 +1197,12 @@
      "gold": 9122,
      "kp": 51,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 20160,
+     "v": 3,
      "dur": 1597,
      "at": 1791016476700
     },
@@ -949,6 +1219,12 @@
      "gold": 8719,
      "kp": 59,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 17306,
+     "v": 3,
      "dur": 1578,
      "at": 1791014529913
     },
@@ -970,6 +1246,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 24731,
+     "v": 3,
      "dur": 1549,
      "at": 1790971891799
     },
@@ -991,6 +1273,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 42028,
+     "v": 3,
      "dur": 1806,
      "at": 1790970026452
     },
@@ -1012,6 +1300,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 24069,
+     "v": 3,
      "dur": 1926,
      "at": 1790967940059
     },
@@ -1033,6 +1327,12 @@
        "same": true
       }
      ],
+     "multi": 0,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 10393,
+     "v": 3,
      "dur": 1571,
      "at": 1790965531111
     },
@@ -1049,6 +1349,12 @@
      "gold": 14696,
      "kp": 49,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 33768,
+     "v": 3,
      "dur": 2175,
      "at": 1790963602542
     },
@@ -1065,6 +1371,12 @@
      "gold": 8848,
      "kp": 61,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 13310,
+     "v": 3,
      "dur": 1570,
      "at": 1790939617114
     },
@@ -1081,6 +1393,12 @@
      "gold": 9087,
      "kp": 48,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 28062,
+     "v": 3,
      "dur": 1688,
      "at": 1790937747933
     },
@@ -1097,6 +1415,12 @@
      "gold": 9708,
      "kp": 50,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 42351,
+     "v": 3,
      "dur": 1566,
      "at": 1790865764499
     },
@@ -1113,6 +1437,12 @@
      "gold": 12365,
      "kp": 74,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 31590,
+     "v": 3,
      "dur": 1858,
      "at": 1790863915384
     }
@@ -1161,6 +1491,12 @@
      "gold": 7902,
      "kp": 44,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 9290,
+     "v": 3,
      "dur": 940,
      "at": 1791046277058
     },
@@ -1182,6 +1518,12 @@
        "same": true
       }
      ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 21786,
+     "v": 3,
      "dur": 1542,
      "at": 1791044496859
     },
@@ -1203,6 +1545,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 22843,
+     "v": 3,
      "dur": 1644,
      "at": 1791042542927
     },
@@ -1224,6 +1572,12 @@
        "same": true
       }
      ],
+     "multi": 2,
+     "penta": 0,
+     "fb": true,
+     "solo": 1,
+     "taken": 12554,
+     "v": 3,
      "dur": 1115,
      "at": 1791040586698
     },
@@ -1245,6 +1599,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 29178,
+     "v": 3,
      "dur": 1999,
      "at": 1791039050688
     },
@@ -1266,6 +1626,12 @@
        "same": true
       }
      ],
+     "multi": 3,
+     "penta": 0,
+     "fb": true,
+     "solo": 2,
+     "taken": 47273,
+     "v": 3,
      "dur": 2436,
      "at": 1791036710145
     },
@@ -1287,6 +1653,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 19496,
+     "v": 3,
      "dur": 1297,
      "at": 1791034021751
     },
@@ -1308,6 +1680,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 20331,
+     "v": 3,
      "dur": 1334,
      "at": 1791032410295
     },
@@ -1329,6 +1707,12 @@
        "same": true
       }
      ],
+     "multi": 2,
+     "penta": 0,
+     "fb": true,
+     "solo": 0,
+     "taken": 22861,
+     "v": 3,
      "dur": 1549,
      "at": 1790971891799
     },
@@ -1350,6 +1734,12 @@
        "same": true
       }
      ],
+     "multi": 4,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 43137,
+     "v": 3,
      "dur": 1806,
      "at": 1790970026452
     },
@@ -1371,6 +1761,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": true,
+     "solo": 1,
+     "taken": 26608,
+     "v": 3,
      "dur": 1926,
      "at": 1790967940059
     },
@@ -1392,6 +1788,12 @@
        "same": true
       }
      ],
+     "multi": 3,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 15799,
+     "v": 3,
      "dur": 1571,
      "at": 1790965531111
     },
@@ -1408,6 +1810,12 @@
      "gold": 14501,
      "kp": 35,
      "mates": [],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 25561,
+     "v": 3,
      "dur": 1711,
      "at": 1790954273505
     },
@@ -1424,6 +1832,12 @@
      "gold": 31961,
      "kp": 64,
      "mates": [],
+     "multi": 3,
+     "penta": 0,
+     "fb": true,
+     "solo": 0,
+     "taken": 49309,
+     "v": 3,
      "dur": 2657,
      "at": 1790952172929
     },
@@ -1440,6 +1854,12 @@
      "gold": 21758,
      "kp": 62,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 29723,
+     "v": 3,
      "dur": 2359,
      "at": 1790867042904
     },
@@ -1456,6 +1876,12 @@
      "gold": 17874,
      "kp": 36,
      "mates": [],
+     "multi": 2,
+     "penta": 0,
+     "fb": true,
+     "solo": 4,
+     "taken": 33556,
+     "v": 3,
      "dur": 1916,
      "at": 1790859229077
     },
@@ -1472,6 +1898,12 @@
      "gold": 21648,
      "kp": 72,
      "mates": [],
+     "multi": 4,
+     "penta": 0,
+     "fb": true,
+     "solo": 3,
+     "taken": 36815,
+     "v": 3,
      "dur": 1952,
      "at": 1790856974018
     }
@@ -1525,6 +1957,12 @@
        "same": true
       }
      ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 34215,
+     "v": 3,
      "dur": 2120,
      "at": 1791113850421
     },
@@ -1546,6 +1984,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 17586,
+     "v": 3,
      "dur": 1795,
      "at": 1791111201106
     },
@@ -1567,6 +2011,12 @@
        "same": true
       }
      ],
+     "multi": 0,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 14783,
+     "v": 3,
      "dur": 1120,
      "at": 1791039296186
     },
@@ -1588,6 +2038,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 22188,
+     "v": 3,
      "dur": 1693,
      "at": 1791037897729
     },
@@ -1609,6 +2065,12 @@
        "same": true
       }
      ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 37763,
+     "v": 3,
      "dur": 2282,
      "at": 1791030675964
     },
@@ -1630,6 +2092,12 @@
        "same": true
       }
      ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 13945,
+     "v": 3,
      "dur": 1449,
      "at": 1791028080741
     },
@@ -1651,6 +2119,12 @@
        "same": true
       }
      ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 24986,
+     "v": 3,
      "dur": 2233,
      "at": 1791026185366
     },
@@ -1667,6 +2141,12 @@
      "gold": 12561,
      "kp": 52,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 45127,
+     "v": 3,
      "dur": 2541,
      "at": 1791023279885
     },
@@ -1683,6 +2163,12 @@
      "gold": 11208,
      "kp": 58,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 37869,
+     "v": 3,
      "dur": 2290,
      "at": 1790957321592
     },
@@ -1699,6 +2185,12 @@
      "gold": 13503,
      "kp": 54,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 49823,
+     "v": 3,
      "dur": 2828,
      "at": 1790954623637
     },
@@ -1715,6 +2207,12 @@
      "gold": 8743,
      "kp": 53,
      "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 34903,
+     "v": 3,
      "dur": 1833,
      "at": 1790950428795
     }
