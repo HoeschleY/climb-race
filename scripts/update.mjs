@@ -27,6 +27,13 @@ async function riot(host, path) {
 
 const rankOf = r => ({ tier: r.tier, division: r.division, lp: r.lp });
 
+const tracked = {}; // puuid -> riotId, for head-to-head
+for (const p of cfg.players) { const prev = old.players?.[p.riotId]; if (prev?.puuid) tracked[prev.puuid] = p.riotId; }
+const alerts = [];
+const DIVS = { IV: 0, III: 1, II: 2, I: 3 }, TIERS = ["IRON","BRONZE","SILVER","GOLD","PLATINUM","EMERALD","DIAMOND","MASTER","GRANDMASTER","CHALLENGER"];
+const step = r => r ? TIERS.indexOf(r.tier) * 4 + (TIERS.indexOf(r.tier) >= 7 ? 0 : DIVS[r.division]) : null;
+const name = r => TIERS.indexOf(r.tier) >= 7 ? r.tier[0] + r.tier.slice(1).toLowerCase() : `${r.tier[0] + r.tier.slice(1).toLowerCase()} ${r.division}`;
+
 const out = { updatedAt: new Date().toISOString(), raceStart: cfg.raceStart, players: {} };
 
 for (const p of cfg.players) {
@@ -36,6 +43,7 @@ for (const p of cfg.players) {
     const puuid = prev.puuid || (await riot(cfg.region,
       `/riot/account/v1/accounts/by-riot-id/${encodeURIComponent(name)}/${encodeURIComponent(tag)}`))?.puuid;
     if (!puuid) throw new Error("Riot ID not found");
+    tracked[puuid] = p.riotId;
 
     const entries = await riot(cfg.platform, `/lol/league/v4/entries/by-puuid/${puuid}`) || [];
     const solo = entries.find(e => e.queueType === "RANKED_SOLO_5x5");
@@ -49,7 +57,7 @@ for (const p of cfg.players) {
       const ids = await riot(cfg.region,
         `/lol/match/v5/matches/by-puuid/${puuid}/ids?queue=420&startTime=${startSec}&start=${start}&count=100`) || [];
       for (const id of ids) {
-        if (matches[id]?.dur) continue; // already stored with full detail
+        if (matches[id]?.mates) continue; // already stored with full detail
         const m = await riot(cfg.region, `/lol/match/v5/matches/${id}`);
         const me = m?.info?.participants?.find(x => x.puuid === puuid);
         if (!me || m.info.gameDuration < 300) continue; // skip remakes
@@ -60,6 +68,8 @@ for (const p of cfg.players) {
           cs: me.totalMinionsKilled + me.neutralMinionsKilled,
           dmg: me.totalDamageDealtToChampions, vis: me.visionScore, gold: me.goldEarned,
           kp: teamKills ? Math.round((me.kills + me.assists) / teamKills * 100) : 0,
+          mates: m.info.participants.filter(x => x.puuid !== puuid && tracked[x.puuid])
+            .map(x => ({ id: tracked[x.puuid], same: x.teamId === me.teamId })),
           dur: m.info.gameDuration, at: m.info.gameEndTimestamp || m.info.gameStartTimestamp,
         };
       }
@@ -75,12 +85,24 @@ for (const p of cfg.players) {
         history.push({ t: Date.now(), ...rankOf(current) });
     }
 
+    if (prev.current && current && step(prev.current) !== step(current)) {
+      const up = step(current) > step(prev.current);
+      alerts.push(`${up ? "🔼" : "🔽"} **${p.riotId.split("#")[0]}** ${up ? "promoted to" : "demoted to"} **${name(current)}** (${current.lp} LP)`);
+    }
+
     out.players[p.riotId] = { riotId: p.riotId, puuid, start, current, history, matches };
     console.log(`OK ${p.riotId}: ${current ? `${current.tier} ${current.division} ${current.lp}LP` : "unranked"}, ${Object.keys(matches).length} games`);
   } catch (e) {
     console.error(`FAIL ${p.riotId}: ${e.message}`);
     out.players[p.riotId] = { ...prev, riotId: p.riotId, error: e.message };
   }
+}
+
+if (alerts.length && process.env.DISCORD_WEBHOOK) {
+  const site = process.env.SITE_URL ? `\n<${process.env.SITE_URL}>` : "";
+  const res = await fetch(process.env.DISCORD_WEBHOOK, { method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username: "Climb Race", content: alerts.join("\n") + site }) });
+  console.log(`Discord: ${alerts.length} alert(s), status ${res.status}`);
 }
 
 await writeFile("data.json", JSON.stringify(out, null, 1));

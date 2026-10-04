@@ -23,6 +23,8 @@ jobs:
       - run: node scripts/update.mjs
         env:
           RIOT_API_KEY: ${{ secrets.RIOT_API_KEY }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          SITE_URL: https://hoeschley.github.io/climb-race/
       - name: Save data.json
         run: |
           git config user.name "climb-race-bot"

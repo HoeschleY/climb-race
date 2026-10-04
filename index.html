@@ -47,6 +47,16 @@ svg text{fill:var(--muted);font:12px var(--body)}
 .stats{display:flex;flex-wrap:wrap;gap:4px 14px;color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums}
 .res{text-align:right;font-size:.8rem;color:var(--muted);white-space:nowrap}
 .res b{display:block;font-size:.9rem}.game.w .res b{color:var(--up)}.game.l .res b{color:var(--down)}
+.gain small{display:block;font-size:.75rem;color:var(--muted)}
+.scards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.scard{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;min-width:0}
+.shead{display:flex;align-items:center;gap:8px;margin-bottom:10px}.shead i{width:14px;height:3px;border-radius:2px}
+.shead b{flex:1;font-size:1.05rem}
+.streak{font:500 .8rem var(--mono);padding:2px 8px;border-radius:99px;background:var(--bg)}
+.scard dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:.85rem}
+.scard dt{color:var(--muted)}.scard dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+.h2{font-family:var(--display);font-size:1.3rem;margin:22px 0 10px;text-transform:uppercase;letter-spacing:.05em}
+.hrow{display:grid;gap:2px;padding:12px 16px;border-top:1px solid var(--line)}.hrow:first-child{border-top:0}
 footer{color:var(--muted);font-size:.8rem}
 </style>
 </head>
@@ -57,6 +67,7 @@ footer{color:var(--muted);font-size:.8rem}
   <button role="tab" data-tab="standings" aria-selected="true">Standings</button>
   <button role="tab" data-tab="graph" aria-selected="false">LP graph</button>
   <button role="tab" data-tab="matches" aria-selected="false">Match history</button>
+  <button role="tab" data-tab="stats" aria-selected="false">Stats &amp; records</button>
 </nav>
 <section id="standings" class="panel"><div class="empty">Loading…</div></section>
 <section id="graph" class="panel chartbox" hidden>
@@ -68,6 +79,12 @@ footer{color:var(--muted);font-size:.8rem}
 <section id="matches" hidden>
   <div class="chips" id="pchips" style="margin-bottom:12px"></div>
   <div class="panel" id="mlist"></div>
+</section>
+<section id="stats" hidden>
+  <div class="scards" id="statcards"></div>
+  <h2 class="h2">Head-to-head</h2>
+  <div class="panel" id="h2h"></div>
+  <p class="note">Records use match results since the race start. LP per day before Oct 4 comes from the reconstructed LP path, so it's approximate.</p>
 </section>
 <footer>Ranked by LP gained since the race start. Data from the Riot Games API, refreshed every 30 minutes; this page reloads itself every 5 minutes.<br>Climb Race Tracker isn't endorsed by Riot Games.</footer>
 </main>
@@ -88,7 +105,7 @@ fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(r=>r.json())
 
 // Tabs, remembered via #hash
 function show(tab){document.querySelectorAll("[role=tab]").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
-  ["standings","graph","matches"].forEach(id=>document.getElementById(id).hidden=id!==tab);
+  ["standings","graph","matches","stats"].forEach(id=>document.getElementById(id).hidden=id!==tab);
   history.replaceState(null,"","#"+tab);if(tab==="graph")renderGraph()}
 document.querySelectorAll("[role=tab]").forEach(b=>b.onclick=()=>show(b.dataset.tab));
 
@@ -102,7 +119,7 @@ async function load(){
     const w=g.filter(x=>x.win).length,s0=score(p.start),s1=score(p.current);
     return{...p,color:COLORS[i%COLORS.length],games:g,w,l:g.length-w,gain:s0!=null&&s1!=null?s1-s0:null};
   });
-  renderStandings();renderGraph();renderMatches();
+  renderStandings();renderGraph();renderMatches();renderStats();
 }
 
 function renderStandings(){
@@ -114,7 +131,9 @@ function renderStandings(){
     const top=Object.entries(champs).sort((a,c)=>c[1]-a[1])[0];
     const m2=el("div","meta",p.error?"Couldn't update: "+p.error:p.games.length?`${p.games.length} games · ${p.w}W ${p.l}L (${Math.round(p.w/p.games.length*100)}%)${top?` · most played ${top[0]}`:""} · last game ${ago(p.games[0].at)}`:"No ranked games since the start");
     if(p.error)m2.classList.add("err");who.append(m2);
-    r.append(who,el("div","gain "+(p.gain>0?"up":p.gain<0?"down":""),p.gain==null?"–":`${p.gain>0?"+":""}${p.gain} LP`));
+    const gc=el("div","gain "+(p.gain>0?"up":p.gain<0?"down":""),p.gain==null?"–":`${p.gain>0?"+":""}${p.gain} LP`);
+    const td=todayOf(p);gc.append(el("small",null,td.n?`today ${sgn(td.lp)} LP · ${td.w}W ${td.l}L`:"no games today"));
+    r.append(who,gc);
     r.style.cursor="pointer";r.onclick=()=>{selected=p.riotId;renderMatches();show("matches")};
     b.append(r);
   });
@@ -177,6 +196,50 @@ function renderGraph(){
 }
 document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dataset.m;document.querySelectorAll("#gmode button").forEach(c=>c.setAttribute("aria-pressed",c===b));renderGraph()});
 
+// ---- Today, streaks, records, head-to-head ----
+const midnight=()=>{const d=new Date();d.setHours(0,0,0,0);return+d};
+const sAt=(pts,t)=>{let s=pts[0].s;for(const q of pts){if(q.t<=t)s=q.s;else break}return s};
+function todayOf(p){const sr=buildSeries(p),m=midnight(),g=p.games.filter(x=>x.at>=m),w=g.filter(x=>x.win).length;
+  return{n:g.length,w,l:g.length-w,lp:sr?sAt(sr.pts,Date.now())-sAt(sr.pts,m):0}}
+function statsOf(p){
+  const g=[...p.games].sort((a,b)=>a.at-b.at);let cur=0,best=0,worst=0,run=0,runL=0;
+  g.forEach(x=>{if(x.win){run++;runL=0}else{runL++;run=0}best=Math.max(best,run);worst=Math.max(worst,runL)});
+  if(g.length){const last=g[g.length-1].win;for(let i=g.length-1;i>=0&&g[i].win===last;i--)cur+=last?1:-1}
+  const sr=buildSeries(p),days={};
+  if(sr)for(let d=new Date(Date.parse(DATA.raceStart));d<=Date.now();d.setDate(d.getDate()+1)){
+    const a=new Date(d);a.setHours(0,0,0,0);const st=Math.max(+a,Date.parse(DATA.raceStart)),en=+a+864e5;
+    const n=g.filter(x=>x.at>=st&&x.at<en).length;if(n)days[+a]={lp:sAt(sr.pts,Math.min(en,Date.now()))-sAt(sr.pts,st),n}}
+  const dl=Object.entries(days).sort((a,b)=>b[1].lp-a[1].lp);
+  const bestKda=[...g].sort((a,b)=>(b.k+b.a)/Math.max(1,b.d)-(a.k+a.a)/Math.max(1,a.d))[0];
+  const topDmg=[...g].sort((a,b)=>b.dmg-a.dmg)[0];
+  return{cur,best,worst,bestDay:dl[0],worstDay:dl[dl.length-1],bestKda,topDmg,mostGames:Object.values(days).reduce((m,d)=>Math.max(m,d.n),0)}}
+const dayName=t=>new Date(+t).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
+const sgn=n=>(n>0?"+":"")+n;
+function renderStats(){
+  const box=document.getElementById("statcards"),h2h=document.getElementById("h2h");if(!players.length)return;box.innerHTML="";
+  players.forEach(p=>{const s=statsOf(p),c=el("div","scard");const h=el("div","shead");const i=el("i");i.style.background=p.color;h.append(i,el("b",null,short(p.riotId)));
+    const st=el("span","streak "+(s.cur>0?"up":s.cur<0?"down":""),s.cur>0?`${s.cur}W streak`:s.cur<0?`${-s.cur}L streak`:"–");h.append(st);c.append(h);
+    const dl=el("dl");const add=(k,v)=>{dl.append(el("dt",null,k),el("dd",null,v))};
+    add("Longest win streak",s.best?s.best+" wins":"–");add("Longest loss streak",s.worst?s.worst+" losses":"–");
+    add("Best day",s.bestDay?`${sgn(s.bestDay[1].lp)} LP · ${dayName(s.bestDay[0])}`:"–");
+    add("Worst day",s.worstDay&&s.worstDay!==s.bestDay?`${sgn(s.worstDay[1].lp)} LP · ${dayName(s.worstDay[0])}`:"–");
+    add("Most games in a day",s.mostGames||"–");
+    add("Best KDA game",s.bestKda?`${s.bestKda.k}/${s.bestKda.d}/${s.bestKda.a} ${s.bestKda.champ}`:"–");
+    add("Most damage",s.topDmg?.dmg?`${(s.topDmg.dmg/1000).toFixed(1)}k ${s.topDmg.champ}`:"–");
+    c.append(dl);box.append(c)});
+  // Head-to-head: shared games between tracked players (deduplicated by match id)
+  const seen={},pairs={};
+  players.forEach(p=>p.games.forEach(g=>(g.mates||[]).forEach(m=>{const k=[p.riotId,m.id].sort().join("|")+g.id;if(seen[k])return;seen[k]=1;
+    const key=[p.riotId,m.id].sort().join("|");const e=pairs[key]||(pairs[key]={a:[p.riotId,m.id].sort()[0],b:[p.riotId,m.id].sort()[1],duoN:0,duoW:0,vsN:0,aWins:0});
+    if(m.same){e.duoN++;if(g.win)e.duoW++}else{e.vsN++;const aWon=(p.riotId===e.a)===g.win;if(aWon)e.aWins++}})));
+  h2h.innerHTML="";const list=Object.values(pairs).sort((x,y)=>(y.duoN+y.vsN)-(x.duoN+x.vsN));
+  if(!list.length){h2h.append(el("div","empty","No games together yet. Duo games and games against each other since Oct 1 will show up here."));return}
+  list.forEach(e=>{const r=el("div","hrow");r.append(el("b",null,`${short(e.a)} & ${short(e.b)}`));
+    const parts=[];if(e.duoN)parts.push(`Duo: ${e.duoN} games, ${e.duoW}W ${e.duoN-e.duoW}L (${Math.round(e.duoW/e.duoN*100)}%)`);
+    if(e.vsN)parts.push(`Against each other: ${short(e.a)} ${e.aWins} – ${e.vsN-e.aWins} ${short(e.b)}`);
+    r.append(el("span","meta",parts.join(" · ")));h2h.append(r)});
+}
+
 function renderMatches(){
   if(!players.length)return;if(!players.find(p=>p.riotId===selected))selected=players[0].riotId;
   const chips=document.getElementById("pchips");chips.innerHTML="";
@@ -200,7 +263,7 @@ function renderMatches(){
     list.append(r)});
 }
 window.addEventListener("resize",()=>renderGraph());
-const h=location.hash.slice(1);if(["graph","matches"].includes(h))show(h);
+const h=location.hash.slice(1);if(["graph","matches","stats"].includes(h))show(h);
 load();setInterval(load,5*60*1000);
 </script>
 </body>
