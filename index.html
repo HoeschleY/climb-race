@@ -294,7 +294,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
   <div class="scards" id="scards"></div>
 </section>
 
-<footer>Ranked by LP gained since the race start. Data from the Riot Games API, refreshed every 5 minutes; this page reloads its data every 2 minutes. Climb Race isn't endorsed by Riot Games.</footer>
+<footer>Ranked by LP gained since the race start. Data from the Riot Games API, refreshed every 5 minutes; this page reloads its data every 3 minutes. Climb Race isn't endorsed by Riot Games.</footer>
 </main>
 <div class="modal" id="modal" hidden><div class="mpanel" role="dialog" aria-modal="true" aria-label="Match details"><button class="mclose" aria-label="Close">✕</button><div id="mbody"></div></div></div>
 
@@ -334,8 +334,13 @@ function show(tab){document.querySelectorAll("[role=tab]").forEach(b=>b.setAttri
 document.querySelectorAll("[role=tab]").forEach(b=>b.onclick=()=>show(b.dataset.tab));
 document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dataset.m;document.querySelectorAll("#gmode button").forEach(c=>c.setAttribute("aria-pressed",c===b));renderGraph()});
 
+// Read files straight from the repo (always current); fall back to the GitHub Pages copy (can lag several minutes).
+const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
+async function getFile(path){
+  try{const r=await fetch(API+path+"?ref=main&t="+Date.now(),{headers:{Accept:"application/vnd.github.raw+json"},cache:"no-store"});if(r.ok)return await r.json()}catch{}
+  const r=await fetch(path+"?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw new Error(r.status);return r.json()}
 async function load(){
-  try{DATA=await (await fetch("data.json?t="+Date.now())).json()}catch{document.getElementById("sub").textContent="Standings aren't available yet.";return}
+  try{DATA=await getFile("data.json")}catch{document.getElementById("sub").textContent="Standings aren't available yet.";return}
   players=Object.values(DATA.players).map((p,i)=>{
     const games=Object.entries(p.matches||{}).map(([id,m])=>({id,...m,riotId:p.riotId})).sort((a,b)=>b.at-a.at);
     const w=games.filter(x=>x.win).length,s0=score(p.start),s1=score(p.current);
@@ -561,7 +566,7 @@ modal.addEventListener("click",e=>{if(e.target===modal||e.target.closest(".mclos
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!modal.hidden)closeModal()});
 async function openMatch(g){
   modal.hidden=false;document.body.style.overflow="hidden";mbody.innerHTML="";mbody.append(el("div","empty","Loading the scoreboard…"));
-  let m;try{const r=await fetch(`matches/${g.id}.json`);if(!r.ok)throw 0;m=await r.json()}
+  let m;try{m=await getFile(`matches/${g.id}.json`)}
   catch{mbody.innerHTML="";mbody.append(el("div","empty","The full scoreboard for this game isn't available yet. It's saved with the next update."));return}
   const A=await assets();mbody.innerHTML="";
   const me=m.players.find(x=>x.tracked===g.riotId)||{},myTeam=me.team;
@@ -665,9 +670,9 @@ const h=location.hash.slice(1);if(TABS.includes(h))show(h);
 const rb=document.getElementById("refresh"),rl=rb.querySelector("span");
 rb.onclick=async()=>{rb.disabled=true;rb.classList.add("spin");rl.textContent="Refreshing…";const before=DATA?.updatedAt;
   await load();await new Promise(r=>setTimeout(r,400));rb.classList.remove("spin");
-  rl.textContent=DATA?.updatedAt!==before?"New data loaded":"Already up to date";
+  rl.textContent=DATA?.updatedAt!==before?"New data loaded":"Up to date";
   setTimeout(()=>{rl.textContent="Refresh";rb.disabled=false},2500)};
-load();setInterval(load,2*60*1000);
+load();setInterval(load,3*60*1000);
 </script>
 </body>
 </html>
