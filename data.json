@@ -1,0 +1,760 @@
+{
+ "updatedAt": "2026-10-04T15:02:44.294Z",
+ "raceStart": "2026-10-01T14:06:00+02:00",
+ "players": {
+  "Kohmira#44160": {
+   "riotId": "Kohmira#44160",
+   "puuid": "u0QN46SRPR3Ll8mnyl28GBgt2goj_pqq-Mei0PpH4OHkIhXgBidctMo1MERTqbhNJ6hl3CH1oUl3Mg",
+   "start": {
+    "tier": "SILVER",
+    "division": "II",
+    "lp": 55
+   },
+   "current": {
+    "tier": "GOLD",
+    "division": "IV",
+    "lp": 29,
+    "wins": 13,
+    "losses": 14
+   },
+   "matches": {
+    "EUW1_8002603842": {
+     "win": true,
+     "champ": "Sylas",
+     "k": 6,
+     "d": 1,
+     "a": 4,
+     "at": 1791044496859
+    },
+    "EUW1_8002568695": {
+     "win": false,
+     "champ": "Ryze",
+     "k": 2,
+     "d": 9,
+     "a": 9,
+     "at": 1791042542927
+    },
+    "EUW1_8002541067": {
+     "win": true,
+     "champ": "Taliyah",
+     "k": 1,
+     "d": 1,
+     "a": 3,
+     "at": 1791040586698
+    },
+    "EUW1_8002493347": {
+     "win": false,
+     "champ": "Yone",
+     "k": 14,
+     "d": 5,
+     "a": 5,
+     "at": 1791039050688
+    },
+    "EUW1_8002458537": {
+     "win": true,
+     "champ": "Vex",
+     "k": 13,
+     "d": 7,
+     "a": 13,
+     "at": 1791036710145
+    },
+    "EUW1_8002422243": {
+     "win": false,
+     "champ": "Lissandra",
+     "k": 3,
+     "d": 5,
+     "a": 6,
+     "at": 1791034021751
+    },
+    "EUW1_8002402826": {
+     "win": false,
+     "champ": "Syndra",
+     "k": 5,
+     "d": 5,
+     "a": 3,
+     "at": 1791032410295
+    },
+    "EUW1_8002367862": {
+     "win": true,
+     "champ": "Ahri",
+     "k": 7,
+     "d": 1,
+     "a": 7,
+     "at": 1791030394446
+    },
+    "EUW1_8002331551": {
+     "win": false,
+     "champ": "Viktor",
+     "k": 7,
+     "d": 5,
+     "a": 9,
+     "at": 1791028312577
+    },
+    "EUW1_8001951444": {
+     "win": true,
+     "champ": "Akali",
+     "k": 7,
+     "d": 3,
+     "a": 2,
+     "at": 1790978931737
+    },
+    "EUW1_8001885131": {
+     "win": false,
+     "champ": "Vex",
+     "k": 14,
+     "d": 7,
+     "a": 20,
+     "at": 1790976815014
+    },
+    "EUW1_8000570016": {
+     "win": true,
+     "champ": "Syndra",
+     "k": 10,
+     "d": 4,
+     "a": 16,
+     "at": 1790871036046
+    },
+    "EUW1_8000544493": {
+     "win": true,
+     "champ": "Akali",
+     "k": 7,
+     "d": 1,
+     "a": 5,
+     "at": 1790868619095
+    },
+    "EUW1_8000503576": {
+     "win": true,
+     "champ": "Viktor",
+     "k": 3,
+     "d": 5,
+     "a": 11,
+     "at": 1790866252594
+    }
+   }
+  },
+  "Ymine#000": {
+   "riotId": "Ymine#000",
+   "puuid": "8Ktvo8qSQw55y5780fomrduKGASqwRAQhLVVr44CM2EjXr7YrRt1KHycP17dNKa7Izki_JO2hRSsdA",
+   "start": {
+    "tier": "GOLD",
+    "division": "II",
+    "lp": 14
+   },
+   "current": {
+    "tier": "GOLD",
+    "division": "III",
+    "lp": 17,
+    "wins": 123,
+    "losses": 132
+   },
+   "matches": {
+    "EUW1_8003386899": {
+     "win": false,
+     "champ": "Aurora",
+     "k": 14,
+     "d": 6,
+     "a": 9,
+     "at": 1791113850421
+    },
+    "EUW1_8003346357": {
+     "win": true,
+     "champ": "Volibear",
+     "k": 10,
+     "d": 3,
+     "a": 5,
+     "at": 1791111201106
+    },
+    "EUW1_8003339033": {
+     "win": false,
+     "champ": "Kalista",
+     "k": 5,
+     "d": 3,
+     "a": 2,
+     "at": 1791109140063
+    },
+    "EUW1_8003038024": {
+     "win": true,
+     "champ": "Jinx",
+     "k": 17,
+     "d": 7,
+     "a": 18,
+     "at": 1791066192071
+    },
+    "EUW1_8002957178": {
+     "win": false,
+     "champ": "Kalista",
+     "k": 18,
+     "d": 5,
+     "a": 7,
+     "at": 1791062742942
+    },
+    "EUW1_8002885225": {
+     "win": false,
+     "champ": "Locke",
+     "k": 9,
+     "d": 6,
+     "a": 4,
+     "at": 1791059511386
+    },
+    "EUW1_8002838807": {
+     "win": false,
+     "champ": "Locke",
+     "k": 13,
+     "d": 5,
+     "a": 1,
+     "at": 1791057346861
+    },
+    "EUW1_8002751760": {
+     "win": false,
+     "champ": "Akshan",
+     "k": 4,
+     "d": 5,
+     "a": 3,
+     "at": 1791052600214
+    },
+    "EUW1_8002637703": {
+     "win": false,
+     "champ": "Syndra",
+     "k": 1,
+     "d": 4,
+     "a": 1,
+     "at": 1791045422070
+    },
+    "EUW1_8002595107": {
+     "win": false,
+     "champ": "Khazix",
+     "k": 5,
+     "d": 8,
+     "a": 4,
+     "at": 1791044087699
+    },
+    "EUW1_8002548207": {
+     "win": true,
+     "champ": "DrMundo",
+     "k": 6,
+     "d": 1,
+     "a": 9,
+     "at": 1791042259265
+    },
+    "EUW1_8002408456": {
+     "win": true,
+     "champ": "Caitlyn",
+     "k": 14,
+     "d": 6,
+     "a": 8,
+     "at": 1791033113231
+    },
+    "EUW1_8002083057": {
+     "win": false,
+     "champ": "Fizz",
+     "k": 6,
+     "d": 9,
+     "a": 0,
+     "at": 1790986072038
+    },
+    "EUW1_8002049087": {
+     "win": false,
+     "champ": "Aphelios",
+     "k": 13,
+     "d": 7,
+     "a": 6,
+     "at": 1790984086627
+    },
+    "EUW1_8001833606": {
+     "win": true,
+     "champ": "Xayah",
+     "k": 15,
+     "d": 2,
+     "a": 6,
+     "at": 1790972963477
+    },
+    "EUW1_8001790610": {
+     "win": true,
+     "champ": "Teemo",
+     "k": 5,
+     "d": 7,
+     "a": 6,
+     "at": 1790971284773
+    },
+    "EUW1_8000544219": {
+     "win": false,
+     "champ": "Jhin",
+     "k": 15,
+     "d": 4,
+     "a": 13,
+     "at": 1790870469781
+    }
+   }
+  },
+  "wilhump#NAEU": {
+   "riotId": "wilhump#NAEU",
+   "puuid": "OJUivqz5GXp9y5P2CESvdW321sixLn1aXaCWUDjMyfRN5JDUvSgBrl1qPjNdeJecOFgu3Kg949UKrw",
+   "start": {
+    "tier": "GOLD",
+    "division": "III",
+    "lp": 81
+   },
+   "current": {
+    "tier": "GOLD",
+    "division": "II",
+    "lp": 81,
+    "wins": 66,
+    "losses": 60
+   },
+   "matches": {
+    "EUW1_8002975983": {
+     "win": true,
+     "champ": "Akshan",
+     "k": 5,
+     "d": 12,
+     "a": 5,
+     "at": 1791063933119
+    },
+    "EUW1_8002951516": {
+     "win": true,
+     "champ": "Locke",
+     "k": 6,
+     "d": 2,
+     "a": 2,
+     "at": 1791061104968
+    },
+    "EUW1_8002885225": {
+     "win": false,
+     "champ": "Akshan",
+     "k": 6,
+     "d": 10,
+     "a": 3,
+     "at": 1791059511386
+    },
+    "EUW1_8002838807": {
+     "win": false,
+     "champ": "Akshan",
+     "k": 6,
+     "d": 10,
+     "a": 6,
+     "at": 1791057346861
+    },
+    "EUW1_8002637703": {
+     "win": false,
+     "champ": "Zed",
+     "k": 2,
+     "d": 7,
+     "a": 0,
+     "at": 1791045422070
+    },
+    "EUW1_8002595107": {
+     "win": false,
+     "champ": "Ekko",
+     "k": 5,
+     "d": 9,
+     "a": 4,
+     "at": 1791044087699
+    },
+    "EUW1_8002548207": {
+     "win": true,
+     "champ": "Locke",
+     "k": 11,
+     "d": 8,
+     "a": 4,
+     "at": 1791042259265
+    },
+    "EUW1_8002518013": {
+     "win": false,
+     "champ": "Locke",
+     "k": 8,
+     "d": 9,
+     "a": 1,
+     "at": 1791039296186
+    },
+    "EUW1_8002485855": {
+     "win": true,
+     "champ": "Ekko",
+     "k": 10,
+     "d": 7,
+     "a": 8,
+     "at": 1791037897729
+    },
+    "EUW1_8002359899": {
+     "win": false,
+     "champ": "Zilean",
+     "k": 8,
+     "d": 7,
+     "a": 13,
+     "at": 1791030675964
+    },
+    "EUW1_8002334879": {
+     "win": true,
+     "champ": "Alistar",
+     "k": 5,
+     "d": 7,
+     "a": 18,
+     "at": 1791028080741
+    },
+    "EUW1_8002308580": {
+     "win": true,
+     "champ": "Karma",
+     "k": 3,
+     "d": 12,
+     "a": 7,
+     "at": 1791026185366
+    },
+    "EUW1_8002226682": {
+     "win": false,
+     "champ": "Renata",
+     "k": 2,
+     "d": 9,
+     "a": 14,
+     "at": 1791018736834
+    },
+    "EUW1_8002216643": {
+     "win": true,
+     "champ": "Bard",
+     "k": 2,
+     "d": 7,
+     "a": 19,
+     "at": 1791016476700
+    },
+    "EUW1_8002206559": {
+     "win": true,
+     "champ": "Thresh",
+     "k": 2,
+     "d": 5,
+     "a": 20,
+     "at": 1791014529913
+    },
+    "EUW1_8001795177": {
+     "win": true,
+     "champ": "Blitzcrank",
+     "k": 4,
+     "d": 12,
+     "a": 11,
+     "at": 1790971891799
+    },
+    "EUW1_8001755977": {
+     "win": true,
+     "champ": "Taric",
+     "k": 6,
+     "d": 7,
+     "a": 28,
+     "at": 1790970026452
+    },
+    "EUW1_8001710744": {
+     "win": false,
+     "champ": "Rell",
+     "k": 1,
+     "d": 8,
+     "a": 7,
+     "at": 1790967940059
+    },
+    "EUW1_8001669821": {
+     "win": true,
+     "champ": "Lulu",
+     "k": 0,
+     "d": 4,
+     "a": 9,
+     "at": 1790965531111
+    },
+    "EUW1_8001626876": {
+     "win": true,
+     "champ": "Pyke",
+     "k": 6,
+     "d": 11,
+     "a": 18,
+     "at": 1790963602542
+    },
+    "EUW1_8001297776": {
+     "win": true,
+     "champ": "Milio",
+     "k": 2,
+     "d": 3,
+     "a": 20,
+     "at": 1790939617114
+    },
+    "EUW1_8001281719": {
+     "win": true,
+     "champ": "Braum",
+     "k": 1,
+     "d": 5,
+     "a": 20,
+     "at": 1790937747933
+    },
+    "EUW1_8000503709": {
+     "win": false,
+     "champ": "Nasus",
+     "k": 4,
+     "d": 3,
+     "a": 1,
+     "at": 1790865764499
+    },
+    "EUW1_8000466199": {
+     "win": false,
+     "champ": "Pyke",
+     "k": 13,
+     "d": 10,
+     "a": 18,
+     "at": 1790863915384
+    }
+   }
+  },
+  "Near#974p": {
+   "riotId": "Near#974p",
+   "puuid": "zniunO34eAclLKVJ_Z8l3G8DA0vobSPsRYbdkfnYCcwOONim3AX-e7s_JQfYDeWZUjbuX7g3gFNxbg",
+   "start": {
+    "tier": "GOLD",
+    "division": "II",
+    "lp": 68
+   },
+   "current": {
+    "tier": "GOLD",
+    "division": "I",
+    "lp": 28,
+    "wins": 304,
+    "losses": 312
+   },
+   "matches": {
+    "EUW1_8002644948": {
+     "win": true,
+     "champ": "Yunara",
+     "k": 3,
+     "d": 2,
+     "a": 9,
+     "at": 1791046277058
+    },
+    "EUW1_8002603842": {
+     "win": true,
+     "champ": "Yunara",
+     "k": 5,
+     "d": 7,
+     "a": 9,
+     "at": 1791044496859
+    },
+    "EUW1_8002568695": {
+     "win": false,
+     "champ": "Kaisa",
+     "k": 8,
+     "d": 7,
+     "a": 10,
+     "at": 1791042542927
+    },
+    "EUW1_8002541067": {
+     "win": true,
+     "champ": "Kalista",
+     "k": 14,
+     "d": 3,
+     "a": 1,
+     "at": 1791040586698
+    },
+    "EUW1_8002493347": {
+     "win": false,
+     "champ": "Ashe",
+     "k": 4,
+     "d": 9,
+     "a": 11,
+     "at": 1791039050688
+    },
+    "EUW1_8002458537": {
+     "win": true,
+     "champ": "Zeri",
+     "k": 18,
+     "d": 10,
+     "a": 18,
+     "at": 1791036710145
+    },
+    "EUW1_8002422243": {
+     "win": false,
+     "champ": "Kalista",
+     "k": 2,
+     "d": 10,
+     "a": 3,
+     "at": 1791034021751
+    },
+    "EUW1_8002402826": {
+     "win": false,
+     "champ": "Nautilus",
+     "k": 4,
+     "d": 6,
+     "a": 8,
+     "at": 1791032410295
+    },
+    "EUW1_8001795177": {
+     "win": true,
+     "champ": "Kalista",
+     "k": 9,
+     "d": 11,
+     "a": 8,
+     "at": 1790971891799
+    },
+    "EUW1_8001755977": {
+     "win": true,
+     "champ": "Nilah",
+     "k": 31,
+     "d": 9,
+     "a": 6,
+     "at": 1790970026452
+    },
+    "EUW1_8001710744": {
+     "win": false,
+     "champ": "Yunara",
+     "k": 6,
+     "d": 10,
+     "a": 1,
+     "at": 1790967940059
+    },
+    "EUW1_8001669821": {
+     "win": true,
+     "champ": "KogMaw",
+     "k": 8,
+     "d": 6,
+     "a": 1,
+     "at": 1790965531111
+    },
+    "EUW1_8001479699": {
+     "win": false,
+     "champ": "Yunara",
+     "k": 5,
+     "d": 10,
+     "a": 7,
+     "at": 1790954273505
+    },
+    "EUW1_8001422246": {
+     "win": true,
+     "champ": "Yunara",
+     "k": 20,
+     "d": 11,
+     "a": 9,
+     "at": 1790952172929
+    },
+    "EUW1_8000503133": {
+     "win": false,
+     "champ": "Jhin",
+     "k": 11,
+     "d": 6,
+     "a": 13,
+     "at": 1790867042904
+    },
+    "EUW1_8000417804": {
+     "win": true,
+     "champ": "Zeri",
+     "k": 14,
+     "d": 9,
+     "a": 5,
+     "at": 1790859229077
+    },
+    "EUW1_8000394788": {
+     "win": true,
+     "champ": "Yunara",
+     "k": 24,
+     "d": 7,
+     "a": 14,
+     "at": 1790856974018
+    }
+   }
+  },
+  "Lésion carieuse#Dents": {
+   "riotId": "Lésion carieuse#Dents",
+   "puuid": "jJza3sHj3VQdtGKNZ45MVQi1FDxKXJFiB5Zz3pXYmwbBnxN2PY6C7aVSxs7X9VtzcwAZQM-WX9Se8A",
+   "start": {
+    "tier": "GOLD",
+    "division": "II",
+    "lp": 45
+   },
+   "current": {
+    "tier": "GOLD",
+    "division": "II",
+    "lp": 3,
+    "wins": 168,
+    "losses": 161
+   },
+   "matches": {
+    "EUW1_8003386899": {
+     "win": false,
+     "champ": "Caitlyn",
+     "k": 7,
+     "d": 7,
+     "a": 4,
+     "at": 1791113850421
+    },
+    "EUW1_8003346357": {
+     "win": true,
+     "champ": "Caitlyn",
+     "k": 5,
+     "d": 1,
+     "a": 1,
+     "at": 1791111201106
+    },
+    "EUW1_8002518013": {
+     "win": false,
+     "champ": "Yunara",
+     "k": 0,
+     "d": 9,
+     "a": 1,
+     "at": 1791039296186
+    },
+    "EUW1_8002485855": {
+     "win": true,
+     "champ": "Yunara",
+     "k": 10,
+     "d": 10,
+     "a": 10,
+     "at": 1791037897729
+    },
+    "EUW1_8002359899": {
+     "win": false,
+     "champ": "Caitlyn",
+     "k": 6,
+     "d": 13,
+     "a": 8,
+     "at": 1791030675964
+    },
+    "EUW1_8002334879": {
+     "win": true,
+     "champ": "Caitlyn",
+     "k": 12,
+     "d": 3,
+     "a": 12,
+     "at": 1791028080741
+    },
+    "EUW1_8002308580": {
+     "win": true,
+     "champ": "Caitlyn",
+     "k": 6,
+     "d": 8,
+     "a": 5,
+     "at": 1791026185366
+    },
+    "EUW1_8002257238": {
+     "win": false,
+     "champ": "Blitzcrank",
+     "k": 1,
+     "d": 9,
+     "a": 25,
+     "at": 1791023279885
+    },
+    "EUW1_8001506407": {
+     "win": false,
+     "champ": "Blitzcrank",
+     "k": 1,
+     "d": 13,
+     "a": 27,
+     "at": 1790957321592
+    },
+    "EUW1_8001465021": {
+     "win": true,
+     "champ": "Blitzcrank",
+     "k": 1,
+     "d": 13,
+     "a": 31,
+     "at": 1790954623637
+    },
+    "EUW1_8001425483": {
+     "win": false,
+     "champ": "Thresh",
+     "k": 5,
+     "d": 10,
+     "a": 5,
+     "at": 1790950428795
+    }
+   }
+  }
+ }
+}
