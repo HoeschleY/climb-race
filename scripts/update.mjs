@@ -52,7 +52,7 @@ for (const p of cfg.players) { const prev = old.players?.[p.riotId]; if (prev?.p
 const alerts = [];
 const DIVS = { IV: 0, III: 1, II: 2, I: 3 }, TIERS = ["IRON","BRONZE","SILVER","GOLD","PLATINUM","EMERALD","DIAMOND","MASTER","GRANDMASTER","CHALLENGER"];
 const step = r => r ? TIERS.indexOf(r.tier) * 4 + (TIERS.indexOf(r.tier) >= 7 ? 0 : DIVS[r.division]) : null;
-const name = r => TIERS.indexOf(r.tier) >= 7 ? r.tier[0] + r.tier.slice(1).toLowerCase() : `${r.tier[0] + r.tier.slice(1).toLowerCase()} ${r.division}`;
+const rankName = r => TIERS.indexOf(r.tier) >= 7 ? r.tier[0] + r.tier.slice(1).toLowerCase() : `${r.tier[0] + r.tier.slice(1).toLowerCase()} ${r.division}`;
 
 const out = { updatedAt: new Date().toISOString(), raceStart: cfg.raceStart, players: {} };
 
@@ -111,7 +111,7 @@ for (const p of cfg.players) {
 
     if (prev.current && current && step(prev.current) !== step(current)) {
       const up = step(current) > step(prev.current);
-      alerts.push(`${up ? "🔼" : "🔽"} **${p.riotId.split("#")[0]}** ${up ? "promoted to" : "demoted to"} **${name(current)}** (${current.lp} LP)`);
+      alerts.push(`${up ? "🔼" : "🔽"} **${p.riotId.split("#")[0]}** ${up ? "promoted to" : "demoted to"} **${rankName(current)}** (${current.lp} LP)`);
     }
 
     // Profile icon and level (cosmetic; ignore failures)
