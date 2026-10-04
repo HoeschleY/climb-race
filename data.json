@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-04T19:34:52.206Z",
+ "updatedAt": "2026-10-04T19:40:25.173Z",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
   "Kohmira#44160": {
@@ -413,7 +413,7 @@
    "liveErr": null,
    "icon": 7143,
    "level": 421,
-   "checkedAt": 1791142498463
+   "checkedAt": 1791142831470
   },
   "Ymine#000": {
    "riotId": "Ymine#000",
@@ -855,11 +855,16 @@
      "at": 1790870469781
     }
    },
-   "live": null,
+   "live": {
+    "champId": 777,
+    "queue": 420,
+    "start": 1791142581624,
+    "mates": []
+   },
    "liveErr": null,
    "icon": 6864,
    "level": 716,
-   "checkedAt": 1791142504351
+   "checkedAt": 1791142837393
   },
   "wilhump#NAEU": {
    "riotId": "wilhump#NAEU",
@@ -1577,7 +1582,7 @@
    "liveErr": null,
    "icon": 5119,
    "level": 512,
-   "checkedAt": 1791142511892
+   "checkedAt": 1791142843270
   },
   "Near#974p": {
    "riotId": "Near#974p",
@@ -2043,7 +2048,7 @@
    "liveErr": null,
    "icon": 3151,
    "level": 744,
-   "checkedAt": 1791142517749
+   "checkedAt": 1791142849155
   },
   "Lésion carieuse#Dents": {
    "riotId": "Lésion carieuse#Dents",
@@ -2357,7 +2362,7 @@
    "liveErr": null,
    "icon": 7139,
    "level": 587,
-   "checkedAt": 1791142523558
+   "checkedAt": 1791142855035
   }
  }
 }
