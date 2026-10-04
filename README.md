@@ -1,6 +1,6 @@
 # Solo/Duo Climb Race
 
-A leaderboard for a Ranked Solo/Duo climbing competition between friends. A GitHub Action calls the Riot API every 30 minutes and saves `data.json`; GitHub Pages shows the leaderboard at a public link.
+A leaderboard for a Ranked Solo/Duo climbing competition between friends. A GitHub Action calls the Riot API every 10 minutes and saves `data.json`; GitHub Pages shows the leaderboard at a public link.
 
 ## Setup (about 10 minutes)
 
@@ -15,6 +15,18 @@ A leaderboard for a Ranked Solo/Duo climbing competition between friends. A GitH
 6. **Run the first update.** Go to the **Actions** tab, enable workflows if asked, open **Update standings**, and click **Run workflow**. After a minute or two, `data.json` appears in the repo.
 
 The site is then live at `https://YOUR-USERNAME.github.io/climb-race/`. Share that link; nobody needs an account to view it.
+
+## Adding or removing a player
+
+Edit `players.json` on GitHub (pencil icon), then **Commit changes**. Each player is one line.
+
+- **Add:** copy a line and change the Riot ID, keeping the comma between lines:
+  `{ "riotId": "NewFriend#EUW" },`
+  Without a `start`, their race starts from the rank they have when the next update runs. To give them a starting rank, write it like the others:
+  `{ "riotId": "NewFriend#EUW", "start": { "tier": "GOLD", "division": "IV", "lp": 0 } },`
+- **Remove:** delete their line. Make sure the last line has no comma at the end.
+
+The change shows on the site after the next update (within 10 minutes). If the update fails after an edit, the JSON is usually missing or has an extra comma.
 
 ## Keeping it running
 

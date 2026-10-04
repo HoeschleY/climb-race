@@ -80,7 +80,8 @@ for (const p of cfg.players) {
 
     // LP history for the graph: Riot only gives current LP, so record a point whenever it changes.
     const start = p.start || prev.start || current; // baseline: given, else first seen
-    const history = prev.history?.length ? [...prev.history] : (start ? [{ t: Date.parse(cfg.raceStart), ...rankOf(start) }] : []);
+    // Baseline time: race start if a starting rank was given, otherwise the moment the player was added.
+    const history = prev.history?.length ? [...prev.history] : (start ? [{ t: p.start ? Date.parse(cfg.raceStart) : Date.now(), ...rankOf(start) }] : []);
     if (current) {
       const last = history[history.length - 1];
       if (!last || last.tier !== current.tier || last.division !== current.division || last.lp !== current.lp)
@@ -92,7 +93,16 @@ for (const p of cfg.players) {
       alerts.push(`${up ? "🔼" : "🔽"} **${p.riotId.split("#")[0]}** ${up ? "promoted to" : "demoted to"} **${name(current)}** (${current.lp} LP)`);
     }
 
-    out.players[p.riotId] = { riotId: p.riotId, puuid, start, current, history, matches };
+    // Live game (404 = not in game)
+    let live = null;
+    try {
+      const g = await riot(cfg.platform, `/lol/spectator/v5/active-games/by-summoner/${puuid}`);
+      const me = g?.participants?.find(x => x.puuid === puuid);
+      if (g && me) live = { champId: me.championId, queue: g.gameQueueConfigId, start: g.gameStartTime || Date.now(),
+        mates: g.participants.filter(x => x.puuid !== puuid && tracked[x.puuid]).map(x => ({ id: tracked[x.puuid], same: x.teamId === me.teamId })) };
+    } catch (e) { console.error(`live check failed for ${p.riotId}: ${e.message}`); }
+
+    out.players[p.riotId] = { riotId: p.riotId, puuid, start, current, history, matches, live, checkedAt: Date.now() };
     console.log(`OK ${p.riotId}: ${current ? `${current.tier} ${current.division} ${current.lp}LP` : "unranked"}, ${Object.keys(matches).length} games`);
   } catch (e) {
     console.error(`FAIL ${p.riotId}: ${e.message}`);

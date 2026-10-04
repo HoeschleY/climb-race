@@ -117,6 +117,29 @@ svg text{fill:var(--muted);font:12px var(--body)}
 .streak{font:600 .78rem var(--body);padding:2px 9px;border-radius:99px;background:var(--panel2)}
 .scard dl{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:.86rem}
 .scard dt{color:var(--muted)}.scard dd{margin:0;text-align:right}
+.live{display:inline-flex;align-items:center;gap:6px;font:600 .75rem var(--body);letter-spacing:.06em;text-transform:uppercase;color:#ff8a8a;background:#e5555f1f;border:1px solid #e5555f55;border-radius:99px;padding:2px 9px;margin-left:8px;vertical-align:2px}
+.live i{width:7px;height:7px;border-radius:50%;background:#ff5a5a;animation:pulse 1.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.25}}
+@media (prefers-reduced-motion:reduce){.live i{animation:none}}
+.prof{display:grid;grid-template-columns:1.4fr 1fr;gap:1px;background:var(--line);border-bottom:1px solid var(--line)}
+.prof>div{background:var(--panel);padding:14px 16px;min-width:0}
+.prof h3{font:600 .72rem var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 10px}
+.pool{display:grid;gap:8px}
+.prow{display:grid;grid-template-columns:30px minmax(0,1fr) auto;gap:10px;align-items:center;font-size:.86rem}
+.prow img{width:30px;height:30px;border-radius:6px}
+.prow .nm{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.prow .sm{color:var(--muted);font-size:.78rem}
+.prow .wr{text-align:right;font-weight:700}
+.bars{display:grid;gap:7px;font-size:.84rem}
+.brow{display:grid;grid-template-columns:76px minmax(0,1fr) 92px;gap:10px;align-items:center}
+.brow .tr{height:8px;border-radius:4px;background:var(--line);overflow:hidden}.brow .tr span{display:block;height:100%}
+.brow .r{text-align:right;color:var(--muted)}
+.tod{grid-column:1/-1}
+.todg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.todc{border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.todc .t{font-size:.75rem;color:var(--muted)}.todc b{display:block;font-size:1.2rem}.todc span{font-size:.78rem;color:var(--muted)}
+.shame .award{border-color:#e5555f40}.shame .award .v{color:#ff8a8a}
+@media (max-width:760px){.prof{grid-template-columns:1fr}.todg{grid-template-columns:1fr 1fr}}
 footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
 
 @media (max-width:760px){
@@ -173,6 +196,8 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
 <section id="records" hidden>
   <h2>Hall of fame</h2>
   <div class="fame" id="fame"></div>
+  <h2>Wall of shame</h2>
+  <div class="fame shame" id="shame"></div>
   <h2>Player records</h2>
   <div class="scards" id="scards"></div>
 </section>
@@ -199,7 +224,10 @@ const dayKey=t=>{const d=new Date(t);d.setHours(0,0,0,0);return+d};
 const dayName=t=>{const k=dayKey(t),today=dayKey(Date.now());return k===today?"Today":k===dayKey(today-36e5)?"Yesterday":new Date(k).toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"short"})};
 
 let DATA=null,players=[],ddv="15.1.1",selected=null,gmode="time";
-fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(r=>r.json()).then(v=>{ddv=v[0];if(DATA)renderAll()}).catch(()=>{});
+let CHAMP={};
+fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(r=>r.json()).then(v=>{ddv=v[0];
+  return fetch(`https://ddragon.leagueoflegends.com/cdn/${ddv}/data/en_US/champion.json`).then(r=>r.json()).then(c=>{for(const x of Object.values(c.data))CHAMP[x.key]={id:x.id,name:x.name}})})
+  .then(()=>{if(DATA)renderAll()}).catch(()=>{});
 const icon=c=>`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/champion/${c}.png`;
 const splash=c=>`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${c}_0.jpg`;
 
@@ -278,7 +306,12 @@ function renderStandings(){
   const b=document.getElementById("standings");b.innerHTML="";const md=dayKey(Date.now());
   [...players].sort((a,c)=>(c.gain??-1e9)-(a.gain??-1e9)).forEach((p,i)=>{
     const r=el("div","st");r.append(el("div","pos",i+1));
-    const who=el("div"),nm=el("div","name",short(p.riotId)+" ");nm.append(el("small",null,"#"+p.riotId.split("#")[1]));who.append(nm);
+    const who=el("div"),nm=el("div","name",short(p.riotId)+" ");nm.append(el("small",null,"#"+p.riotId.split("#")[1]));
+    if(p.live){const c=CHAMP[p.live.champId],mins=Math.max(0,Math.round((Date.now()-p.live.start)/6e4)),q={420:"",440:"Flex · ",450:"ARAM · "}[p.live.queue]??"Normal · ";
+      const lb=el("span","live");lb.append(el("i"),`In game · ${q}${c?c.name:"?"}${p.live.start?` · ${mins} min`:""}`);
+      const with_=(p.live.mates||[]).filter(x=>x.same).map(x=>short(x.id));if(with_.length)lb.append(` · with ${with_.join(", ")}`);
+      const vs=(p.live.mates||[]).filter(x=>!x.same).map(x=>short(x.id));if(vs.length)lb.append(` · vs ${vs.join(", ")}`);nm.append(lb)}
+    who.append(nm);
     who.append(el("div","rec num",p.games.length?`${p.games.length} games · ${p.w}W ${p.l}L · ${Math.round(p.w/p.games.length*100)}%`:"No games yet"));
     if(p.error)who.append(el("div","err","Couldn't update: "+p.error));r.append(who);
     const rk=el("div","rank"),bd=el("span","badge"),c=TCOL[p.current?.tier]||"#666";bd.append(dot(c),fmt(p.current));
@@ -334,6 +367,7 @@ function renderMatches(){
   const n=p.games.length,sum=k=>p.games.reduce((s,g)=>s+(g[k]||0),0),mins=sum("dur")/60,sm=el("div","msum");
   [["Record",`${p.w}W ${p.l}L`],["Win rate",Math.round(p.w/n*100)+"%"],["KDA",sum("d")?((sum("k")+sum("a"))/sum("d")).toFixed(2):"Perfect"],["CS/min",mins?(sum("cs")/mins).toFixed(1):"–"],["Damage/min",mins?Math.round(sum("dmg")/mins):"–"],["LP",p.gain==null?"–":sgn(p.gain)]]
     .forEach(([k,v])=>{const d=el("div");d.append(el("b","num",v),el("span",null,k));sm.append(d)});list.append(sm);
+  list.append(profileOf(p));
   const best=Math.max(...p.games.map(perf));
   p.games.forEach(g=>{const r=el("div","game "+(g.win?"w":"l"));r.append(el("div","bar"));
     const img=el("img");img.alt=g.champ;img.loading="lazy";img.src=icon(g.champ);r.append(img);
@@ -347,6 +381,34 @@ function renderMatches(){
     [role(g.role),g.cs!=null&&`${g.cs} CS${dm?` (${(g.cs/dm).toFixed(1)})`:""}`,g.dmg!=null&&`${(g.dmg/1000).toFixed(1)}k dmg`,g.kp!=null&&`${g.kp}% KP`,g.vis!=null&&`${g.vis} vision`].filter(Boolean).forEach(t=>st.append(el("span",null,t)));
     m.append(st);r.append(m);
     const res=el("div","res");res.append(el("b",null,g.win?"Victory":"Defeat"),el("span",null,`${dm?Math.round(dm)+" min · ":""}${ago(g.at)}`));r.append(res);list.append(r)});
+}
+
+/* Player profile: champion pool, roles, time of day */
+function wrCol(w){return w>=.55?"var(--win)":w<=.45?"var(--loss)":"var(--gold)"}
+function profileOf(p){
+  const box=el("div","prof"),agg=(key)=>{const m={};p.games.forEach(g=>{const k=key(g);if(k==null)return;const e=m[k]||(m[k]={k,n:0,w:0,K:0,D:0,A:0,cs:0,min:0});
+    e.n++;if(g.win)e.w++;e.K+=g.k;e.D+=g.d;e.A+=g.a;e.cs+=g.cs||0;e.min+=(g.dur||0)/60});return Object.values(m).sort((a,b)=>b.n-a.n||b.w-a.w)};
+  // Champion pool
+  const pc=el("div");pc.append(el("h3",null,"Champion pool"));const pool=el("div","pool");
+  agg(g=>g.champ).slice(0,6).forEach(e=>{const r=el("div","prow"),img=el("img");img.src=icon(e.k);img.alt="";img.loading="lazy";
+    const mid=el("div");mid.append(el("div","nm",e.k),el("div","sm num",`${e.n} game${e.n>1?"s":""} · ${e.D?((e.K+e.A)/e.D).toFixed(2):"Perfect"} KDA · ${e.min?(e.cs/e.min).toFixed(1):"–"} CS/min`));
+    const wr=el("div","wr num",Math.round(e.w/e.n*100)+"%");wr.style.color=wrCol(e.w/e.n);r.append(img,mid,wr);pool.append(r)});
+  pc.append(pool);box.append(pc);
+  // Roles
+  const rc=el("div");rc.append(el("h3",null,"Roles"));const bars=el("div","bars");
+  agg(g=>role(g.role)||null).forEach(e=>{const r=el("div","brow"),tr=el("div","tr"),f=el("span");f.style.width=e.w/e.n*100+"%";f.style.background=wrCol(e.w/e.n);tr.append(f);
+    r.append(el("span",null,e.k),tr,el("span","r num",`${Math.round(e.w/e.n*100)}% · ${e.n}g`));bars.append(r)});
+  rc.append(bars,el("p","note","Bar length is win rate in that role."));box.append(rc);
+  // Time of day (by game start, local time)
+  const tc=el("div","tod");tc.append(el("h3",null,"When they play best"));const grid=el("div","todg");
+  const SL=[["Morning","6h–12h",6,12],["Afternoon","12h–18h",12,18],["Evening","18h–0h",18,24],["Night","0h–6h",0,6]];
+  const bucket=g=>{const h=new Date(g.at-(g.dur||0)*1000).getHours();return SL.findIndex(([,,a,b])=>h>=a&&h<b)};
+  const tb=SL.map(()=>({n:0,w:0}));p.games.forEach(g=>{const i=bucket(g);tb[i].n++;if(g.win)tb[i].w++});
+  const bestI=tb.reduce((bi,x,i)=>x.n>=3&&(bi<0||x.w/x.n>tb[bi].w/tb[bi].n)?i:bi,-1);
+  SL.forEach(([n,r],i)=>{const c=el("div","todc"),x=tb[i];c.append(el("div","t",`${n} · ${r}`));
+    const b=el("b","num",x.n?Math.round(x.w/x.n*100)+"%":"–");if(x.n)b.style.color=wrCol(x.w/x.n);c.append(b,el("span","num",x.n?`${x.w}W ${x.n-x.w}L${i===bestI?" · best":""}`:"no games"));grid.append(c)});
+  tc.append(grid);box.append(tc);
+  return box;
 }
 
 /* Duos & rivalries */
@@ -400,6 +462,17 @@ function renderRecords(){
   g=top(all,x=>x.dmg);if(g?.dmg)item("Most damage in a game",short(g.riotId),`${(g.dmg/1000).toFixed(1)}k on ${g.champ}`);
   g=top(all,x=>x.multi);if(g?.multi>=3)item("Biggest multikill",short(g.riotId),`${["","","Double","Triple","Quadra","Penta"][g.multi]||"Multi"} kill on ${g.champ}`);
   g=top(all,x=>x.dur?x.cs/x.dur:null);if(g?.cs)item("Best farming",short(g.riotId),`${(g.cs/(g.dur/60)).toFixed(1)} CS/min on ${g.champ}`);
+  const sh=document.getElementById("shame");sh.innerHTML="";
+  const shame=(t,who,v)=>{const c=el("div","award");c.append(el("div","t",t),el("div","n",who),el("div","v num",v));sh.append(c)};
+  const L=all.filter(x=>!x.win),mins=x=>Math.round((x.dur||0)/60);
+  g=top(L,x=>x.dur);if(g)shame("Longest game lost",short(g.riotId),`${mins(g)} min on ${g.champ}, all for nothing`);
+  g=top(L,x=>x.dur?-x.dur:null);if(g)shame("Fastest loss",short(g.riotId),`Over in ${mins(g)} min on ${g.champ}`);
+  g=top(all.filter(x=>x.k===0),x=>x.d);if(g)shame("Most deaths without a kill",short(g.riotId),`0/${g.d}/${g.a} on ${g.champ}`);
+  g=top(all,x=>x.kp!=null?-x.kp:null);if(g)shame("Where were you?",short(g.riotId),`${g.kp}% kill participation on ${g.champ}`);
+  g=top(all.filter(x=>x.role&&x.role!=="UTILITY"&&x.dur),x=>-x.cs/x.dur);if(g)shame("Allergic to minions",short(g.riotId),`${(g.cs/(g.dur/60)).toFixed(1)} CS/min on ${g.champ}`);
+  g=top(all.filter(x=>x.vis!=null&&x.dur),x=>-x.vis/x.dur);if(g)shame("Playing blind",short(g.riotId),`${g.vis} vision score in ${mins(g)} min`);
+  r=top(S,x=>{const t=x.p.games.filter(y=>dayKey(y.at)===dayKey(Date.now()));return t.length>=3?t.length-2*t.filter(y=>y.win).length:null});
+  if(r){const t=r.p.games.filter(y=>dayKey(y.at)===dayKey(Date.now())),w=t.filter(y=>y.win).length;if(t.length-w>w)shame("Should have stopped",short(r.p.riotId),`${w}W ${t.length-w}L today and still queuing`)}
   S.forEach(({p,s})=>{const c=el("div","scard"),h=el("div","shead");h.append(dot(p.color),el("b",null,short(p.riotId)),el("span","streak "+(s.cur>0?"up":s.cur<0?"down":""),s.cur>0?`${s.cur}W streak`:s.cur<0?`${-s.cur}L streak`:"–"));c.append(h);
     const dl=el("dl"),add=(k,v)=>dl.append(el("dt",null,k),el("dd","num",v));
     add("Longest win streak",s.best||"–");add("Longest loss streak",s.worst||"–");
