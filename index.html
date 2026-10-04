@@ -6,15 +6,19 @@
 <title>Solo/Duo Climb Race</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@500&display=swap">
 <style>
-:root{--bg:#f3f4f7;--panel:#fff;--fg:#141824;--muted:#5f6678;--line:#dde0e8;--accent:#b8861b;--up:#1f8a55;--down:#c2413a;
+:root{--bg:#f3f4f7;--panel:#fff;--fg:#141824;--muted:#5f6678;--line:#dde0e8;--accent:#b8861b;--up:#1f8a55;--down:#c2413a;--winbg:#e4f3eb;--lossbg:#f8e5e3;
 --display:"Rajdhani",system-ui,sans-serif;--body:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
-@media (prefers-color-scheme:dark){:root{--bg:#0e1118;--panel:#161a24;--fg:#e8eaf0;--muted:#99a0b2;--line:#272c3a;--accent:#d9a83a;--up:#4cc58a;--down:#ef6a62;color-scheme:dark}}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1118;--panel:#161a24;--fg:#e8eaf0;--muted:#99a0b2;--line:#272c3a;--accent:#d9a83a;--up:#4cc58a;--down:#ef6a62;--winbg:#14261f;--lossbg:#2a1719;color-scheme:dark}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 var(--body);padding:0 16px}
-main{max-width:820px;margin:0 auto;padding-block:28px 48px;display:grid;gap:20px}
+main{max-width:980px;margin:0 auto;padding-block:28px 48px;display:grid;gap:18px}
 h1{font-family:var(--display);font-size:2.4rem;margin:0;letter-spacing:.02em}
 .sub{color:var(--muted);margin:2px 0 0}
-.board{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.tabs,.chips{display:flex;gap:6px;flex-wrap:wrap}
+.tabs button,.chips button{font:500 .9rem var(--body);padding:8px 14px;border:1px solid var(--line);border-radius:6px;background:var(--panel);color:var(--muted);cursor:pointer}
+.tabs button[aria-selected=true],.chips button[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
 .row{display:grid;grid-template-columns:2.2rem 1fr auto;gap:12px;align-items:center;padding:14px 16px;border-top:1px solid var(--line)}
 .row:first-child{border-top:0}
 .pos{font-family:var(--display);font-size:1.6rem;color:var(--muted);text-align:center}
@@ -22,54 +26,154 @@ h1{font-family:var(--display);font-size:2.4rem;margin:0;letter-spacing:.02em}
 .who{min-width:0}.who b{display:block;font-size:1.05rem;overflow-wrap:anywhere}
 .meta{color:var(--muted);font-size:.85rem}
 .gain{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;font-size:1.1rem;white-space:nowrap}
-.gain small{display:block;font-size:.75rem;color:var(--muted)}
-.up{color:var(--up)}.down{color:var(--down)}
-.err{color:var(--down)}
+.up{color:var(--up)}.down{color:var(--down)}.err{color:var(--down)}
 .empty{padding:24px 16px;color:var(--muted)}
+.chartbox{padding:16px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;margin-bottom:8px;font-size:.9rem}
+.legend span{display:flex;align-items:center;gap:6px}.legend i{width:14px;height:3px;border-radius:2px;display:inline-block}
+.chartwrap{position:relative;overflow-x:auto}
+svg text{fill:var(--muted);font:12px var(--body)}
+.tip{position:absolute;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:.85rem;box-shadow:0 4px 16px rgba(0,0,0,.2);white-space:nowrap}
+.tip div{display:flex;gap:8px;align-items:center}.tip i{width:10px;height:3px;display:inline-block}
+.note{color:var(--muted);font-size:.8rem;margin:8px 0 0}
+.summary{display:flex;flex-wrap:wrap;gap:8px 24px;padding:14px 16px;border-bottom:1px solid var(--line);font-size:.9rem}
+.summary b{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.game{display:grid;grid-template-columns:4px 44px 1fr auto;gap:12px;align-items:center;padding:10px 16px 10px 0;border-top:1px solid var(--line)}
+.game:first-of-type{border-top:0}
+.bar{align-self:stretch}.game.w .bar{background:var(--up)}.game.l .bar{background:var(--down)}
+.game img{width:44px;height:44px;border-radius:6px;background:var(--line)}
+.game .main{min-width:0}.game .main b{font-size:.95rem}
+.kda{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:.95rem}
+.stats{display:flex;flex-wrap:wrap;gap:4px 14px;color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums}
+.res{text-align:right;font-size:.8rem;color:var(--muted);white-space:nowrap}
+.res b{display:block;font-size:.9rem}.game.w .res b{color:var(--up)}.game.l .res b{color:var(--down)}
 footer{color:var(--muted);font-size:.8rem}
 </style>
 </head>
 <body>
 <main>
 <header><h1>Solo/Duo Climb Race</h1><p class="sub" id="sub">Loading standings…</p></header>
-<div class="board" id="board"><div class="empty">Loading…</div></div>
-<footer>Ranked by LP gained since the race start. Data from the Riot Games API, refreshed every 30 minutes. This page reloads itself every 5 minutes.<br>Climb Race Tracker isn't endorsed by Riot Games.</footer>
+<nav class="tabs" role="tablist">
+  <button role="tab" data-tab="standings" aria-selected="true">Standings</button>
+  <button role="tab" data-tab="graph" aria-selected="false">LP graph</button>
+  <button role="tab" data-tab="matches" aria-selected="false">Match history</button>
+</nav>
+<section id="standings" class="panel"><div class="empty">Loading…</div></section>
+<section id="graph" class="panel chartbox" hidden>
+  <div class="legend" id="legend"></div>
+  <div class="chartwrap" id="chartwrap"></div>
+  <p class="note">A point is recorded each time a player's LP changes (checked every 30 minutes). Riot doesn't provide past LP, so the line goes straight from the Oct 1 starting rank to the first recorded update on Oct 4.</p>
+</section>
+<section id="matches" hidden>
+  <div class="chips" id="pchips" style="margin-bottom:12px"></div>
+  <div class="panel" id="mlist"></div>
+</section>
+<footer>Ranked by LP gained since the race start. Data from the Riot Games API, refreshed every 30 minutes; this page reloads itself every 5 minutes.<br>Climb Race Tracker isn't endorsed by Riot Games.</footer>
 </main>
 <script>
 const TIERS=["IRON","BRONZE","SILVER","GOLD","PLATINUM","EMERALD","DIAMOND","MASTER","GRANDMASTER","CHALLENGER"];
-const DIV={IV:0,III:1,II:2,I:3};
+const DIV={IV:0,III:1,II:2,I:3},ROMAN=["IV","III","II","I"];
+const COLORS=["#3b82f6","#e8622c","#16a37a","#d4a017","#e0508a","#8b5cf6","#0ea5e9","#84cc16"];
 const cap=s=>s.charAt(0)+s.slice(1).toLowerCase();
-function score(r){if(!r)return null;const i=TIERS.indexOf(r.tier);return i>=7?2800+r.lp:i*400+(DIV[r.division]??0)*100+r.lp}
-function fmt(r){if(!r)return"Unranked";return TIERS.indexOf(r.tier)>=7?`${cap(r.tier)} ${r.lp} LP`:`${cap(r.tier)} ${r.division} · ${r.lp} LP`}
-function ago(t){const m=Math.round((Date.now()-t)/60000);return m<60?`${m} min ago`:m<1440?`${Math.round(m/60)} h ago`:`${Math.round(m/1440)} d ago`}
+const score=r=>{if(!r)return null;const i=TIERS.indexOf(r.tier);return i>=7?2800+r.lp:i*400+(DIV[r.division]??0)*100+r.lp};
+const fmt=r=>!r?"Unranked":TIERS.indexOf(r.tier)>=7?`${cap(r.tier)} ${r.lp} LP`:`${cap(r.tier)} ${r.division} · ${r.lp} LP`;
+const label=s=>{if(s>=2800)return"Master";const t=Math.floor(s/400),d=Math.floor((s%400)/100);return`${cap(TIERS[t])} ${ROMAN[d]}`};
+const ago=t=>{const m=Math.round((Date.now()-t)/60000);return m<60?`${m} min ago`:m<1440?`${Math.round(m/60)} h ago`:`${Math.round(m/1440)} d ago`};
+const short=id=>id.split("#")[0];
+const el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e};
+
+let DATA=null,players=[],ddv="15.1.1",selected=null;
+fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(r=>r.json()).then(v=>{ddv=v[0];if(DATA)renderMatches()}).catch(()=>{});
+
+// Tabs, remembered via #hash
+function show(tab){document.querySelectorAll("[role=tab]").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
+  ["standings","graph","matches"].forEach(id=>document.getElementById(id).hidden=id!==tab);
+  history.replaceState(null,"","#"+tab);if(tab==="graph")renderGraph()}
+document.querySelectorAll("[role=tab]").forEach(b=>b.onclick=()=>show(b.dataset.tab));
+
 async function load(){
-  try{
-    const d=await (await fetch("data.json?t="+Date.now())).json();
-    const start=new Date(d.raceStart).toLocaleDateString("en-GB",{day:"numeric",month:"long"});
-    document.getElementById("sub").textContent=`Race started ${start} · last update ${ago(new Date(d.updatedAt))}`;
-    const list=Object.values(d.players).map(p=>{
-      const g=Object.values(p.matches||{});const w=g.filter(x=>x.win).length;
-      const champs={};g.forEach(x=>champs[x.champ]=(champs[x.champ]||0)+1);
-      const top=Object.entries(champs).sort((a,b)=>b[1]-a[1])[0];
-      const s0=score(p.start),s1=score(p.current);
-      return{...p,games:g.length,w,l:g.length-w,top,last:Math.max(0,...g.map(x=>x.at)),gain:s0!=null&&s1!=null?s1-s0:null};
-    }).sort((a,b)=>(b.gain??-1e9)-(a.gain??-1e9));
-    const b=document.getElementById("board");b.innerHTML="";
-    if(!list.length){b.innerHTML='<div class="empty">No players yet. Add Riot IDs to players.json.</div>';return}
-    list.forEach((p,i)=>{
-      const r=document.createElement("div");r.className="row";
-      const cls=p.gain>0?"up":p.gain<0?"down":"";
-      r.innerHTML=`<div class="pos">${i+1}</div><div class="who"><b></b><div class="meta m1"></div><div class="meta m2"></div></div><div class="gain ${cls}"></div>`;
-      r.querySelector("b").textContent=p.riotId;
-      r.querySelector(".m1").textContent=`${fmt(p.start)} → ${fmt(p.current)}`;
-      const m2=r.querySelector(".m2");
-      if(p.error){m2.textContent="Couldn't update: "+p.error;m2.classList.add("err")}
-      else m2.textContent=p.games?`${p.games} games · ${p.w}W ${p.l}L (${Math.round(p.w/p.games*100)}%)${p.top?` · most played ${p.top[0]}`:""} · last game ${ago(p.last)}`:"No ranked games since the start";
-      const gEl=r.querySelector(".gain");gEl.textContent=p.gain==null?"–":`${p.gain>0?"+":""}${p.gain} LP`;
-      b.appendChild(r);
-    });
-  }catch(e){document.getElementById("sub").textContent="Standings not available yet. The first update runs within 30 minutes of setup."}
+  try{DATA=await (await fetch("data.json?t="+Date.now())).json()}
+  catch{document.getElementById("sub").textContent="Standings not available yet.";return}
+  const start=new Date(DATA.raceStart).toLocaleDateString("en-GB",{day:"numeric",month:"long"});
+  document.getElementById("sub").textContent=`Race started ${start} · last update ${ago(new Date(DATA.updatedAt))}`;
+  players=Object.values(DATA.players).map((p,i)=>{
+    const g=Object.entries(p.matches||{}).map(([id,m])=>({id,...m})).sort((a,b)=>b.at-a.at);
+    const w=g.filter(x=>x.win).length,s0=score(p.start),s1=score(p.current);
+    return{...p,color:COLORS[i%COLORS.length],games:g,w,l:g.length-w,gain:s0!=null&&s1!=null?s1-s0:null};
+  });
+  renderStandings();renderGraph();renderMatches();
 }
+
+function renderStandings(){
+  const b=document.getElementById("standings");b.innerHTML="";
+  [...players].sort((a,c)=>(c.gain??-1e9)-(a.gain??-1e9)).forEach((p,i)=>{
+    const r=el("div","row");r.append(el("div","pos",i+1));
+    const who=el("div","who");who.append(el("b",null,p.riotId),el("div","meta",`${fmt(p.start)} → ${fmt(p.current)}`));
+    const champs={};p.games.forEach(x=>champs[x.champ]=(champs[x.champ]||0)+1);
+    const top=Object.entries(champs).sort((a,c)=>c[1]-a[1])[0];
+    const m2=el("div","meta",p.error?"Couldn't update: "+p.error:p.games.length?`${p.games.length} games · ${p.w}W ${p.l}L (${Math.round(p.w/p.games.length*100)}%)${top?` · most played ${top[0]}`:""} · last game ${ago(p.games[0].at)}`:"No ranked games since the start");
+    if(p.error)m2.classList.add("err");who.append(m2);
+    r.append(who,el("div","gain "+(p.gain>0?"up":p.gain<0?"down":""),p.gain==null?"–":`${p.gain>0?"+":""}${p.gain} LP`));
+    r.style.cursor="pointer";r.onclick=()=>{selected=p.riotId;renderMatches();show("matches")};
+    b.append(r);
+  });
+}
+
+// Step chart in SVG
+function renderGraph(){
+  const wrap=document.getElementById("chartwrap");if(!players.length||document.getElementById("graph").hidden)return;
+  const leg=document.getElementById("legend");leg.innerHTML="";
+  players.forEach(p=>{const s=el("span");const i=el("i");i.style.background=p.color;s.append(i,short(p.riotId));leg.append(s)});
+  const series=players.map(p=>({p,pts:(p.history||[]).map(h=>({t:h.t,s:score(h),r:h}))})).filter(x=>x.pts.length);
+  const now=Date.now(),t0=Date.parse(DATA.raceStart);
+  const all=series.flatMap(x=>x.pts.map(q=>q.s));
+  const lo=Math.floor((Math.min(...all)-20)/100)*100,hi=Math.ceil((Math.max(...all)+20)/100)*100;
+  const W=Math.max(wrap.clientWidth,560),H=360,L=86,R=14,T=10,B=28;
+  const x=t=>L+(t-t0)/(now-t0)*(W-L-R),y=s=>T+(hi-s)/(hi-lo)*(H-T-B);
+  let svg=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="LP over time per player">`;
+  for(let s=lo;s<=hi;s+=100){svg+=`<line x1="${L}" x2="${W-R}" y1="${y(s)}" y2="${y(s)}" stroke="var(--line)"/><text x="${L-8}" y="${y(s)+4}" text-anchor="end">${label(s)}</text>`}
+  for(let d=new Date(t0);d<=now;d.setDate(d.getDate()+1)){const dd=new Date(d);dd.setHours(0,0,0,0);if(dd<t0)continue;const X=x(+dd);
+    svg+=`<line x1="${X}" x2="${X}" y1="${T}" y2="${H-B}" stroke="var(--line)" stroke-dasharray="2 4"/><text x="${X}" y="${H-8}" text-anchor="middle">${dd.toLocaleDateString("en-GB",{day:"numeric",month:"short"})}</text>`}
+  series.forEach(({p,pts})=>{let d=`M${x(pts[0].t)},${y(pts[0].s)}`;
+    pts.slice(1).forEach(q=>d+=` H${x(q.t)} V${y(q.s)}`);d+=` H${x(now)}`;
+    svg+=`<path d="${d}" fill="none" stroke="${p.color}" stroke-width="2.2" stroke-linejoin="round"/>`;
+    const e=pts[pts.length-1];svg+=`<circle cx="${x(now)}" cy="${y(e.s)}" r="3.5" fill="${p.color}"/>`});
+  svg+=`<line id="cross" x1="0" x2="0" y1="${T}" y2="${H-B}" stroke="var(--muted)" opacity="0"/></svg>`;
+  wrap.innerHTML=svg;const tip=el("div","tip");tip.hidden=true;wrap.append(tip);
+  const svgEl=wrap.querySelector("svg"),cross=svgEl.querySelector("#cross");
+  svgEl.addEventListener("mousemove",ev=>{const bx=svgEl.getBoundingClientRect(),mx=ev.clientX-bx.left;if(mx<L){tip.hidden=true;cross.setAttribute("opacity",0);return}
+    const t=t0+(mx-L)/(W-L-R)*(now-t0);cross.setAttribute("x1",mx);cross.setAttribute("x2",mx);cross.setAttribute("opacity",.5);
+    tip.innerHTML="";tip.append(el("div","meta",new Date(t).toLocaleString("en-GB",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})));
+    series.map(({p,pts})=>{const q=[...pts].reverse().find(q=>q.t<=t);return q&&{p,q}}).filter(Boolean).sort((a,b)=>b.q.s-a.q.s)
+      .forEach(({p,q})=>{const r=el("div");const i=el("i");i.style.background=p.color;r.append(i,el("b",null,fmt(q.r)),el("span","meta",short(p.riotId)));tip.append(r)});
+    tip.hidden=false;tip.style.left=Math.min(mx+14,W-tip.offsetWidth-4)+"px";tip.style.top="12px"});
+  svgEl.addEventListener("mouseleave",()=>{tip.hidden=true;cross.setAttribute("opacity",0)});
+}
+
+function renderMatches(){
+  if(!players.length)return;if(!players.find(p=>p.riotId===selected))selected=players[0].riotId;
+  const chips=document.getElementById("pchips");chips.innerHTML="";
+  players.forEach(p=>{const b=el("button",null,short(p.riotId));b.setAttribute("aria-pressed",p.riotId===selected);b.onclick=()=>{selected=p.riotId;renderMatches()};chips.append(b)});
+  const p=players.find(p=>p.riotId===selected),list=document.getElementById("mlist");list.innerHTML="";
+  if(!p.games.length){list.append(el("div","empty","No ranked Solo/Duo games since the race started."));return}
+  const n=p.games.length,sum=k=>p.games.reduce((s,g)=>s+(g[k]||0),0),mins=sum("dur")/60;
+  const kda=sum("d")?((sum("k")+sum("a"))/sum("d")).toFixed(2):"Perfect";
+  const sm=el("div","summary");
+  [["Record",`${p.w}W ${p.l}L · ${Math.round(p.w/n*100)}%`],["KDA",`${(sum("k")/n).toFixed(1)} / ${(sum("d")/n).toFixed(1)} / ${(sum("a")/n).toFixed(1)} (${kda})`],
+   ["CS/min",mins?(sum("cs")/mins).toFixed(1):"–"],["Damage/min",mins?Math.round(sum("dmg")/mins):"–"],["LP",p.gain==null?"–":`${p.gain>0?"+":""}${p.gain}`]]
+   .forEach(([k,v])=>{const s=el("span",null,k+" ");s.append(el("b",null,v));sm.append(s)});
+  list.append(sm);
+  p.games.forEach(g=>{const r=el("div","game "+(g.win?"w":"l"));r.append(el("div","bar"));
+    const img=el("img");img.alt=g.champ;img.loading="lazy";img.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/champion/${g.champ}.png`;r.append(img);
+    const m=el("div","main"),top=el("div");top.append(el("b",null,g.champ+" "),el("span","kda",`${g.k}/${g.d}/${g.a}`));m.append(top);
+    const st=el("div","stats");const dm=g.dur?g.dur/60:0;
+    [g.role&&cap(g.role==="UTILITY"?"SUPPORT":g.role),g.cs!=null&&`${g.cs} CS${dm?` (${(g.cs/dm).toFixed(1)})`:""}`,g.dmg!=null&&`${(g.dmg/1000).toFixed(1)}k dmg`,g.kp!=null&&`${g.kp}% KP`,g.vis!=null&&`${g.vis} vision`].filter(Boolean).forEach(t=>st.append(el("span",null,t)));
+    m.append(st);r.append(m);
+    const res=el("div","res");res.append(el("b",null,g.win?"Win":"Loss"),el("span",null,`${g.dur?Math.round(g.dur/60)+" min · ":""}${ago(g.at)}`));r.append(res);
+    list.append(r)});
+}
+window.addEventListener("resize",()=>renderGraph());
+const h=location.hash.slice(1);if(["graph","matches"].includes(h))show(h);
 load();setInterval(load,5*60*1000);
 </script>
 </body>

@@ -25,6 +25,8 @@ async function riot(host, path) {
   throw new Error(`Rate limited on ${path}`);
 }
 
+const rankOf = r => ({ tier: r.tier, division: r.division, lp: r.lp });
+
 const out = { updatedAt: new Date().toISOString(), raceStart: cfg.raceStart, players: {} };
 
 for (const p of cfg.players) {
@@ -47,21 +49,33 @@ for (const p of cfg.players) {
       const ids = await riot(cfg.region,
         `/lol/match/v5/matches/by-puuid/${puuid}/ids?queue=420&startTime=${startSec}&start=${start}&count=100`) || [];
       for (const id of ids) {
-        if (matches[id]) continue;
+        if (matches[id]?.dur) continue; // already stored with full detail
         const m = await riot(cfg.region, `/lol/match/v5/matches/${id}`);
         const me = m?.info?.participants?.find(x => x.puuid === puuid);
         if (!me || m.info.gameDuration < 300) continue; // skip remakes
-        matches[id] = { win: me.win, champ: me.championName, k: me.kills, d: me.deaths, a: me.assists,
-                        at: m.info.gameEndTimestamp || m.info.gameStartTimestamp };
+        const teamKills = m.info.participants.filter(x => x.teamId === me.teamId).reduce((s, x) => s + x.kills, 0);
+        matches[id] = {
+          win: me.win, champ: me.championName, role: me.teamPosition || "",
+          k: me.kills, d: me.deaths, a: me.assists,
+          cs: me.totalMinionsKilled + me.neutralMinionsKilled,
+          dmg: me.totalDamageDealtToChampions, vis: me.visionScore, gold: me.goldEarned,
+          kp: teamKills ? Math.round((me.kills + me.assists) / teamKills * 100) : 0,
+          dur: m.info.gameDuration, at: m.info.gameEndTimestamp || m.info.gameStartTimestamp,
+        };
       }
       if (ids.length < 100) break;
     }
 
-    out.players[p.riotId] = {
-      riotId: p.riotId, puuid,
-      start: p.start || prev.start || current, // baseline: given, else first seen
-      current, matches,
-    };
+    // LP history for the graph: Riot only gives current LP, so record a point whenever it changes.
+    const start = p.start || prev.start || current; // baseline: given, else first seen
+    const history = prev.history?.length ? [...prev.history] : (start ? [{ t: Date.parse(cfg.raceStart), ...rankOf(start) }] : []);
+    if (current) {
+      const last = history[history.length - 1];
+      if (!last || last.tier !== current.tier || last.division !== current.division || last.lp !== current.lp)
+        history.push({ t: Date.now(), ...rankOf(current) });
+    }
+
+    out.players[p.riotId] = { riotId: p.riotId, puuid, start, current, history, matches };
     console.log(`OK ${p.riotId}: ${current ? `${current.tier} ${current.division} ${current.lp}LP` : "unranked"}, ${Object.keys(matches).length} games`);
   } catch (e) {
     console.error(`FAIL ${p.riotId}: ${e.message}`);
