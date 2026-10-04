@@ -22,6 +22,13 @@ main{max-width:1040px;margin:0 auto;padding-block:32px 56px;display:grid;gap:22p
 h1{font-family:var(--display);font-size:clamp(1.9rem,5vw,2.8rem);margin:0;letter-spacing:.04em;color:var(--gold2);text-wrap:balance}
 .top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:8px 20px;border-bottom:1px solid var(--line);padding-bottom:16px}
 .daypill{font:600 .8rem var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border:1px solid #c8aa6e55;border-radius:99px;padding:4px 12px}
+.topr{display:flex;align-items:center;gap:10px}
+.refresh{display:inline-flex;align-items:center;gap:7px;font:600 .85rem var(--body);color:var(--gold2);background:var(--panel);border:1px solid #c8aa6e66;border-radius:99px;padding:6px 14px;cursor:pointer}
+.refresh:hover{background:var(--panel2);border-color:var(--gold)}
+.refresh[disabled]{opacity:.7;cursor:default}
+.refresh.spin svg{animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.refresh.spin svg{animation:none}}
 .sub{color:var(--muted);font-size:.9rem;margin-top:4px}
 .eyebrow{font:600 .75rem var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
 h2{font-family:var(--display);font-size:1.15rem;letter-spacing:.06em;margin:0 0 12px}
@@ -123,7 +130,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
 <main>
 <header class="top">
   <div><div class="eyebrow">League of Legends · Ranked Solo/Duo</div><h1>Climb Race</h1><div class="sub num" id="sub">Loading…</div></div>
-  <span class="daypill num" id="daypill">Day –</span>
+  <div class="topr"><span class="daypill num" id="daypill">Day –</span><button class="refresh" id="refresh" type="button"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Refresh</span></button></div>
 </header>
 
 <section aria-label="Spotlight">
@@ -146,7 +153,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
   <div class="chips" id="gmode"><button data-m="time" aria-pressed="true">By date</button><button data-m="games" aria-pressed="false">By games played</button></div>
   <div class="legend" id="legend"></div>
   <div class="chartwrap" id="chartwrap"></div>
-  <p class="note">Solid lines are real LP, checked every 30 minutes since Oct 4. Dashed lines are rebuilt from match results (about ±20 LP per game, adjusted to end on the real LP) because Riot doesn't keep past LP. Values marked ≈ are estimates.</p>
+  <p class="note">Solid lines are real LP, checked every 10 minutes since Oct 4. Dashed lines are rebuilt from match results (about ±20 LP per game, adjusted to end on the real LP) because Riot doesn't keep past LP. Values marked ≈ are estimates.</p>
 </section>
 
 <section id="matches" hidden>
@@ -170,7 +177,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
   <div class="scards" id="scards"></div>
 </section>
 
-<footer>Ranked by LP gained since the race start. Data from the Riot Games API, refreshed every 30 minutes; this page reloads its data every 5 minutes. Climb Race isn't endorsed by Riot Games.</footer>
+<footer>Ranked by LP gained since the race start. Data from the Riot Games API, refreshed every 10 minutes; this page reloads its data every 2 minutes. Climb Race isn't endorsed by Riot Games.</footer>
 </main>
 
 <script>
@@ -218,7 +225,7 @@ async function load(){
 function renderAll(){
   const t0=Date.parse(DATA.raceStart),day=Math.round((dayKey(Date.now())-dayKey(t0))/864e5)+1;
   document.getElementById("daypill").textContent=`Day ${day}`;
-  document.getElementById("sub").textContent=`Since ${new Date(t0).toLocaleDateString("en-GB",{day:"numeric",month:"long"})} · ${players.reduce((s,p)=>s+p.games.length,0)} games played · updated ${ago(Date.parse(DATA.updatedAt))}`;
+  document.getElementById("sub").textContent=`Since ${new Date(t0).toLocaleDateString("en-GB",{day:"numeric",month:"long"})} · ${players.reduce((s,p)=>s+p.games.length,0)} games played · updated ${ago(Date.parse(DATA.updatedAt))} · next update in about ${Math.max(1,10-Math.round((Date.now()-Date.parse(DATA.updatedAt))/6e4)%10)} min`;
   for(const f of [renderSpotlight,renderStandings,renderGraph,renderMatches,renderH2H,renderRecords]){try{f()}catch(e){console.error(f.name,e)}}
 }
 
@@ -402,7 +409,12 @@ function renderRecords(){
 }
 
 const h=location.hash.slice(1);if(TABS.includes(h))show(h);
-load();setInterval(load,5*60*1000);
+const rb=document.getElementById("refresh"),rl=rb.querySelector("span");
+rb.onclick=async()=>{rb.disabled=true;rb.classList.add("spin");rl.textContent="Refreshing…";const before=DATA?.updatedAt;
+  await load();await new Promise(r=>setTimeout(r,400));rb.classList.remove("spin");
+  rl.textContent=DATA?.updatedAt!==before?"New data loaded":"Already up to date";
+  setTimeout(()=>{rl.textContent="Refresh";rb.disabled=false},2500)};
+load();setInterval(load,2*60*1000);
 </script>
 </body>
 </html>
