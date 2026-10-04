@@ -1,0 +1,9 @@
+{
+  "platform": "euw1",
+  "region": "europe",
+  "raceStart": "2026-10-01T00:00:00+02:00",
+  "players": [
+    { "riotId": "PlayerOne#EUW", "start": { "tier": "GOLD", "division": "II", "lp": 40 } },
+    { "riotId": "PlayerTwo#EUW" }
+  ]
+}

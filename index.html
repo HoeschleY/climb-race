@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Solo/Duo Climb Race</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{--bg:#f3f4f7;--panel:#fff;--fg:#141824;--muted:#5f6678;--line:#dde0e8;--accent:#b8861b;--up:#1f8a55;--down:#c2413a;
+--display:"Rajdhani",system-ui,sans-serif;--body:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+@media (prefers-color-scheme:dark){:root{--bg:#0e1118;--panel:#161a24;--fg:#e8eaf0;--muted:#99a0b2;--line:#272c3a;--accent:#d9a83a;--up:#4cc58a;--down:#ef6a62;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 var(--body);padding:0 16px}
+main{max-width:820px;margin:0 auto;padding-block:28px 48px;display:grid;gap:20px}
+h1{font-family:var(--display);font-size:2.4rem;margin:0;letter-spacing:.02em}
+.sub{color:var(--muted);margin:2px 0 0}
+.board{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.row{display:grid;grid-template-columns:2.2rem 1fr auto;gap:12px;align-items:center;padding:14px 16px;border-top:1px solid var(--line)}
+.row:first-child{border-top:0}
+.pos{font-family:var(--display);font-size:1.6rem;color:var(--muted);text-align:center}
+.row:first-child .pos{color:var(--accent)}
+.who{min-width:0}.who b{display:block;font-size:1.05rem;overflow-wrap:anywhere}
+.meta{color:var(--muted);font-size:.85rem}
+.gain{font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right;font-size:1.1rem;white-space:nowrap}
+.gain small{display:block;font-size:.75rem;color:var(--muted)}
+.up{color:var(--up)}.down{color:var(--down)}
+.err{color:var(--down)}
+.empty{padding:24px 16px;color:var(--muted)}
+footer{color:var(--muted);font-size:.8rem}
+</style>
+</head>
+<body>
+<main>
+<header><h1>Solo/Duo Climb Race</h1><p class="sub" id="sub">Loading standings…</p></header>
+<div class="board" id="board"><div class="empty">Loading…</div></div>
+<footer>Ranked by LP gained since the race start. Data from the Riot Games API, refreshed every 30 minutes. This page reloads itself every 5 minutes.<br>Climb Race Tracker isn't endorsed by Riot Games.</footer>
+</main>
+<script>
+const TIERS=["IRON","BRONZE","SILVER","GOLD","PLATINUM","EMERALD","DIAMOND","MASTER","GRANDMASTER","CHALLENGER"];
+const DIV={IV:0,III:1,II:2,I:3};
+const cap=s=>s.charAt(0)+s.slice(1).toLowerCase();
+function score(r){if(!r)return null;const i=TIERS.indexOf(r.tier);return i>=7?2800+r.lp:i*400+(DIV[r.division]??0)*100+r.lp}
+function fmt(r){if(!r)return"Unranked";return TIERS.indexOf(r.tier)>=7?`${cap(r.tier)} ${r.lp} LP`:`${cap(r.tier)} ${r.division} · ${r.lp} LP`}
+function ago(t){const m=Math.round((Date.now()-t)/60000);return m<60?`${m} min ago`:m<1440?`${Math.round(m/60)} h ago`:`${Math.round(m/1440)} d ago`}
+async function load(){
+  try{
+    const d=await (await fetch("data.json?t="+Date.now())).json();
+    const start=new Date(d.raceStart).toLocaleDateString("en-GB",{day:"numeric",month:"long"});
+    document.getElementById("sub").textContent=`Race started ${start} · last update ${ago(new Date(d.updatedAt))}`;
+    const list=Object.values(d.players).map(p=>{
+      const g=Object.values(p.matches||{});const w=g.filter(x=>x.win).length;
+      const champs={};g.forEach(x=>champs[x.champ]=(champs[x.champ]||0)+1);
+      const top=Object.entries(champs).sort((a,b)=>b[1]-a[1])[0];
+      const s0=score(p.start),s1=score(p.current);
+      return{...p,games:g.length,w,l:g.length-w,top,last:Math.max(0,...g.map(x=>x.at)),gain:s0!=null&&s1!=null?s1-s0:null};
+    }).sort((a,b)=>(b.gain??-1e9)-(a.gain??-1e9));
+    const b=document.getElementById("board");b.innerHTML="";
+    if(!list.length){b.innerHTML='<div class="empty">No players yet. Add Riot IDs to players.json.</div>';return}
+    list.forEach((p,i)=>{
+      const r=document.createElement("div");r.className="row";
+      const cls=p.gain>0?"up":p.gain<0?"down":"";
+      r.innerHTML=`<div class="pos">${i+1}</div><div class="who"><b></b><div class="meta m1"></div><div class="meta m2"></div></div><div class="gain ${cls}"></div>`;
+      r.querySelector("b").textContent=p.riotId;
+      r.querySelector(".m1").textContent=`${fmt(p.start)} → ${fmt(p.current)}`;
+      const m2=r.querySelector(".m2");
+      if(p.error){m2.textContent="Couldn't update: "+p.error;m2.classList.add("err")}
+      else m2.textContent=p.games?`${p.games} games · ${p.w}W ${p.l}L (${Math.round(p.w/p.games*100)}%)${p.top?` · most played ${p.top[0]}`:""} · last game ${ago(p.last)}`:"No ranked games since the start";
+      const gEl=r.querySelector(".gain");gEl.textContent=p.gain==null?"–":`${p.gain>0?"+":""}${p.gain} LP`;
+      b.appendChild(r);
+    });
+  }catch(e){document.getElementById("sub").textContent="Standings not available yet. The first update runs within 30 minutes of setup."}
+}
+load();setInterval(load,5*60*1000);
+</script>
+</body>
+</html>
