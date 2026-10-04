@@ -128,6 +128,12 @@ for (const p of cfg.players) {
         mates: g.participants.filter(x => x.puuid !== puuid && tracked[x.puuid]).map(x => ({ id: tracked[x.puuid], same: x.teamId === me.teamId })) };
     } catch (e) { liveErr = e.message; console.error(`live check failed for ${p.riotId}: ${e.message}`); }
 
+    // Ghost games: Riot's live service sometimes keeps reporting a finished game.
+    if (live) {
+      const over = Object.values(matches).some(m => m.at - (m.dur || 0) * 1000 >= live.start - 3 * 60e3);
+      if (over || Date.now() - live.start > 70 * 60e3) live = null;
+    }
+
     out.players[p.riotId] = { riotId: p.riotId, puuid, start, current, history, matches, live, liveErr, icon, level, checkedAt: Date.now() };
     console.log(`OK ${p.riotId}: ${current ? `${current.tier} ${current.division} ${current.lp}LP` : "unranked"}, ${Object.keys(matches).length} games`);
   } catch (e) {

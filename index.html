@@ -400,7 +400,8 @@ const PICON=id=>id!=null?`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/pro
 function emblem(tier,size){const i=el("img","emb");i.src=EMB(tier);i.alt=cap(tier||"Unranked");i.width=i.height=size;i.onerror=()=>{i.replaceWith(dot(TCOL[tier]||"#666"))};return i}
 function avatar(p,size){const w=el("div","ava");w.style.width=w.style.height=size+"px";w.style.borderColor=TCOL[p.current?.tier]||"var(--line)";
   if(p.icon!=null){const i=el("img");i.src=PICON(p.icon);i.alt="";i.onerror=()=>i.remove();w.append(i)}else w.append(el("span",null,short(p.riotId)[0]));return w}
-function liveBadge(p){if(!p.live||Date.now()-Date.parse(DATA.updatedAt)>15*6e4)return null;const c=CHAMP[p.live.champId],mins=Math.max(0,Math.round((Date.now()-p.live.start)/6e4)),q={420:"",440:"Flex · ",450:"ARAM · "}[p.live.queue]??"Normal · ";
+function liveBadge(p){if(!p.live||Date.now()-Date.parse(DATA.updatedAt)>15*6e4)return null;
+  if(Date.now()-p.live.start>70*6e4||p.games.some(g=>g.at-(g.dur||0)*1e3>=p.live.start-18e4))return null;const c=CHAMP[p.live.champId],mins=Math.max(0,Math.round((Date.now()-p.live.start)/6e4)),q={420:"",440:"Flex · ",450:"ARAM · "}[p.live.queue]??"Normal · ";
   const lb=el("span","live");lb.append(el("i"),`In game · ${q}${c?c.name:"?"} · ${mins} min`);
   const w=(p.live.mates||[]).filter(x=>x.same).map(x=>short(x.id)),v=(p.live.mates||[]).filter(x=>!x.same).map(x=>short(x.id));
   if(w.length)lb.append(` · with ${w.join(", ")}`);if(v.length)lb.append(` · vs ${v.join(", ")}`);return lb}
