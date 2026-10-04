@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-04T20:57:47.443Z",
+ "updatedAt": "2026-10-04T21:03:18.835Z",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
   "Kohmira#44160": {
@@ -413,7 +413,7 @@
    "liveErr": null,
    "icon": 7143,
    "level": 421,
-   "checkedAt": 1791147473646
+   "checkedAt": 1791147804960
   },
   "Ymine#000": {
    "riotId": "Ymine#000",
@@ -425,10 +425,10 @@
    },
    "current": {
     "tier": "GOLD",
-    "division": "III",
-    "lp": 17,
+    "division": "IV",
+    "lp": 96,
     "wins": 124,
-    "losses": 133
+    "losses": 134
    },
    "history": [
     {
@@ -454,6 +454,12 @@
      "tier": "GOLD",
      "division": "III",
      "lp": 17
+    },
+    {
+     "t": 1791147809422,
+     "tier": "GOLD",
+     "division": "IV",
+     "lp": 96
     }
    ],
    "matches": {
@@ -909,18 +915,35 @@
      "v": 4,
      "dur": 1544,
      "at": 1791145952602
+    },
+    "EUW1_8004089229": {
+     "win": false,
+     "champ": "Kalista",
+     "role": "BOTTOM",
+     "k": 6,
+     "d": 8,
+     "a": 0,
+     "cs": 176,
+     "dmg": 18819,
+     "vis": 10,
+     "gold": 10969,
+     "kp": 30,
+     "mates": [],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 19296,
+     "v": 4,
+     "dur": 1388,
+     "at": 1791147609776
     }
    },
-   "live": {
-    "champId": 429,
-    "queue": 420,
-    "start": 1791146191180,
-    "mates": []
-   },
+   "live": null,
    "liveErr": null,
    "icon": 6864,
    "level": 716,
-   "checkedAt": 1791147479661
+   "checkedAt": 1791147812365
   },
   "wilhump#NAEU": {
    "riotId": "wilhump#NAEU",
@@ -1638,7 +1661,7 @@
    "liveErr": null,
    "icon": 5119,
    "level": 512,
-   "checkedAt": 1791147485574
+   "checkedAt": 1791147818234
   },
   "Near#974p": {
    "riotId": "Near#974p",
@@ -2104,7 +2127,7 @@
    "liveErr": null,
    "icon": 3151,
    "level": 744,
-   "checkedAt": 1791147491564
+   "checkedAt": 1791147824149
   },
   "Lésion carieuse#Dents": {
    "riotId": "Lésion carieuse#Dents",
@@ -2418,7 +2441,7 @@
    "liveErr": null,
    "icon": 7139,
    "level": 587,
-   "checkedAt": 1791147497435
+   "checkedAt": 1791147830038
   }
  }
 }
