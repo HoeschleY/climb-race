@@ -1,12 +1,16 @@
 name: Update standings
 
+# Runs as a long-lived loop: updates every 5 minutes for ~5.5 hours,
+# then starts a fresh run of itself. The hourly schedule is only a backup
+# in case the chain ever breaks (GitHub's scheduler is unreliable).
 on:
   schedule:
-    - cron: "*/10 * * * *"   # every 10 minutes
-  workflow_dispatch:          # "Run workflow" button for a manual refresh
+    - cron: "17 * * * *"
+  workflow_dispatch:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: update
@@ -15,20 +19,35 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: node scripts/update.mjs
+      - name: Update every 5 minutes
         env:
           RIOT_API_KEY: ${{ secrets.RIOT_API_KEY }}
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           SITE_URL: https://hoeschley.github.io/climb-race/
-      - name: Save data.json
         run: |
           git config user.name "climb-race-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add data.json matches
-          git diff --cached --quiet || git commit -m "Update standings"
-          git push
+          end=$((SECONDS + 330*60))
+          while [ $SECONDS -lt $end ]; do
+            git pull -q --rebase origin main || git rebase --abort || true
+            node scripts/update.mjs || echo "update failed, retrying next round"
+            git add data.json matches
+            if ! git diff --cached --quiet; then
+              git commit -q -m "Update standings"
+              git push -q origin HEAD:main || (git pull -q --rebase origin main && git push -q origin HEAD:main) || true
+            fi
+            sleep 300
+          done
+      - name: Start the next run
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run update.yml --repo ${{ github.repository }} --ref main

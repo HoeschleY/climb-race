@@ -268,7 +268,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
   <div class="chips" id="gmode"><button data-m="time" aria-pressed="true">By date</button><button data-m="games" aria-pressed="false">By games played</button></div>
   <div class="legend" id="legend"></div>
   <div class="chartwrap" id="chartwrap"></div>
-  <p class="note">Solid lines are real LP, checked every 10 minutes since Oct 4. Dashed lines are rebuilt from match results (about ±20 LP per game, adjusted to end on the real LP) because Riot doesn't keep past LP. Values marked ≈ are estimates.</p>
+  <p class="note">Solid lines are real LP, checked every 5 minutes since Oct 4. Dashed lines are rebuilt from match results (about ±20 LP per game, adjusted to end on the real LP) because Riot doesn't keep past LP. Values marked ≈ are estimates.</p>
 </section>
 
 <section id="matches" hidden>
@@ -294,7 +294,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
   <div class="scards" id="scards"></div>
 </section>
 
-<footer>Ranked by LP gained since the race start. Data from the Riot Games API, refreshed every 10 minutes; this page reloads its data every 2 minutes. Climb Race isn't endorsed by Riot Games.</footer>
+<footer>Ranked by LP gained since the race start. Data from the Riot Games API, refreshed every 5 minutes; this page reloads its data every 2 minutes. Climb Race isn't endorsed by Riot Games.</footer>
 </main>
 <div class="modal" id="modal" hidden><div class="mpanel" role="dialog" aria-modal="true" aria-label="Match details"><button class="mclose" aria-label="Close">✕</button><div id="mbody"></div></div></div>
 
@@ -346,7 +346,7 @@ async function load(){
 function renderAll(){
   const t0=Date.parse(DATA.raceStart),day=Math.round((dayKey(Date.now())-dayKey(t0))/864e5)+1;
   document.getElementById("daypill").textContent=`Day ${day}`;
-  document.getElementById("sub").textContent=`Since ${new Date(t0).toLocaleDateString("en-GB",{day:"numeric",month:"long"})} · ${players.reduce((s,p)=>s+p.games.length,0)} games played · updated ${ago(Date.parse(DATA.updatedAt))} · next update in about ${Math.max(1,10-Math.round((Date.now()-Date.parse(DATA.updatedAt))/6e4)%10)} min`;
+  document.getElementById("sub").textContent=`Since ${new Date(t0).toLocaleDateString("en-GB",{day:"numeric",month:"long"})} · ${players.reduce((s,p)=>s+p.games.length,0)} games played · updated ${ago(Date.parse(DATA.updatedAt))} · ${Date.now()-Date.parse(DATA.updatedAt)>20*6e4?"updates are delayed":"updates every 5 min"}`;
   for(const f of [renderHome,renderSpotlight,renderStandings,renderGraph,renderMatches,renderH2H,renderRecords]){try{f()}catch(e){console.error(f.name,e)}}
 }
 
@@ -400,7 +400,7 @@ const PICON=id=>id!=null?`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/pro
 function emblem(tier,size){const i=el("img","emb");i.src=EMB(tier);i.alt=cap(tier||"Unranked");i.width=i.height=size;i.onerror=()=>{i.replaceWith(dot(TCOL[tier]||"#666"))};return i}
 function avatar(p,size){const w=el("div","ava");w.style.width=w.style.height=size+"px";w.style.borderColor=TCOL[p.current?.tier]||"var(--line)";
   if(p.icon!=null){const i=el("img");i.src=PICON(p.icon);i.alt="";i.onerror=()=>i.remove();w.append(i)}else w.append(el("span",null,short(p.riotId)[0]));return w}
-function liveBadge(p){if(!p.live)return null;const c=CHAMP[p.live.champId],mins=Math.max(0,Math.round((Date.now()-p.live.start)/6e4)),q={420:"",440:"Flex · ",450:"ARAM · "}[p.live.queue]??"Normal · ";
+function liveBadge(p){if(!p.live||Date.now()-Date.parse(DATA.updatedAt)>15*6e4)return null;const c=CHAMP[p.live.champId],mins=Math.max(0,Math.round((Date.now()-p.live.start)/6e4)),q={420:"",440:"Flex · ",450:"ARAM · "}[p.live.queue]??"Normal · ";
   const lb=el("span","live");lb.append(el("i"),`In game · ${q}${c?c.name:"?"} · ${mins} min`);
   const w=(p.live.mates||[]).filter(x=>x.same).map(x=>short(x.id)),v=(p.live.mates||[]).filter(x=>!x.same).map(x=>short(x.id));
   if(w.length)lb.append(` · with ${w.join(", ")}`);if(v.length)lb.append(` · vs ${v.join(", ")}`);return lb}
@@ -531,7 +531,7 @@ function gameRow(g,best,showName){
 /* Home */
 function renderHome(){
   // Live now
-  const lv=document.getElementById("livenow");lv.innerHTML="";const live=players.filter(p=>p.live);
+  const lv=document.getElementById("livenow");lv.innerHTML="";const live=players.filter(p=>liveBadge(p));
   if(!live.length)lv.append(el("div","empty","Nobody is in a game right now."));
   live.forEach(p=>{const r=el("div","mini");r.append(avatar(p,34));const t=el("div");t.append(el("b",null,short(p.riotId)));const lb=liveBadge(p);if(lb)t.append(lb);r.append(t);lv.append(r)});
   // Mini standings
