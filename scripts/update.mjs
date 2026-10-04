@@ -130,7 +130,8 @@ for (const p of cfg.players) {
 
     // Ghost games: Riot's live service sometimes keeps reporting a finished game.
     if (live) {
-      const over = Object.values(matches).some(m => m.at - (m.dur || 0) * 1000 >= live.start - 3 * 60e3);
+      const done = ms => Object.values(ms || {}).some(m => m.at - (m.dur || 0) * 1000 >= live.start - 3 * 60e3);
+      const over = done(matches) || (live.mates || []).some(x => done((out.players[x.id] || old.players?.[x.id])?.matches));
       if (over || Date.now() - live.start > 70 * 60e3) live = null;
     }
 
