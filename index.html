@@ -294,7 +294,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
   <div class="chips" id="gmode"><button data-m="time" aria-pressed="true">By date</button><button data-m="games" aria-pressed="false">By games played</button></div>
   <div class="legend" id="legend"></div>
   <div class="chartwrap" id="chartwrap"></div>
-  <p class="note">Solid lines are real LP, checked every 5 minutes since Oct 4. Dashed lines are rebuilt from match results (about ±20 LP per game, adjusted to end on the real LP) because Riot doesn't keep past LP. Values marked ≈ are estimates.</p>
+  <p class="note">Solid lines are real LP, checked every minute since Oct 4. Dashed lines are rebuilt from match results (about ±20 LP per game, adjusted to end on the real LP) because Riot doesn't keep past LP. Values marked ≈ are estimates.</p>
 </section>
 
 <section id="matches" hidden>
@@ -332,7 +332,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
   <div class="scards" id="scards"></div>
 </section>
 
-<footer>Ranked by LP gained since the race start. Data from the Riot Games API, refreshed every 5 minutes; this page updates itself automatically. Climb Race isn't endorsed by Riot Games.</footer>
+<footer>Ranked by LP gained since the race start. Data from the Riot Games API, refreshed every minute; this page updates itself automatically. Climb Race isn't endorsed by Riot Games.</footer>
 </main>
 <div class="modal" id="modal" hidden><div class="mpanel" role="dialog" aria-modal="true" aria-label="Match details"><button class="mclose" aria-label="Close">✕</button><div id="mbody"></div></div></div>
 
@@ -375,7 +375,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610051605";
+const BUILD="202610052026";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
@@ -414,7 +414,7 @@ function toast(msg){let el_=document.getElementById("toast");if(!el_){el_=el("di
 function renderAll(){
   const t0=Date.parse(DATA.raceStart),day=Math.round((dayKey(Date.now())-dayKey(t0))/864e5)+1;
   document.getElementById("daypill").textContent=`Day ${day}`;
-  document.getElementById("sub").textContent=`Since ${new Date(t0).toLocaleDateString("en-GB",{day:"numeric",month:"long"})} · ${players.reduce((s,p)=>s+p.games.length,0)} games played · updated ${ago(Date.parse(DATA.updatedAt))} · ${Date.now()-Date.parse(DATA.updatedAt)>20*6e4?"updates are delayed":"updates every 5 min"}`;
+  document.getElementById("sub").textContent=`Since ${new Date(t0).toLocaleDateString("en-GB",{day:"numeric",month:"long"})} · ${players.reduce((s,p)=>s+p.games.length,0)} games played · updated ${ago(Date.parse(DATA.updatedAt))} · ${Date.now()-Date.parse(DATA.updatedAt)>20*6e4?"updates are delayed":"updates every minute"}`;
   for(const f of [renderHome,renderSpotlight,renderStandings,renderGraph,renderMatches,renderH2H,renderRecords,renderChamps]){try{f()}catch(e){console.error(f.name,e)}}
 }
 
@@ -779,7 +779,7 @@ function renderRecords(){
 }
 
 const h=location.hash.slice(1);if(TABS.includes(h))show(h);
-document.getElementById("livepill").onclick=()=>{document.getElementById("livetxt").textContent="Checking…";load()};
+document.getElementById("livepill").onclick=async()=>{document.getElementById("livetxt").textContent="Checking…";const before=DATA?.updatedAt;await load();if(DATA?.updatedAt===before)toast("Already up to date · new data every minute")};
 document.addEventListener("visibilitychange",()=>{if(!document.hidden&&Date.now()-lastCheck>15e3)load()});
 load();
 setInterval(()=>{if(!document.hidden)load()},30e3);   // check for new data

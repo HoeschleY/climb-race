@@ -17,8 +17,10 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 // Dev keys allow 100 requests / 2 min, so space calls out.
 async function riot(host, path) {
   for (let attempt = 0; attempt < 4; attempt++) {
-    await sleep(1300);
-    const res = await fetch(`https://${host}.api.riotgames.com${path}`, { headers: { "X-Riot-Token": KEY } });
+    await sleep(700);
+    let res;
+    try { res = await fetch(`https://${host}.api.riotgames.com${path}`, { headers: { "X-Riot-Token": KEY }, signal: AbortSignal.timeout(10000) }); }
+    catch (e) { if (attempt === 3) throw new Error(`no response on ${path}`); continue; }
     if (res.status === 429) { await sleep((+res.headers.get("retry-after") || 10) * 1000); continue; }
     if (res.status === 404) return null;
     if (!res.ok) throw new Error(`${res.status} on ${path}`);
@@ -120,7 +122,8 @@ for (const p of cfg.players) {
 
     // Profile icon and level (cosmetic; ignore failures)
     let icon = prev.icon ?? null, level = prev.level ?? null;
-    try { const sm = await riot(cfg.platform, `/lol/summoner/v4/summoners/by-puuid/${puuid}`); if (sm) { icon = sm.profileIconId; level = sm.summonerLevel; } }
+    let iconAt = prev.iconAt ?? 0;
+    if (Date.now() - iconAt > 15 * 60e3) try { const sm = await riot(cfg.platform, `/lol/summoner/v4/summoners/by-puuid/${puuid}`); if (sm) { icon = sm.profileIconId; level = sm.summonerLevel; iconAt = Date.now(); } }
     catch (e) { console.error(`summoner lookup failed for ${p.riotId}: ${e.message}`); }
 
     // Live game (404 = not in game)
@@ -139,7 +142,7 @@ for (const p of cfg.players) {
       if (over || Date.now() - live.start > 70 * 60e3) live = null;
     }
 
-    out.players[p.riotId] = { riotId: p.riotId, puuid, start, current, history, matches, live, liveErr, icon, level, checkedAt: Date.now() };
+    out.players[p.riotId] = { riotId: p.riotId, puuid, start, current, history, matches, live, liveErr, icon, level, iconAt };
     console.log(`OK ${p.riotId}: ${current ? `${current.tier} ${current.division} ${current.lp}LP` : "unranked"}, ${Object.keys(matches).length} games`);
   } catch (e) {
     console.error(`FAIL ${p.riotId}: ${e.message}`);
@@ -168,4 +171,7 @@ if (alerts.length && process.env.DISCORD_WEBHOOK) {
   console.log(`Discord: ${alerts.length} alert(s), status ${res.status}`);
 }
 
-await writeFile("data.json", JSON.stringify(out, null, 1));
+const strip = d => JSON.stringify({ ...d, updatedAt: 0, players: Object.fromEntries(Object.entries(d.players || {}).map(([k, v]) => [k, { ...v, iconAt: 0, checkedAt: 0 }])) });
+const changed = strip(out) !== strip(old), heartbeat = !old.updatedAt || Date.now() - Date.parse(old.updatedAt) > 5 * 60e3;
+if (changed || heartbeat) await writeFile("data.json", JSON.stringify(out, null, 1));
+console.log(changed ? "data changed" : heartbeat ? "heartbeat" : "no change");

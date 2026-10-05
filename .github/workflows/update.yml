@@ -1,6 +1,6 @@
 name: Update standings
 
-# Runs as a long-lived loop: updates every 5 minutes for ~5.5 hours,
+# Runs as a long-lived loop: updates every minute for ~5.5 hours,
 # then starts a fresh run of itself. The hourly schedule is only a backup
 # in case the chain ever breaks (GitHub's scheduler is unreliable).
 on:
@@ -27,24 +27,26 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Update every 5 minutes
+      - name: Update every minute
         env:
           RIOT_API_KEY: ${{ secrets.RIOT_API_KEY }}
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           SITE_URL: https://hoeschley.github.io/climb-race/
         run: |
+          set +e   # never let one failed command end the loop
           git config user.name "climb-race-bot"
           git config user.email "actions@users.noreply.github.com"
           end=$((SECONDS + 330*60))
           while [ $SECONDS -lt $end ]; do
-            git pull -q --rebase origin main || git rebase --abort || true
-            node scripts/update.mjs || echo "update failed, retrying next round"
+            round=$SECONDS
+            timeout 30 git pull -q --rebase origin main || git rebase --abort || true
+            timeout 150 node scripts/update.mjs || echo "round failed or timed out, trying again next minute"
             git add data.json matches
             if ! git diff --cached --quiet; then
               git commit -q -m "Update standings"
-              git push -q origin HEAD:main || (git pull -q --rebase origin main && git push -q origin HEAD:main) || true
+              timeout 30 git push -q origin HEAD:main || (timeout 30 git pull -q --rebase origin main && timeout 30 git push -q origin HEAD:main) || true
             fi
-            sleep 300
+            wait=$((60 - (SECONDS - round))); [ $wait -gt 0 ] && sleep $wait
           done
       - name: Start the next run
         if: always()
