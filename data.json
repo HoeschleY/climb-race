@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-05T20:47:47.855Z",
+ "updatedAt": "2026-10-05T20:53:03.133Z",
  "build": "202610052026",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -13,9 +13,9 @@
    },
    "current": {
     "tier": "GOLD",
-    "division": "IV",
-    "lp": 85,
-    "wins": 15,
+    "division": "III",
+    "lp": 13,
+    "wins": 16,
     "losses": 14
    },
    "history": [
@@ -42,6 +42,12 @@
      "tier": "GOLD",
      "division": "IV",
      "lp": 85
+    },
+    {
+     "t": 1791233586063,
+     "tier": "GOLD",
+     "division": "III",
+     "lp": 13
     }
    ],
    "matches": {
@@ -649,23 +655,53 @@
       "Yunara",
       "Thresh"
      ]
+    },
+    "EUW1_8004971445": {
+     "win": true,
+     "champ": "Camille",
+     "role": "TOP",
+     "k": 4,
+     "d": 3,
+     "a": 8,
+     "cs": 212,
+     "dmg": 14470,
+     "vis": 25,
+     "gold": 12324,
+     "kp": 30,
+     "mates": [
+      {
+       "id": "Near#974p",
+       "same": true
+      }
+     ],
+     "multi": 1,
+     "penta": 0,
+     "fb": true,
+     "solo": 2,
+     "taken": 21530,
+     "v": 4,
+     "dur": 1924,
+     "at": 1791233568155,
+     "vs": [
+      "Heimerdinger",
+      "Ekko",
+      "Malzahar",
+      "Smolder",
+      "Braum"
+     ],
+     "with": [
+      "Warwick",
+      "Xerath",
+      "Yunara",
+      "Pantheon"
+     ]
     }
    },
-   "live": {
-    "champId": 164,
-    "queue": 420,
-    "start": 1791231613654,
-    "mates": [
-     {
-      "id": "Near#974p",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 7143,
    "level": 421,
-   "iconAt": 1791232633185
+   "iconAt": 1791233586943
   },
   "Ymine#000": {
    "riotId": "Ymine#000",
@@ -1777,7 +1813,7 @@
    "liveErr": null,
    "icon": 6864,
    "level": 717,
-   "iconAt": 1791232637702
+   "iconAt": 1791233590467
   },
   "wilhump#NAEU": {
    "riotId": "wilhump#NAEU",
@@ -2989,7 +3025,7 @@
    "liveErr": null,
    "icon": 5119,
    "level": 513,
-   "iconAt": 1791232642157
+   "iconAt": 1791233594058
   },
   "Near#974p": {
    "riotId": "Near#974p",
@@ -3000,10 +3036,10 @@
     "lp": 68
    },
    "current": {
-    "tier": "GOLD",
-    "division": "I",
-    "lp": 91,
-    "wins": 308,
+    "tier": "PLATINUM",
+    "division": "IV",
+    "lp": 12,
+    "wins": 309,
     "losses": 313
    },
    "history": [
@@ -3048,6 +3084,12 @@
      "tier": "GOLD",
      "division": "I",
      "lp": 91
+    },
+    {
+     "t": 1791233597639,
+     "tier": "PLATINUM",
+     "division": "IV",
+     "lp": 12
     }
    ],
    "matches": {
@@ -3895,23 +3937,53 @@
       "Fizz",
       "Thresh"
      ]
+    },
+    "EUW1_8004971445": {
+     "win": true,
+     "champ": "Yunara",
+     "role": "BOTTOM",
+     "k": 13,
+     "d": 7,
+     "a": 5,
+     "cs": 264,
+     "dmg": 30208,
+     "vis": 12,
+     "gold": 19238,
+     "kp": 45,
+     "mates": [
+      {
+       "id": "Kohmira#44160",
+       "same": true
+      }
+     ],
+     "multi": 3,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 27624,
+     "v": 4,
+     "dur": 1924,
+     "at": 1791233568155,
+     "vs": [
+      "Heimerdinger",
+      "Ekko",
+      "Malzahar",
+      "Smolder",
+      "Braum"
+     ],
+     "with": [
+      "Camille",
+      "Warwick",
+      "Xerath",
+      "Pantheon"
+     ]
     }
    },
-   "live": {
-    "champId": 804,
-    "queue": 420,
-    "start": 1791231613654,
-    "mates": [
-     {
-      "id": "Kohmira#44160",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 3151,
    "level": 745,
-   "iconAt": 1791232646721
+   "iconAt": 1791233598507
   },
   "Lésion carieuse#Dents": {
    "riotId": "Lésion carieuse#Dents",
@@ -4532,7 +4604,7 @@
    "liveErr": null,
    "icon": 7139,
    "level": 588,
-   "iconAt": 1791232650240
+   "iconAt": 1791233602053
   }
  }
 }
