@@ -247,6 +247,18 @@ main{padding-block:18px 56px}
 .howrate{margin:12px 0 0;font-size:.82rem;color:var(--muted)}
 .howrate summary{cursor:pointer;color:var(--gold);font-weight:600;width:fit-content}
 .howrate p{margin:8px 0 0;max-width:75ch;line-height:1.55}
+/* Top bar: one line, never scrolls */
+.topbar .barin{max-width:1320px;gap:14px}
+.topbar .tabs{overflow:visible;flex-wrap:nowrap;gap:0;scrollbar-width:none}
+.topbar .tabs::-webkit-scrollbar{display:none}
+.topbar .tabs button{padding:0 9px;font-size:.88rem}
+.brand h1{font-size:1.3rem}
+@media (max-width:1240px){
+  .topbar .barin{flex-wrap:wrap;row-gap:0;padding-top:8px}
+  .topbar .tabs{order:3;flex-basis:100%;flex-wrap:wrap;justify-content:flex-start}
+  .topbar .tabs button{padding:10px 10px}
+  .topbar .livepill{margin-left:auto}
+}
 footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
 
 @media (max-width:760px){
@@ -384,7 +396,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610052102";
+const BUILD="202610052142";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
@@ -416,7 +428,7 @@ async function load(){
 function tickLive(err){const t=document.getElementById("livetxt"),pill=document.getElementById("livepill");if(!t)return;
   if(!DATA){t.textContent=err?"Offline":"Connecting…";pill.className="livepill"+(err?" off":"");return}
   const age=Date.now()-Date.parse(DATA.updatedAt),stale=age>20*6e4;
-  pill.className="livepill"+(stale?" stale":err?" off":"");t.textContent=(stale?"Delayed":"Live")+" · updated "+ago(Date.parse(DATA.updatedAt));
+  pill.className="livepill"+(stale?" stale":err?" off":"");t.textContent=(stale?"Delayed":"Live")+" · "+ago(Date.parse(DATA.updatedAt));
   const sub=document.getElementById("sub");if(sub)sub.textContent=sub.textContent.replace(/updated [^·]+·/,"updated "+ago(Date.parse(DATA.updatedAt))+" ·")}
 function toast(msg){let el_=document.getElementById("toast");if(!el_){el_=el("div","toast");el_.id="toast";el_.setAttribute("role","status");document.body.append(el_)}
   el_.textContent=msg;el_.classList.add("show");clearTimeout(el_._t);el_._t=setTimeout(()=>el_.classList.remove("show"),2600)}
