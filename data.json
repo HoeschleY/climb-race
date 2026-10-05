@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-05T21:35:25.409Z",
+ "updatedAt": "2026-10-05T21:40:40.453Z",
  "build": "202610052102",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -918,7 +918,7 @@
    "liveErr": null,
    "icon": 7143,
    "level": 421,
-   "iconAt": 1791235491346
+   "iconAt": 1791236443295
   },
   "Ymine#000": {
    "riotId": "Ymine#000",
@@ -2449,7 +2449,7 @@
    "liveErr": null,
    "icon": 6864,
    "level": 717,
-   "iconAt": 1791235494880
+   "iconAt": 1791236446843
   },
   "wilhump#NAEU": {
    "riotId": "wilhump#NAEU",
@@ -4122,7 +4122,7 @@
    "liveErr": null,
    "icon": 5119,
    "level": 513,
-   "iconAt": 1791235498399
+   "iconAt": 1791236450371
   },
   "Near#974p": {
    "riotId": "Near#974p",
@@ -4135,9 +4135,9 @@
    "current": {
     "tier": "PLATINUM",
     "division": "IV",
-    "lp": 12,
+    "lp": 0,
     "wins": 309,
-    "losses": 313
+    "losses": 314
    },
    "history": [
     {
@@ -4187,6 +4187,12 @@
      "tier": "PLATINUM",
      "division": "IV",
      "lp": 12
+    },
+    {
+     "t": 1791236454090,
+     "tier": "PLATINUM",
+     "division": "IV",
+     "lp": 0
     }
    ],
    "matches": {
@@ -5338,18 +5344,58 @@
      "bad": [],
      "laneGold": 5394,
      "rv": 1
+    },
+    "EUW1_8005041513": {
+     "win": false,
+     "champ": "Zeri",
+     "role": "BOTTOM",
+     "k": 22,
+     "d": 9,
+     "a": 11,
+     "cs": 312,
+     "dmg": 61021,
+     "vis": 31,
+     "gold": 25542,
+     "kp": 61,
+     "mates": [],
+     "multi": 2,
+     "penta": 0,
+     "fb": true,
+     "solo": 6,
+     "taken": 38984,
+     "v": 4,
+     "dur": 2186,
+     "at": 1791236309116,
+     "vs": [
+      "Tryndamere",
+      "Shyvana",
+      "Ekko",
+      "Twitch",
+      "Briar"
+     ],
+     "with": [
+      "Yasuo",
+      "MasterYi",
+      "Diana",
+      "Lux"
+     ],
+     "rating": 6.7,
+     "place": 2,
+     "good": [
+      "35% of team damage",
+      "31% of team gold",
+      "+4.2k gold vs lane opponent"
+     ],
+     "bad": [],
+     "laneGold": 4222,
+     "rv": 1
     }
    },
-   "live": {
-    "champId": 221,
-    "queue": 420,
-    "start": 1791234092635,
-    "mates": []
-   },
+   "live": null,
    "liveErr": null,
    "icon": 3151,
    "level": 745,
-   "iconAt": 1791235501949
+   "iconAt": 1791236454973
   },
   "Lésion carieuse#Dents": {
    "riotId": "Lésion carieuse#Dents",
@@ -6151,7 +6197,7 @@
    "liveErr": null,
    "icon": 7139,
    "level": 588,
-   "iconAt": 1791235505473
+   "iconAt": 1791236458622
   }
  }
 }
