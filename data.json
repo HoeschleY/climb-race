@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-10-05T20:58:24.597Z",
- "build": "202610052026",
+ "updatedAt": "2026-10-05T21:03:41.176Z",
+ "build": "202610052102",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
   "Kohmira#44160": {
@@ -89,7 +89,20 @@
       "Shyvana",
       "Yunara",
       "Lux"
-     ]
+     ],
+     "rating": 5.5,
+     "place": 5,
+     "good": [
+      "10.0 KDA",
+      "1 death"
+     ],
+     "bad": [
+      "28% kill participation",
+      "15% of team damage",
+      "16% of team gold"
+     ],
+     "laneGold": 48,
+     "rv": 1
     },
     "EUW1_8002568695": {
      "win": false,
@@ -129,7 +142,19 @@
       "Hecarim",
       "Kaisa",
       "Seraphine"
-     ]
+     ],
+     "rating": 2.3,
+     "place": 10,
+     "good": [
+      "26% of team damage taken"
+     ],
+     "bad": [
+      "9 deaths",
+      "−3.9k gold vs lane opponent",
+      "1.2 KDA"
+     ],
+     "laneGold": -3859,
+     "rv": 1
     },
     "EUW1_8002541067": {
      "win": true,
@@ -169,7 +194,21 @@
       "Warwick",
       "Kalista",
       "Nautilus"
-     ]
+     ],
+     "rating": 4.8,
+     "place": 7,
+     "good": [
+      "1 death",
+      "4.0 KDA",
+      "7.7 CS/min"
+     ],
+     "bad": [
+      "18% kill participation",
+      "−2.4k gold vs lane opponent",
+      "8% of team damage taken"
+     ],
+     "laneGold": -2383,
+     "rv": 1
     },
     "EUW1_8002493347": {
      "win": false,
@@ -209,7 +248,19 @@
       "Lillia",
       "Ashe",
       "Milio"
-     ]
+     ],
+     "rating": 6.9,
+     "place": 2,
+     "good": [
+      "25% of team gold",
+      "+3.9k gold vs lane opponent",
+      "8.6 CS/min"
+     ],
+     "bad": [
+      "12 vision score"
+     ],
+     "laneGold": 3903,
+     "rv": 1
     },
     "EUW1_8002458537": {
      "win": true,
@@ -249,7 +300,19 @@
       "Udyr",
       "Zeri",
       "Morgana"
-     ]
+     ],
+     "rating": 6.4,
+     "place": 2,
+     "good": [
+      "3.7 KDA",
+      "7 deaths",
+      "+1.9k gold vs lane opponent"
+     ],
+     "bad": [
+      "13% of team damage taken"
+     ],
+     "laneGold": 1929,
+     "rv": 1
     },
     "EUW1_8002422243": {
      "win": false,
@@ -289,7 +352,19 @@
       "Evelynn",
       "Kalista",
       "Nami"
-     ]
+     ],
+     "rating": 4.4,
+     "place": 7,
+     "good": [
+      "60% kill participation",
+      "7.5 CS/min"
+     ],
+     "bad": [
+      "1.8 KDA",
+      "21% of team gold"
+     ],
+     "laneGold": -727,
+     "rv": 1
     },
     "EUW1_8002402826": {
      "win": false,
@@ -329,7 +404,20 @@
       "Nautilus",
       "Tristana",
       "Brand"
-     ]
+     ],
+     "rating": 3.6,
+     "place": 7,
+     "good": [
+      "7.9 CS/min",
+      "5 deaths"
+     ],
+     "bad": [
+      "19% of team damage",
+      "1.6 KDA",
+      "20% of team gold"
+     ],
+     "laneGold": -1332,
+     "rv": 1
     },
     "EUW1_8002367862": {
      "win": true,
@@ -364,7 +452,17 @@
       "Udyr",
       "Tristana",
       "Lux"
-     ]
+     ],
+     "rating": 7.9,
+     "place": 2,
+     "good": [
+      "14.0 KDA",
+      "+4.0k gold vs lane opponent",
+      "22% of team gold"
+     ],
+     "bad": [],
+     "laneGold": 4037,
+     "rv": 1
     },
     "EUW1_8002331551": {
      "win": false,
@@ -399,7 +497,21 @@
       "Talon",
       "Xayah",
       "Morgana"
-     ]
+     ],
+     "rating": 3.4,
+     "place": 9,
+     "good": [
+      "5 deaths",
+      "3.2 KDA",
+      "6.8 CS/min"
+     ],
+     "bad": [
+      "−5.2k gold vs lane opponent",
+      "37% kill participation",
+      "18% of team damage"
+     ],
+     "laneGold": -5245,
+     "rv": 1
     },
     "EUW1_8001951444": {
      "win": true,
@@ -434,7 +546,20 @@
       "Zaahen",
       "Jhin",
       "Xerath"
-     ]
+     ],
+     "rating": 4.8,
+     "place": 6,
+     "good": [
+      "3 deaths",
+      "7.2 CS/min"
+     ],
+     "bad": [
+      "18% kill participation",
+      "−1.9k gold vs lane opponent",
+      "17% of team damage taken"
+     ],
+     "laneGold": -1905,
+     "rv": 1
     },
     "EUW1_8001885131": {
      "win": false,
@@ -469,7 +594,19 @@
       "MonkeyKing",
       "Lucian",
       "Thresh"
-     ]
+     ],
+     "rating": 5.6,
+     "place": 3,
+     "good": [
+      "28% of team damage",
+      "4.9 KDA",
+      "7 deaths"
+     ],
+     "bad": [
+      "37 vision score"
+     ],
+     "laneGold": -138,
+     "rv": 1
     },
     "EUW1_8000570016": {
      "win": true,
@@ -504,7 +641,20 @@
       "Sion",
       "Jhin",
       "Lux"
-     ]
+     ],
+     "rating": 5.2,
+     "place": 5,
+     "good": [
+      "4 deaths",
+      "6.5 KDA"
+     ],
+     "bad": [
+      "15% of team damage",
+      "−1.5k gold vs lane opponent",
+      "17% of team gold"
+     ],
+     "laneGold": -1473,
+     "rv": 1
     },
     "EUW1_8000544493": {
      "win": true,
@@ -539,7 +689,20 @@
       "Shaco",
       "Draven",
       "Braum"
-     ]
+     ],
+     "rating": 7.3,
+     "place": 2,
+     "good": [
+      "12.0 KDA",
+      "1 death",
+      "+4.3k gold vs lane opponent"
+     ],
+     "bad": [
+      "34% kill participation",
+      "14% of team damage taken"
+     ],
+     "laneGold": 4302,
+     "rv": 1
     },
     "EUW1_8000503576": {
      "win": true,
@@ -574,7 +737,20 @@
       "Nocturne",
       "Caitlyn",
       "Lux"
-     ]
+     ],
+     "rating": 4.9,
+     "place": 6,
+     "good": [
+      "5 deaths",
+      "6.6 CS/min"
+     ],
+     "bad": [
+      "16% of team gold",
+      "34% kill participation",
+      "15% of team damage taken"
+     ],
+     "laneGold": -1250,
+     "rv": 1
     },
     "EUW1_8003886278": {
      "win": true,
@@ -614,7 +790,20 @@
       "Qiyana",
       "Vayne",
       "Leona"
-     ]
+     ],
+     "rating": 7.5,
+     "place": 1,
+     "good": [
+      "6.5 KDA",
+      "2 deaths",
+      "8.4 CS/min"
+     ],
+     "bad": [
+      "36% kill participation",
+      "9% of team damage taken"
+     ],
+     "laneGold": 2902,
+     "rv": 1
     },
     "EUW1_8004919326": {
      "win": true,
@@ -654,7 +843,21 @@
       "Fizz",
       "Yunara",
       "Thresh"
-     ]
+     ],
+     "rating": 6.3,
+     "place": 4,
+     "good": [
+      "10.0 KDA",
+      "2 deaths",
+      "+2.2k gold vs lane opponent"
+     ],
+     "bad": [
+      "41% kill participation",
+      "14% of team damage",
+      "19% of team damage taken"
+     ],
+     "laneGold": 2223,
+     "rv": 1
     },
     "EUW1_8004971445": {
      "win": true,
@@ -694,7 +897,21 @@
       "Xerath",
       "Yunara",
       "Pantheon"
-     ]
+     ],
+     "rating": 4.6,
+     "place": 6,
+     "good": [
+      "3 deaths",
+      "4.0 KDA",
+      "6.6 CS/min"
+     ],
+     "bad": [
+      "13% of team damage",
+      "30% kill participation",
+      "16% of team damage taken"
+     ],
+     "laneGold": -1676,
+     "rv": 1
     }
    },
    "live": null,
@@ -714,8 +931,8 @@
    "current": {
     "tier": "GOLD",
     "division": "III",
-    "lp": 52,
-    "wins": 129,
+    "lp": 72,
+    "wins": 130,
     "losses": 136
    },
    "history": [
@@ -790,6 +1007,12 @@
      "tier": "GOLD",
      "division": "III",
      "lp": 52
+    },
+    {
+     "t": 1791234226657,
+     "tier": "GOLD",
+     "division": "III",
+     "lp": 72
     }
    ],
    "matches": {
@@ -831,7 +1054,17 @@
       "Chogath",
       "Caitlyn",
       "Milio"
-     ]
+     ],
+     "rating": 7,
+     "place": 3,
+     "good": [
+      "3.8 KDA",
+      "59% kill participation",
+      "+3.4k gold vs lane opponent"
+     ],
+     "bad": [],
+     "laneGold": 3380,
+     "rv": 1
     },
     "EUW1_8003346357": {
      "win": true,
@@ -871,7 +1104,17 @@
       "Yone",
       "Caitlyn",
       "Poppy"
-     ]
+     ],
+     "rating": 8.9,
+     "place": 1,
+     "good": [
+      "29% of team gold",
+      "34% of team damage",
+      "+7.6k gold vs lane opponent"
+     ],
+     "bad": [],
+     "laneGold": 7628,
+     "rv": 1
     },
     "EUW1_8003339033": {
      "win": false,
@@ -906,7 +1149,19 @@
       "Nocturne",
       "Vladimir",
       "Teemo"
-     ]
+     ],
+     "rating": 5,
+     "place": 6,
+     "good": [
+      "70% kill participation",
+      "31% of team gold",
+      "8.9 CS/min"
+     ],
+     "bad": [
+      "20% of team damage"
+     ],
+     "laneGold": -287,
+     "rv": 1
     },
     "EUW1_8003038024": {
      "win": true,
@@ -941,7 +1196,17 @@
       "Sejuani",
       "Lux",
       "Leona"
-     ]
+     ],
+     "rating": 6.5,
+     "place": 3,
+     "good": [
+      "27% of team damage",
+      "25% of team gold",
+      "7.9 CS/min"
+     ],
+     "bad": [],
+     "laneGold": 511,
+     "rv": 1
     },
     "EUW1_8002957178": {
      "win": false,
@@ -976,7 +1241,17 @@
       "Shaco",
       "Veigar",
       "Blitzcrank"
-     ]
+     ],
+     "rating": 6.9,
+     "place": 2,
+     "good": [
+      "30% of team gold",
+      "38% of team damage",
+      "81% kill participation"
+     ],
+     "bad": [],
+     "laneGold": 6931,
+     "rv": 1
     },
     "EUW1_8002885225": {
      "win": false,
@@ -1016,7 +1291,19 @@
       "Akshan",
       "Lucian",
       "Soraka"
-     ]
+     ],
+     "rating": 4.1,
+     "place": 7,
+     "good": [
+      "57% kill participation",
+      "21% of team damage taken"
+     ],
+     "bad": [
+      "2.2 KDA",
+      "−2.4k gold vs lane opponent"
+     ],
+     "laneGold": -2378,
+     "rv": 1
     },
     "EUW1_8002838807": {
      "win": false,
@@ -1056,7 +1343,17 @@
       "Akshan",
       "Vayne",
       "Anivia"
-     ]
+     ],
+     "rating": 5.2,
+     "place": 6,
+     "good": [
+      "25% of team gold",
+      "8.2 CS/min",
+      "5 deaths"
+     ],
+     "bad": [],
+     "laneGold": 2287,
+     "rv": 1
     },
     "EUW1_8002751760": {
      "win": false,
@@ -1091,7 +1388,20 @@
       "Shyvana",
       "Zeri",
       "Thresh"
-     ]
+     ],
+     "rating": 4.3,
+     "place": 6,
+     "good": [
+      "7.7 CS/min",
+      "+1.1k gold vs lane opponent"
+     ],
+     "bad": [
+      "1.4 KDA",
+      "20% of team damage",
+      "39% kill participation"
+     ],
+     "laneGold": 1119,
+     "rv": 1
     },
     "EUW1_8002637703": {
      "win": false,
@@ -1131,7 +1441,17 @@
       "Sejuani",
       "Zed",
       "Xerath"
-     ]
+     ],
+     "rating": 3,
+     "place": 8,
+     "good": [],
+     "bad": [
+      "9% of team damage",
+      "0.5 KDA",
+      "4 deaths"
+     ],
+     "laneGold": -1636,
+     "rv": 1
     },
     "EUW1_8002595107": {
      "win": false,
@@ -1171,7 +1491,20 @@
       "Ekko",
       "Vayne",
       "Nami"
-     ]
+     ],
+     "rating": 3.1,
+     "place": 9,
+     "good": [
+      "22% of team damage taken",
+      "6.9 CS/min"
+     ],
+     "bad": [
+      "1.1 KDA",
+      "38% kill participation",
+      "8 deaths"
+     ],
+     "laneGold": -1527,
+     "rv": 1
     },
     "EUW1_8002548207": {
      "win": true,
@@ -1211,7 +1544,20 @@
       "Locke",
       "MissFortune",
       "Pantheon"
-     ]
+     ],
+     "rating": 8.7,
+     "place": 1,
+     "good": [
+      "15.0 KDA",
+      "1 death",
+      "36% of team damage taken"
+     ],
+     "bad": [
+      "21 vision score",
+      "19% of team damage"
+     ],
+     "laneGold": 1015,
+     "rv": 1
     },
     "EUW1_8002408456": {
      "win": true,
@@ -1246,7 +1592,19 @@
       "Kayn",
       "Fizz",
       "Alistar"
-     ]
+     ],
+     "rating": 6.7,
+     "place": 3,
+     "good": [
+      "35% of team damage",
+      "27% of team gold",
+      "9.0 CS/min"
+     ],
+     "bad": [
+      "11% of team damage taken"
+     ],
+     "laneGold": -171,
+     "rv": 1
     },
     "EUW1_8002083057": {
      "win": false,
@@ -1281,7 +1639,19 @@
       "Sylas",
       "Jhin",
       "Nautilus"
-     ]
+     ],
+     "rating": 2.9,
+     "place": 9,
+     "good": [
+      "7.9 CS/min"
+     ],
+     "bad": [
+      "0.7 KDA",
+      "35% kill participation",
+      "−2.5k gold vs lane opponent"
+     ],
+     "laneGold": -2482,
+     "rv": 1
     },
     "EUW1_8002049087": {
      "win": false,
@@ -1316,7 +1686,19 @@
       "Olaf",
       "Fizz",
       "Maokai"
-     ]
+     ],
+     "rating": 6.3,
+     "place": 3,
+     "good": [
+      "28% of team damage",
+      "29% of team gold",
+      "8.7 CS/min"
+     ],
+     "bad": [
+      "13% of team damage taken"
+     ],
+     "laneGold": 5000,
+     "rv": 1
     },
     "EUW1_8001833606": {
      "win": true,
@@ -1351,7 +1733,19 @@
       "Locke",
       "Xerath",
       "Swain"
-     ]
+     ],
+     "rating": 8.5,
+     "place": 1,
+     "good": [
+      "30% of team damage",
+      "30% of team gold",
+      "10.5 KDA"
+     ],
+     "bad": [
+      "8 vision score"
+     ],
+     "laneGold": 7143,
+     "rv": 1
     },
     "EUW1_8001790610": {
      "win": true,
@@ -1386,7 +1780,21 @@
       "Mel",
       "Jhin",
       "Naafiri"
-     ]
+     ],
+     "rating": 5.4,
+     "place": 4,
+     "good": [
+      "8.0 CS/min",
+      "21% of team damage",
+      "20% of team gold"
+     ],
+     "bad": [
+      "34% kill participation",
+      "7 deaths",
+      "1.6 KDA"
+     ],
+     "laneGold": 1250,
+     "rv": 1
     },
     "EUW1_8000544219": {
      "win": false,
@@ -1421,7 +1829,17 @@
       "Sylas",
       "Yone",
       "Zyra"
-     ]
+     ],
+     "rating": 7.2,
+     "place": 2,
+     "good": [
+      "7.0 KDA",
+      "25% of team gold",
+      "8.9 CS/min"
+     ],
+     "bad": [],
+     "laneGold": 5203,
+     "rv": 1
     },
     "EUW1_8004004314": {
      "win": true,
@@ -1456,7 +1874,17 @@
       "Shaco",
       "Ashe",
       "Rakan"
-     ]
+     ],
+     "rating": 7.9,
+     "place": 2,
+     "good": [
+      "+4.8k gold vs lane opponent",
+      "24% of team gold",
+      "27% of team damage"
+     ],
+     "bad": [],
+     "laneGold": 4753,
+     "rv": 1
     },
     "EUW1_8004052999": {
      "win": false,
@@ -1491,7 +1919,21 @@
       "Yone",
       "Ezreal",
       "Sona"
-     ]
+     ],
+     "rating": 5.4,
+     "place": 5,
+     "good": [
+      "26% of team damage taken",
+      "60% kill participation",
+      "7.7 CS/min"
+     ],
+     "bad": [
+      "7 deaths",
+      "1.3 KDA",
+      "11 vision score"
+     ],
+     "laneGold": 1108,
+     "rv": 1
     },
     "EUW1_8004089229": {
      "win": false,
@@ -1526,7 +1968,21 @@
       "Zed",
       "Mel",
       "Janna"
-     ]
+     ],
+     "rating": 3.1,
+     "place": 9,
+     "good": [
+      "7.6 CS/min",
+      "26% of team gold",
+      "25% of team damage"
+     ],
+     "bad": [
+      "8 deaths",
+      "30% kill participation",
+      "0.8 KDA"
+     ],
+     "laneGold": -2538,
+     "rv": 1
     },
     "EUW1_8004134620": {
      "win": false,
@@ -1566,7 +2022,19 @@
       "Swain",
       "Kalista",
       "Alistar"
-     ]
+     ],
+     "rating": 5.2,
+     "place": 5,
+     "good": [
+      "9.8 CS/min",
+      "4 deaths",
+      "24% of team gold"
+     ],
+     "bad": [
+      "39% kill participation"
+     ],
+     "laneGold": 1354,
+     "rv": 1
     },
     "EUW1_8004227241": {
      "win": false,
@@ -1601,7 +2069,18 @@
       "KogMaw",
       "Veigar",
       "Leona"
-     ]
+     ],
+     "rating": 4.1,
+     "place": 6,
+     "good": [
+      "32% of team damage taken",
+      "5 deaths"
+     ],
+     "bad": [
+      "−3.9k gold vs lane opponent"
+     ],
+     "laneGold": -3910,
+     "rv": 1
     },
     "EUW1_8004253945": {
      "win": true,
@@ -1636,7 +2115,19 @@
       "Teemo",
       "Viktor",
       "Mel"
-     ]
+     ],
+     "rating": 5.3,
+     "place": 5,
+     "good": [
+      "10.5 CS/min",
+      "24% of team gold",
+      "4 deaths"
+     ],
+     "bad": [
+      "−3.7k gold vs lane opponent"
+     ],
+     "laneGold": -3747,
+     "rv": 1
     },
     "EUW1_8004657637": {
      "win": true,
@@ -1676,7 +2167,21 @@
       "Malzahar",
       "Kalista",
       "Xerath"
-     ]
+     ],
+     "rating": 7,
+     "place": 2,
+     "good": [
+      "+4.2k gold vs lane opponent",
+      "26% of team damage",
+      "23% of team gold"
+     ],
+     "bad": [
+      "1.5 KDA",
+      "31% kill participation",
+      "8 deaths"
+     ],
+     "laneGold": 4166,
+     "rv": 1
     },
     "EUW1_8004693913": {
      "win": true,
@@ -1716,7 +2221,20 @@
       "Veigar",
       "Yunara",
       "Lux"
-     ]
+     ],
+     "rating": 6,
+     "place": 5,
+     "good": [
+      "8.4 CS/min",
+      "+2.6k gold vs lane opponent",
+      "19% of team damage"
+     ],
+     "bad": [
+      "21% kill participation",
+      "1.5 KDA"
+     ],
+     "laneGold": 2560,
+     "rv": 1
     },
     "EUW1_8004898324": {
      "win": true,
@@ -1756,7 +2274,17 @@
       "Gwen",
       "Heimerdinger",
       "Leona"
-     ]
+     ],
+     "rating": 8.3,
+     "place": 1,
+     "good": [
+      "37% of team damage",
+      "29% of team gold",
+      "7.0 KDA"
+     ],
+     "bad": [],
+     "laneGold": 4328,
+     "rv": 1
     },
     "EUW1_8004927306": {
      "win": true,
@@ -1796,20 +2324,72 @@
       "Skarner",
       "Talon",
       "Leona"
-     ]
+     ],
+     "rating": 8.3,
+     "place": 1,
+     "good": [
+      "6.7 KDA",
+      "28% of team gold",
+      "63% kill participation"
+     ],
+     "bad": [],
+     "laneGold": 6205,
+     "rv": 1
+    },
+    "EUW1_8004991929": {
+     "win": true,
+     "champ": "Xayah",
+     "role": "BOTTOM",
+     "k": 8,
+     "d": 3,
+     "a": 11,
+     "cs": 295,
+     "dmg": 23027,
+     "vis": 27,
+     "gold": 16067,
+     "kp": 58,
+     "mates": [
+      {
+       "id": "wilhump#NAEU",
+       "same": true
+      }
+     ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 15818,
+     "v": 4,
+     "dur": 1855,
+     "at": 1791233966022,
+     "vs": [
+      "Urgot",
+      "Rammus",
+      "Lissandra",
+      "Tristana",
+      "LeeSin"
+     ],
+     "with": [
+      "Varus",
+      "Poppy",
+      "Lux",
+      "Leona"
+     ],
+     "rating": 7.5,
+     "place": 2,
+     "good": [
+      "25% of team gold",
+      "9.5 CS/min",
+      "+5.0k gold vs lane opponent"
+     ],
+     "bad": [
+      "14% of team damage taken"
+     ],
+     "laneGold": 5014,
+     "rv": 1
     }
    },
-   "live": {
-    "champId": 498,
-    "queue": 420,
-    "start": 1791232080840,
-    "mates": [
-     {
-      "id": "wilhump#NAEU",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 6864,
    "level": 717,
@@ -1826,8 +2406,8 @@
    "current": {
     "tier": "GOLD",
     "division": "I",
-    "lp": 67,
-    "wins": 71,
+    "lp": 89,
+    "wins": 72,
     "losses": 61
    },
    "history": [
@@ -1872,6 +2452,12 @@
      "tier": "GOLD",
      "division": "I",
      "lp": 67
+    },
+    {
+     "t": 1791234230206,
+     "tier": "GOLD",
+     "division": "I",
+     "lp": 89
     }
    ],
    "matches": {
@@ -1908,7 +2494,17 @@
       "Briar",
       "Twitch",
       "Brand"
-     ]
+     ],
+     "rating": 1.9,
+     "place": 10,
+     "good": [],
+     "bad": [
+      "11% of team damage",
+      "25% kill participation",
+      "0.8 KDA"
+     ],
+     "laneGold": -5204,
+     "rv": 1
     },
     "EUW1_8002951516": {
      "win": true,
@@ -1943,7 +2539,19 @@
       "Nocturne",
       "MissFortune",
       "Senna"
-     ]
+     ],
+     "rating": 5.2,
+     "place": 5,
+     "good": [
+      "2 deaths"
+     ],
+     "bad": [
+      "14% of team damage",
+      "7 vision score",
+      "31% kill participation"
+     ],
+     "laneGold": -179,
+     "rv": 1
     },
     "EUW1_8002885225": {
      "win": false,
@@ -1983,7 +2591,19 @@
       "Locke",
       "Lucian",
       "Soraka"
-     ]
+     ],
+     "rating": 2.6,
+     "place": 10,
+     "good": [
+      "7.9 CS/min"
+     ],
+     "bad": [
+      "10 deaths",
+      "−3.8k gold vs lane opponent",
+      "0.9 KDA"
+     ],
+     "laneGold": -3838,
+     "rv": 1
     },
     "EUW1_8002838807": {
      "win": false,
@@ -2023,7 +2643,19 @@
       "Locke",
       "Vayne",
       "Anivia"
-     ]
+     ],
+     "rating": 3.1,
+     "place": 8,
+     "good": [
+      "7.7 CS/min"
+     ],
+     "bad": [
+      "10 deaths",
+      "1.2 KDA",
+      "20% of team damage"
+     ],
+     "laneGold": -1902,
+     "rv": 1
     },
     "EUW1_8002637703": {
      "win": false,
@@ -2063,7 +2695,17 @@
       "Sejuani",
       "Syndra",
       "Xerath"
-     ]
+     ],
+     "rating": 2.7,
+     "place": 9,
+     "good": [],
+     "bad": [
+      "7 deaths",
+      "−3.0k gold vs lane opponent",
+      "0.3 KDA"
+     ],
+     "laneGold": -2999,
+     "rv": 1
     },
     "EUW1_8002595107": {
      "win": false,
@@ -2103,7 +2745,17 @@
       "Khazix",
       "Vayne",
       "Nami"
-     ]
+     ],
+     "rating": 2.4,
+     "place": 10,
+     "good": [],
+     "bad": [
+      "−3.4k gold vs lane opponent",
+      "9 deaths",
+      "16% of team damage"
+     ],
+     "laneGold": -3429,
+     "rv": 1
     },
     "EUW1_8002548207": {
      "win": true,
@@ -2143,7 +2795,19 @@
       "DrMundo",
       "MissFortune",
       "Pantheon"
-     ]
+     ],
+     "rating": 5.8,
+     "place": 3,
+     "good": [
+      "+2.0k gold vs lane opponent",
+      "20% of team gold"
+     ],
+     "bad": [
+      "8 deaths",
+      "1.9 KDA"
+     ],
+     "laneGold": 1973,
+     "rv": 1
     },
     "EUW1_8002518013": {
      "win": false,
@@ -2183,7 +2847,21 @@
       "Viego",
       "Yunara",
       "Rell"
-     ]
+     ],
+     "rating": 5.2,
+     "place": 5,
+     "good": [
+      "82% kill participation",
+      "36% of team damage",
+      "29% of team gold"
+     ],
+     "bad": [
+      "9 deaths",
+      "1.0 KDA",
+      "5 vision score"
+     ],
+     "laneGold": 1068,
+     "rv": 1
     },
     "EUW1_8002485855": {
      "win": true,
@@ -2223,7 +2901,17 @@
       "LeeSin",
       "Yunara",
       "Swain"
-     ]
+     ],
+     "rating": 6.7,
+     "place": 4,
+     "good": [
+      "+3.5k gold vs lane opponent",
+      "7 deaths",
+      "7.2 CS/min"
+     ],
+     "bad": [],
+     "laneGold": 3458,
+     "rv": 1
     },
     "EUW1_8002359899": {
      "win": false,
@@ -2263,7 +2951,17 @@
       "Lillia",
       "Yone",
       "Caitlyn"
-     ]
+     ],
+     "rating": 3.2,
+     "place": 9,
+     "good": [
+      "3.0 KDA"
+     ],
+     "bad": [
+      "15% of team damage taken"
+     ],
+     "laneGold": 1215,
+     "rv": 1
     },
     "EUW1_8002334879": {
      "win": true,
@@ -2303,7 +3001,19 @@
       "Warwick",
       "Ekko",
       "Caitlyn"
-     ]
+     ],
+     "rating": 5.9,
+     "place": 4,
+     "good": [
+      "57% kill participation",
+      "31 vision score",
+      "25% of team damage taken"
+     ],
+     "bad": [
+      "12% of team damage"
+     ],
+     "laneGold": -541,
+     "rv": 1
     },
     "EUW1_8002308580": {
      "win": true,
@@ -2343,7 +3053,19 @@
       "Kayn",
       "Xerath",
       "Caitlyn"
-     ]
+     ],
+     "rating": 1.8,
+     "place": 10,
+     "good": [
+      "55 vision score"
+     ],
+     "bad": [
+      "12 deaths",
+      "28% kill participation",
+      "0.8 KDA"
+     ],
+     "laneGold": 605,
+     "rv": 1
     },
     "EUW1_8002226682": {
      "win": false,
@@ -2378,7 +3100,19 @@
       "Qiyana",
       "Ahri",
       "Vayne"
-     ]
+     ],
+     "rating": 1.6,
+     "place": 10,
+     "good": [
+      "56 vision score"
+     ],
+     "bad": [
+      "9% of team damage",
+      "9 deaths",
+      "16% of team damage taken"
+     ],
+     "laneGold": -3780,
+     "rv": 1
     },
     "EUW1_8002216643": {
      "win": true,
@@ -2413,7 +3147,18 @@
       "Nunu",
       "Yone",
       "Caitlyn"
-     ]
+     ],
+     "rating": 6.2,
+     "place": 4,
+     "good": [
+      "50 vision score",
+      "51% kill participation"
+     ],
+     "bad": [
+      "15% of team damage taken"
+     ],
+     "laneGold": 699,
+     "rv": 1
     },
     "EUW1_8002206559": {
      "win": true,
@@ -2448,7 +3193,20 @@
       "Aatrox",
       "Sylas",
       "Aphelios"
-     ]
+     ],
+     "rating": 5.8,
+     "place": 5,
+     "good": [
+      "43 vision score",
+      "59% kill participation",
+      "4.4 KDA"
+     ],
+     "bad": [
+      "9% of team damage",
+      "14% of team damage taken"
+     ],
+     "laneGold": 694,
+     "rv": 1
     },
     "EUW1_8001795177": {
      "win": true,
@@ -2488,7 +3246,19 @@
       "Viego",
       "Malzahar",
       "Kalista"
-     ]
+     ],
+     "rating": 3.7,
+     "place": 9,
+     "good": [
+      "36 vision score"
+     ],
+     "bad": [
+      "12 deaths",
+      "1.3 KDA",
+      "12% of team damage"
+     ],
+     "laneGold": -925,
+     "rv": 1
     },
     "EUW1_8001755977": {
      "win": true,
@@ -2528,7 +3298,20 @@
       "DrMundo",
       "Lissandra",
       "Nilah"
-     ]
+     ],
+     "rating": 6.8,
+     "place": 2,
+     "good": [
+      "62% kill participation",
+      "4.9 KDA",
+      "7 deaths"
+     ],
+     "bad": [
+      "14 vision score",
+      "10% of team damage"
+     ],
+     "laneGold": 2864,
+     "rv": 1
     },
     "EUW1_8001710744": {
      "win": false,
@@ -2568,7 +3351,19 @@
       "Nasus",
       "Kennen",
       "Yunara"
-     ]
+     ],
+     "rating": 2.4,
+     "place": 10,
+     "good": [
+      "78 vision score"
+     ],
+     "bad": [
+      "1.0 KDA",
+      "8 deaths",
+      "8% of team damage"
+     ],
+     "laneGold": -3020,
+     "rv": 1
     },
     "EUW1_8001669821": {
      "win": true,
@@ -2608,7 +3403,19 @@
       "Amumu",
       "Viktor",
       "KogMaw"
-     ]
+     ],
+     "rating": 3.9,
+     "place": 7,
+     "good": [
+      "36 vision score"
+     ],
+     "bad": [
+      "16% of team damage taken",
+      "8% of team damage",
+      "36% kill participation"
+     ],
+     "laneGold": 69,
+     "rv": 1
     },
     "EUW1_8001626876": {
      "win": true,
@@ -2643,7 +3450,19 @@
       "Olaf",
       "Vex",
       "Draven"
-     ]
+     ],
+     "rating": 5.3,
+     "place": 4,
+     "good": [
+      "83 vision score",
+      "49% kill participation"
+     ],
+     "bad": [
+      "11 deaths",
+      "13% of team damage"
+     ],
+     "laneGold": 3284,
+     "rv": 1
     },
     "EUW1_8001297776": {
      "win": true,
@@ -2678,7 +3497,20 @@
       "MonkeyKing",
       "Galio",
       "Yunara"
-     ]
+     ],
+     "rating": 8,
+     "place": 2,
+     "good": [
+      "53 vision score",
+      "7.3 KDA",
+      "61% kill participation"
+     ],
+     "bad": [
+      "13% of team damage taken",
+      "8% of team damage"
+     ],
+     "laneGold": 1736,
+     "rv": 1
     },
     "EUW1_8001281719": {
      "win": true,
@@ -2713,7 +3545,19 @@
       "Fizz",
       "Talon",
       "MissFortune"
-     ]
+     ],
+     "rating": 6,
+     "place": 4,
+     "good": [
+      "39 vision score",
+      "48% kill participation",
+      "5 deaths"
+     ],
+     "bad": [
+      "9% of team damage"
+     ],
+     "laneGold": 1726,
+     "rv": 1
     },
     "EUW1_8000503709": {
      "win": false,
@@ -2748,7 +3592,18 @@
       "Malzahar",
       "Ezreal",
       "Rell"
-     ]
+     ],
+     "rating": 4.8,
+     "place": 6,
+     "good": [
+      "36% of team damage taken",
+      "7.7 CS/min"
+     ],
+     "bad": [
+      "1.7 KDA"
+     ],
+     "laneGold": -808,
+     "rv": 1
     },
     "EUW1_8000466199": {
      "win": false,
@@ -2783,7 +3638,19 @@
       "Shaco",
       "Leblanc",
       "Varus"
-     ]
+     ],
+     "rating": 5,
+     "place": 5,
+     "good": [
+      "74% kill participation",
+      "71 vision score",
+      "23% of team damage taken"
+     ],
+     "bad": [
+      "10 deaths"
+     ],
+     "laneGold": -782,
+     "rv": 1
     },
     "EUW1_8003807867": {
      "win": false,
@@ -2818,7 +3685,20 @@
       "Diana",
       "Locke",
       "Samira"
-     ]
+     ],
+     "rating": 5,
+     "place": 4,
+     "good": [
+      "81 vision score",
+      "4.8 KDA",
+      "63% kill participation"
+     ],
+     "bad": [
+      "7% of team damage",
+      "13% of team damage taken"
+     ],
+     "laneGold": -231,
+     "rv": 1
     },
     "EUW1_8003764808": {
      "win": true,
@@ -2853,7 +3733,20 @@
       "Syndra",
       "Zeri",
       "Lulu"
-     ]
+     ],
+     "rating": 5.2,
+     "place": 5,
+     "good": [
+      "43% of team damage taken",
+      "7.2 CS/min"
+     ],
+     "bad": [
+      "−3.7k gold vs lane opponent",
+      "32% kill participation",
+      "2.2 KDA"
+     ],
+     "laneGold": -3665,
+     "rv": 1
     },
     "EUW1_8003886278": {
      "win": true,
@@ -2893,7 +3786,19 @@
       "Qiyana",
       "Viktor",
       "Vayne"
-     ]
+     ],
+     "rating": 6.4,
+     "place": 4,
+     "good": [
+      "62 vision score",
+      "4.8 KDA",
+      "4 deaths"
+     ],
+     "bad": [
+      "11% of team damage"
+     ],
+     "laneGold": 1406,
+     "rv": 1
     },
     "EUW1_8004715988": {
      "win": true,
@@ -2928,7 +3833,20 @@
       "Belveth",
       "Fizz",
       "Ezreal"
-     ]
+     ],
+     "rating": 5.1,
+     "place": 7,
+     "good": [
+      "53% kill participation",
+      "34 vision score",
+      "3.2 KDA"
+     ],
+     "bad": [
+      "7% of team damage",
+      "17% of team damage taken"
+     ],
+     "laneGold": 1440,
+     "rv": 1
     },
     "EUW1_8004898324": {
      "win": true,
@@ -2968,7 +3886,17 @@
       "Gwen",
       "Heimerdinger",
       "Xayah"
-     ]
+     ],
+     "rating": 7.1,
+     "place": 2,
+     "good": [
+      "7.0 KDA",
+      "67% kill participation",
+      "11 vision score"
+     ],
+     "bad": [],
+     "laneGold": 1051,
+     "rv": 1
     },
     "EUW1_8004927306": {
      "win": true,
@@ -3008,20 +3936,74 @@
       "Skarner",
       "Talon",
       "Xayah"
-     ]
+     ],
+     "rating": 5.8,
+     "place": 3,
+     "good": [
+      "56% kill participation",
+      "63 vision score",
+      "3.0 KDA"
+     ],
+     "bad": [
+      "11% of team damage"
+     ],
+     "laneGold": 1,
+     "rv": 1
+    },
+    "EUW1_8004991929": {
+     "win": true,
+     "champ": "Leona",
+     "role": "UTILITY",
+     "k": 5,
+     "d": 3,
+     "a": 14,
+     "cs": 30,
+     "dmg": 11163,
+     "vis": 48,
+     "gold": 9813,
+     "kp": 58,
+     "mates": [
+      {
+       "id": "Ymine#000",
+       "same": true
+      }
+     ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 25886,
+     "v": 4,
+     "dur": 1855,
+     "at": 1791233966022,
+     "vs": [
+      "Urgot",
+      "Rammus",
+      "Lissandra",
+      "Tristana",
+      "LeeSin"
+     ],
+     "with": [
+      "Varus",
+      "Poppy",
+      "Lux",
+      "Xayah"
+     ],
+     "rating": 6.6,
+     "place": 4,
+     "good": [
+      "48 vision score",
+      "58% kill participation",
+      "6.3 KDA"
+     ],
+     "bad": [
+      "10% of team damage"
+     ],
+     "laneGold": -20,
+     "rv": 1
     }
    },
-   "live": {
-    "champId": 89,
-    "queue": 420,
-    "start": 1791232080840,
-    "mates": [
-     {
-      "id": "Ymine#000",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 5119,
    "level": 513,
@@ -3126,7 +4108,17 @@
       "Briar",
       "Malphite",
       "Seraphine"
-     ]
+     ],
+     "rating": 5.9,
+     "place": 5,
+     "good": [
+      "22% of team gold",
+      "7.3 CS/min",
+      "6.0 KDA"
+     ],
+     "bad": [],
+     "laneGold": 1184,
+     "rv": 1
     },
     "EUW1_8002603842": {
      "win": true,
@@ -3166,7 +4158,21 @@
       "Shyvana",
       "Sylas",
       "Lux"
-     ]
+     ],
+     "rating": 5.6,
+     "place": 4,
+     "good": [
+      "23% of team damage",
+      "22% of team gold",
+      "7.7 CS/min"
+     ],
+     "bad": [
+      "2.0 KDA",
+      "39% kill participation",
+      "7 deaths"
+     ],
+     "laneGold": 617,
+     "rv": 1
     },
     "EUW1_8002568695": {
      "win": false,
@@ -3206,7 +4212,19 @@
       "Hecarim",
       "Ryze",
       "Seraphine"
-     ]
+     ],
+     "rating": 5,
+     "place": 6,
+     "good": [
+      "34% of team damage",
+      "26% of team gold",
+      "69% kill participation"
+     ],
+     "bad": [
+      "7 deaths"
+     ],
+     "laneGold": -410,
+     "rv": 1
     },
     "EUW1_8002541067": {
      "win": true,
@@ -3246,7 +4264,17 @@
       "Warwick",
       "Taliyah",
       "Nautilus"
-     ]
+     ],
+     "rating": 8.4,
+     "place": 1,
+     "good": [
+      "46% of team damage",
+      "32% of team gold",
+      "+6.5k gold vs lane opponent"
+     ],
+     "bad": [],
+     "laneGold": 6504,
+     "rv": 1
     },
     "EUW1_8002493347": {
      "win": false,
@@ -3286,7 +4314,20 @@
       "Lillia",
       "Yone",
       "Milio"
-     ]
+     ],
+     "rating": 4,
+     "place": 9,
+     "good": [
+      "7.2 CS/min",
+      "27% of team damage",
+      "22% of team gold"
+     ],
+     "bad": [
+      "1.7 KDA",
+      "9 deaths"
+     ],
+     "laneGold": -465,
+     "rv": 1
     },
     "EUW1_8002458537": {
      "win": true,
@@ -3326,7 +4367,19 @@
       "Udyr",
       "Vex",
       "Morgana"
-     ]
+     ],
+     "rating": 8,
+     "place": 1,
+     "good": [
+      "40% of team damage",
+      "30% of team gold",
+      "9.5 CS/min"
+     ],
+     "bad": [
+      "10 deaths"
+     ],
+     "laneGold": 2996,
+     "rv": 1
     },
     "EUW1_8002422243": {
      "win": false,
@@ -3366,7 +4419,19 @@
       "Evelynn",
       "Lissandra",
       "Nami"
-     ]
+     ],
+     "rating": 2.3,
+     "place": 9,
+     "good": [
+      "6.7 CS/min"
+     ],
+     "bad": [
+      "10 deaths",
+      "−4.4k gold vs lane opponent",
+      "0.5 KDA"
+     ],
+     "laneGold": -4390,
+     "rv": 1
     },
     "EUW1_8002402826": {
      "win": false,
@@ -3406,7 +4471,17 @@
       "Syndra",
       "Tristana",
       "Brand"
-     ]
+     ],
+     "rating": 4.2,
+     "place": 6,
+     "good": [
+      "55% kill participation"
+     ],
+     "bad": [
+      "9 vision score"
+     ],
+     "laneGold": -388,
+     "rv": 1
     },
     "EUW1_8001795177": {
      "win": true,
@@ -3446,7 +4521,18 @@
       "Viego",
       "Malzahar",
       "Blitzcrank"
-     ]
+     ],
+     "rating": 5.1,
+     "place": 5,
+     "good": [
+      "24% of team gold"
+     ],
+     "bad": [
+      "11 deaths",
+      "1.5 KDA"
+     ],
+     "laneGold": 989,
+     "rv": 1
     },
     "EUW1_8001755977": {
      "win": true,
@@ -3486,7 +4572,17 @@
       "DrMundo",
       "Lissandra",
       "Taric"
-     ]
+     ],
+     "rating": 8.1,
+     "place": 1,
+     "good": [
+      "33% of team gold",
+      "41% of team damage",
+      "67% kill participation"
+     ],
+     "bad": [],
+     "laneGold": 12601,
+     "rv": 1
     },
     "EUW1_8001710744": {
      "win": false,
@@ -3526,7 +4622,20 @@
       "Nasus",
       "Kennen",
       "Rell"
-     ]
+     ],
+     "rating": 2.9,
+     "place": 7,
+     "good": [
+      "8.4 CS/min",
+      "25% of team gold"
+     ],
+     "bad": [
+      "−4.8k gold vs lane opponent",
+      "10 deaths",
+      "0.7 KDA"
+     ],
+     "laneGold": -4789,
+     "rv": 1
     },
     "EUW1_8001669821": {
      "win": true,
@@ -3566,7 +4675,20 @@
       "Amumu",
       "Viktor",
       "Lulu"
-     ]
+     ],
+     "rating": 6.4,
+     "place": 4,
+     "good": [
+      "33% of team damage",
+      "26% of team gold",
+      "9.0 CS/min"
+     ],
+     "bad": [
+      "6 deaths",
+      "1.5 KDA"
+     ],
+     "laneGold": 2509,
+     "rv": 1
     },
     "EUW1_8001479699": {
      "win": false,
@@ -3601,7 +4723,19 @@
       "MonkeyKing",
       "Syndra",
       "Brand"
-     ]
+     ],
+     "rating": 3.9,
+     "place": 7,
+     "good": [
+      "7.3 CS/min",
+      "25% of team gold"
+     ],
+     "bad": [
+      "1.2 KDA",
+      "10 deaths"
+     ],
+     "laneGold": -219,
+     "rv": 1
     },
     "EUW1_8001422246": {
      "win": true,
@@ -3636,7 +4770,19 @@
       "Skarner",
       "Viktor",
       "Janna"
-     ]
+     ],
+     "rating": 7.7,
+     "place": 1,
+     "good": [
+      "33% of team gold",
+      "39% of team damage",
+      "9.3 CS/min"
+     ],
+     "bad": [
+      "11 deaths"
+     ],
+     "laneGold": 10279,
+     "rv": 1
     },
     "EUW1_8000503133": {
      "win": false,
@@ -3671,7 +4817,17 @@
       "Jax",
       "Zed",
       "Lux"
-     ]
+     ],
+     "rating": 6.5,
+     "place": 4,
+     "good": [
+      "4.0 KDA",
+      "62% kill participation",
+      "26% of team gold"
+     ],
+     "bad": [],
+     "laneGold": 2846,
+     "rv": 1
     },
     "EUW1_8000417804": {
      "win": true,
@@ -3706,7 +4862,17 @@
       "Warwick",
       "Lux",
       "Zilean"
-     ]
+     ],
+     "rating": 5.9,
+     "place": 5,
+     "good": [
+      "24% of team gold",
+      "+2.3k gold vs lane opponent",
+      "7.0 CS/min"
+     ],
+     "bad": [],
+     "laneGold": 2268,
+     "rv": 1
     },
     "EUW1_8000394788": {
      "win": true,
@@ -3741,7 +4907,17 @@
       "Teemo",
       "Katarina",
       "Thresh"
-     ]
+     ],
+     "rating": 8.4,
+     "place": 1,
+     "good": [
+      "38% of team damage",
+      "28% of team gold",
+      "72% kill participation"
+     ],
+     "bad": [],
+     "laneGold": 8064,
+     "rv": 1
     },
     "EUW1_8004134620": {
      "win": false,
@@ -3781,7 +4957,21 @@
       "Chogath",
       "Swain",
       "Alistar"
-     ]
+     ],
+     "rating": 2.9,
+     "place": 9,
+     "good": [
+      "7.5 CS/min",
+      "28% of team damage",
+      "23% of team gold"
+     ],
+     "bad": [
+      "−4.8k gold vs lane opponent",
+      "10 deaths",
+      "1.5 KDA"
+     ],
+     "laneGold": -4828,
+     "rv": 1
     },
     "EUW1_8004428513": {
      "win": true,
@@ -3816,7 +5006,20 @@
       "Chogath",
       "Lissandra",
       "Seraphine"
-     ]
+     ],
+     "rating": 6,
+     "place": 5,
+     "good": [
+      "8.7 CS/min",
+      "25% of team gold",
+      "+3.0k gold vs lane opponent"
+     ],
+     "bad": [
+      "42% kill participation",
+      "2.3 KDA"
+     ],
+     "laneGold": 3017,
+     "rv": 1
     },
     "EUW1_8004657637": {
      "win": true,
@@ -3856,7 +5059,17 @@
       "MonkeyKing",
       "Malzahar",
       "Xerath"
-     ]
+     ],
+     "rating": 6.3,
+     "place": 3,
+     "good": [
+      "25% of team gold",
+      "25% of team damage",
+      "7.9 CS/min"
+     ],
+     "bad": [],
+     "laneGold": 1060,
+     "rv": 1
     },
     "EUW1_8004693913": {
      "win": true,
@@ -3896,7 +5109,17 @@
       "Kayn",
       "Veigar",
       "Lux"
-     ]
+     ],
+     "rating": 7.4,
+     "place": 2,
+     "good": [
+      "27% of team damage",
+      "26% of team gold",
+      "+6.3k gold vs lane opponent"
+     ],
+     "bad": [],
+     "laneGold": 6337,
+     "rv": 1
     },
     "EUW1_8004919326": {
      "win": true,
@@ -3936,7 +5159,20 @@
       "Sylas",
       "Fizz",
       "Thresh"
-     ]
+     ],
+     "rating": 6.7,
+     "place": 3,
+     "good": [
+      "29% of team damage",
+      "24% of team gold",
+      "+4.5k gold vs lane opponent"
+     ],
+     "bad": [
+      "2.6 KDA",
+      "9 deaths"
+     ],
+     "laneGold": 4543,
+     "rv": 1
     },
     "EUW1_8004971445": {
      "win": true,
@@ -3976,10 +5212,25 @@
       "Warwick",
       "Xerath",
       "Pantheon"
-     ]
+     ],
+     "rating": 7.3,
+     "place": 1,
+     "good": [
+      "27% of team gold",
+      "26% of team damage",
+      "+5.4k gold vs lane opponent"
+     ],
+     "bad": [],
+     "laneGold": 5394,
+     "rv": 1
     }
    },
-   "live": null,
+   "live": {
+    "champId": 221,
+    "queue": 420,
+    "start": 1791234092635,
+    "mates": []
+   },
    "liveErr": null,
    "icon": 3151,
    "level": 745,
@@ -4077,7 +5328,19 @@
       "Chogath",
       "Aurora",
       "Milio"
-     ]
+     ],
+     "rating": 3.8,
+     "place": 8,
+     "good": [
+      "6.7 CS/min",
+      "24% of team damage"
+     ],
+     "bad": [
+      "28% kill participation",
+      "1.6 KDA"
+     ],
+     "laneGold": -62,
+     "rv": 1
     },
     "EUW1_8003346357": {
      "win": true,
@@ -4117,7 +5380,19 @@
       "Ekko",
       "Yone",
       "Poppy"
-     ]
+     ],
+     "rating": 6.2,
+     "place": 3,
+     "good": [
+      "31% of team damage",
+      "9.0 CS/min",
+      "1 death"
+     ],
+     "bad": [
+      "27% kill participation"
+     ],
+     "laneGold": 1041,
+     "rv": 1
     },
     "EUW1_8002518013": {
      "win": false,
@@ -4157,7 +5432,19 @@
       "Viego",
       "Locke",
       "Rell"
-     ]
+     ],
+     "rating": 1.9,
+     "place": 10,
+     "good": [
+      "6.1 CS/min"
+     ],
+     "bad": [
+      "−8.0k gold vs lane opponent",
+      "9 deaths",
+      "9% kill participation"
+     ],
+     "laneGold": -7972,
+     "rv": 1
     },
     "EUW1_8002485855": {
      "win": true,
@@ -4197,7 +5484,19 @@
       "LeeSin",
       "Ekko",
       "Swain"
-     ]
+     ],
+     "rating": 5.5,
+     "place": 5,
+     "good": [
+      "23% of team damage",
+      "21% of team gold",
+      "7.4 CS/min"
+     ],
+     "bad": [
+      "10 deaths"
+     ],
+     "laneGold": 1315,
+     "rv": 1
     },
     "EUW1_8002359899": {
      "win": false,
@@ -4237,7 +5536,17 @@
       "Lillia",
       "Yone",
       "Zilean"
-     ]
+     ],
+     "rating": 2.1,
+     "place": 10,
+     "good": [],
+     "bad": [
+      "13 deaths",
+      "−9.8k gold vs lane opponent",
+      "1.1 KDA"
+     ],
+     "laneGold": -9848,
+     "rv": 1
     },
     "EUW1_8002334879": {
      "win": true,
@@ -4277,7 +5586,20 @@
       "Warwick",
       "Ekko",
       "Alistar"
-     ]
+     ],
+     "rating": 7.4,
+     "place": 1,
+     "good": [
+      "25% of team gold",
+      "30% of team damage",
+      "8.0 KDA"
+     ],
+     "bad": [
+      "12% of team damage taken",
+      "10 vision score"
+     ],
+     "laneGold": 2001,
+     "rv": 1
     },
     "EUW1_8002308580": {
      "win": true,
@@ -4317,7 +5639,19 @@
       "Kayn",
       "Xerath",
       "Karma"
-     ]
+     ],
+     "rating": 4,
+     "place": 7,
+     "good": [
+      "6.7 CS/min"
+     ],
+     "bad": [
+      "31% kill participation",
+      "14% of team damage",
+      "1.4 KDA"
+     ],
+     "laneGold": -1296,
+     "rv": 1
     },
     "EUW1_8002257238": {
      "win": false,
@@ -4352,7 +5686,19 @@
       "Kindred",
       "Malzahar",
       "Kaisa"
-     ]
+     ],
+     "rating": 4.5,
+     "place": 6,
+     "good": [
+      "123 vision score",
+      "2.9 KDA",
+      "52% kill participation"
+     ],
+     "bad": [
+      "7% of team damage"
+     ],
+     "laneGold": -856,
+     "rv": 1
     },
     "EUW1_8001506407": {
      "win": false,
@@ -4387,7 +5733,20 @@
       "Yone",
       "Urgot",
       "Yunara"
-     ]
+     ],
+     "rating": 3.9,
+     "place": 8,
+     "good": [
+      "112 vision score",
+      "58% kill participation"
+     ],
+     "bad": [
+      "13 deaths",
+      "6% of team damage",
+      "2.2 KDA"
+     ],
+     "laneGold": -1348,
+     "rv": 1
     },
     "EUW1_8001465021": {
      "win": true,
@@ -4422,7 +5781,18 @@
       "Viego",
       "Zed",
       "Yunara"
-     ]
+     ],
+     "rating": 5.7,
+     "place": 4,
+     "good": [
+      "144 vision score",
+      "54% kill participation"
+     ],
+     "bad": [
+      "4% of team damage"
+     ],
+     "laneGold": -835,
+     "rv": 1
     },
     "EUW1_8001425483": {
      "win": false,
@@ -4457,7 +5827,21 @@
       "Kindred",
       "Aurora",
       "Caitlyn"
-     ]
+     ],
+     "rating": 2.8,
+     "place": 8,
+     "good": [
+      "81 vision score",
+      "53% kill participation",
+      "25% of team damage taken"
+     ],
+     "bad": [
+      "10 deaths",
+      "1.0 KDA",
+      "12% of team damage"
+     ],
+     "laneGold": -1889,
+     "rv": 1
     },
     "EUW1_8004657173": {
      "win": true,
@@ -4492,7 +5876,20 @@
       "Hecarim",
       "Locke",
       "Lux"
-     ]
+     ],
+     "rating": 5.7,
+     "place": 6,
+     "good": [
+      "23% of team damage",
+      "2.7 KDA",
+      "48% kill participation"
+     ],
+     "bad": [
+      "−2.0k gold vs lane opponent",
+      "16% of team damage taken"
+     ],
+     "laneGold": -1976,
+     "rv": 1
     },
     "EUW1_8004701043": {
      "win": true,
@@ -4527,7 +5924,19 @@
       "Zyra",
       "Sylas",
       "Seraphine"
-     ]
+     ],
+     "rating": 5.9,
+     "place": 3,
+     "good": [
+      "+2.9k gold vs lane opponent",
+      "23% of team gold",
+      "7.3 CS/min"
+     ],
+     "bad": [
+      "38% kill participation"
+     ],
+     "laneGold": 2927,
+     "rv": 1
     },
     "EUW1_8004808809": {
      "win": true,
@@ -4562,7 +5971,20 @@
       "Viktor",
       "Draven",
       "Swain"
-     ]
+     ],
+     "rating": 5.9,
+     "place": 4,
+     "good": [
+      "4 deaths",
+      "7.6 CS/min",
+      "+2.4k gold vs lane opponent"
+     ],
+     "bad": [
+      "23% kill participation",
+      "10% of team damage"
+     ],
+     "laneGold": 2410,
+     "rv": 1
     },
     "EUW1_8004861894": {
      "win": false,
@@ -4597,7 +6019,17 @@
       "Briar",
       "Vex",
       "Nautilus"
-     ]
+     ],
+     "rating": 5.8,
+     "place": 3,
+     "good": [
+      "39% of team damage",
+      "89% kill participation",
+      "27% of team gold"
+     ],
+     "bad": [],
+     "laneGold": 2699,
+     "rv": 1
     }
    },
    "live": null,
