@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-05T00:38:47.849Z",
+ "updatedAt": "2026-10-05T00:44:18.882Z",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
   "Kohmira#44160": {
@@ -63,7 +63,20 @@
      "taken": 18117,
      "v": 4,
      "dur": 1542,
-     "at": 1791044496859
+     "at": 1791044496859,
+     "vs": [
+      "Malphite",
+      "Belveth",
+      "Vladimir",
+      "Kaisa",
+      "Brand"
+     ],
+     "with": [
+      "Darius",
+      "Shyvana",
+      "Yunara",
+      "Lux"
+     ]
     },
     "EUW1_8002568695": {
      "win": false,
@@ -90,7 +103,20 @@
      "taken": 32972,
      "v": 4,
      "dur": 1644,
-     "at": 1791042542927
+     "at": 1791042542927,
+     "vs": [
+      "DrMundo",
+      "Ivern",
+      "Sylas",
+      "Tristana",
+      "Velkoz"
+     ],
+     "with": [
+      "Malphite",
+      "Hecarim",
+      "Kaisa",
+      "Seraphine"
+     ]
     },
     "EUW1_8002541067": {
      "win": true,
@@ -117,7 +143,20 @@
      "taken": 5029,
      "v": 4,
      "dur": 1115,
-     "at": 1791040586698
+     "at": 1791040586698,
+     "vs": [
+      "Aatrox",
+      "Nocturne",
+      "Kennen",
+      "Yasuo",
+      "Nami"
+     ],
+     "with": [
+      "Urgot",
+      "Warwick",
+      "Kalista",
+      "Nautilus"
+     ]
     },
     "EUW1_8002493347": {
      "win": false,
@@ -144,7 +183,20 @@
      "taken": 34107,
      "v": 4,
      "dur": 1999,
-     "at": 1791039050688
+     "at": 1791039050688,
+     "vs": [
+      "Darius",
+      "LeeSin",
+      "Kennen",
+      "Caitlyn",
+      "Lux"
+     ],
+     "with": [
+      "Renekton",
+      "Lillia",
+      "Ashe",
+      "Milio"
+     ]
     },
     "EUW1_8002458537": {
      "win": true,
@@ -171,7 +223,20 @@
      "taken": 27283,
      "v": 4,
      "dur": 2436,
-     "at": 1791036710145
+     "at": 1791036710145,
+     "vs": [
+      "TahmKench",
+      "Rammus",
+      "Hwei",
+      "Jhin",
+      "Pyke"
+     ],
+     "with": [
+      "Garen",
+      "Udyr",
+      "Zeri",
+      "Morgana"
+     ]
     },
     "EUW1_8002422243": {
      "win": false,
@@ -198,7 +263,20 @@
      "taken": 14414,
      "v": 4,
      "dur": 1297,
-     "at": 1791034021751
+     "at": 1791034021751,
+     "vs": [
+      "Akali",
+      "Shyvana",
+      "Irelia",
+      "Twitch",
+      "Sona"
+     ],
+     "with": [
+      "Tryndamere",
+      "Evelynn",
+      "Kalista",
+      "Nami"
+     ]
     },
     "EUW1_8002402826": {
      "win": false,
@@ -225,7 +303,20 @@
      "taken": 14142,
      "v": 4,
      "dur": 1334,
-     "at": 1791032410295
+     "at": 1791032410295,
+     "vs": [
+      "Volibear",
+      "Sejuani",
+      "Akshan",
+      "Yunara",
+      "Lux"
+     ],
+     "with": [
+      "Shaco",
+      "Nautilus",
+      "Tristana",
+      "Brand"
+     ]
     },
     "EUW1_8002367862": {
      "win": true,
@@ -247,7 +338,20 @@
      "taken": 14250,
      "v": 4,
      "dur": 1625,
-     "at": 1791030394446
+     "at": 1791030394446,
+     "vs": [
+      "Shaco",
+      "Chogath",
+      "Yasuo",
+      "Seraphine",
+      "Yuumi"
+     ],
+     "with": [
+      "Fiora",
+      "Udyr",
+      "Tristana",
+      "Lux"
+     ]
     },
     "EUW1_8002331551": {
      "win": false,
@@ -269,7 +373,20 @@
      "taken": 27905,
      "v": 4,
      "dur": 2575,
-     "at": 1791028312577
+     "at": 1791028312577,
+     "vs": [
+      "Ornn",
+      "MasterYi",
+      "Veigar",
+      "MissFortune",
+      "Lux"
+     ],
+     "with": [
+      "Yone",
+      "Talon",
+      "Xayah",
+      "Morgana"
+     ]
     },
     "EUW1_8001951444": {
      "win": true,
@@ -291,7 +408,20 @@
      "taken": 20570,
      "v": 4,
      "dur": 1794,
-     "at": 1790978931737
+     "at": 1790978931737,
+     "vs": [
+      "Olaf",
+      "Kayn",
+      "Ekko",
+      "Caitlyn",
+      "Lux"
+     ],
+     "with": [
+      "Vayne",
+      "Zaahen",
+      "Jhin",
+      "Xerath"
+     ]
     },
     "EUW1_8001885131": {
      "win": false,
@@ -313,7 +443,20 @@
      "taken": 40463,
      "v": 4,
      "dur": 2714,
-     "at": 1790976815014
+     "at": 1790976815014,
+     "vs": [
+      "Kennen",
+      "Jax",
+      "Yone",
+      "Chogath",
+      "Sion"
+     ],
+     "with": [
+      "Pantheon",
+      "MonkeyKing",
+      "Lucian",
+      "Thresh"
+     ]
     },
     "EUW1_8000570016": {
      "win": true,
@@ -335,7 +478,20 @@
      "taken": 24964,
      "v": 4,
      "dur": 2059,
-     "at": 1790871036046
+     "at": 1790871036046,
+     "vs": [
+      "Gangplank",
+      "Shyvana",
+      "Vex",
+      "Yasuo",
+      "Leona"
+     ],
+     "with": [
+      "Irelia",
+      "Sion",
+      "Jhin",
+      "Lux"
+     ]
     },
     "EUW1_8000544493": {
      "win": true,
@@ -357,7 +513,20 @@
      "taken": 19790,
      "v": 4,
      "dur": 1958,
-     "at": 1790868619095
+     "at": 1790868619095,
+     "vs": [
+      "Teemo",
+      "Graves",
+      "Vladimir",
+      "MissFortune",
+      "Zilean"
+     ],
+     "with": [
+      "Singed",
+      "Shaco",
+      "Draven",
+      "Braum"
+     ]
     },
     "EUW1_8000503576": {
      "win": true,
@@ -379,7 +548,20 @@
      "taken": 21570,
      "v": 4,
      "dur": 2197,
-     "at": 1790866252594
+     "at": 1790866252594,
+     "vs": [
+      "Shen",
+      "Viego",
+      "Fizz",
+      "Tristana",
+      "Swain"
+     ],
+     "with": [
+      "Gangplank",
+      "Nocturne",
+      "Caitlyn",
+      "Lux"
+     ]
     },
     "EUW1_8003886278": {
      "win": true,
@@ -406,14 +588,27 @@
      "taken": 10738,
      "v": 4,
      "dur": 1870,
-     "at": 1791139747143
+     "at": 1791139747143,
+     "vs": [
+      "Jax",
+      "Viego",
+      "Fizz",
+      "Caitlyn",
+      "Nami"
+     ],
+     "with": [
+      "Olaf",
+      "Qiyana",
+      "Vayne",
+      "Leona"
+     ]
     }
    },
    "live": null,
    "liveErr": null,
    "icon": 7143,
    "level": 421,
-   "checkedAt": 1791160733970
+   "checkedAt": 1791161064996
   },
   "Ymine#000": {
    "riotId": "Ymine#000",
@@ -506,7 +701,20 @@
      "taken": 28602,
      "v": 4,
      "dur": 2120,
-     "at": 1791113850421
+     "at": 1791113850421,
+     "vs": [
+      "Gwen",
+      "Kayn",
+      "Vex",
+      "MissFortune",
+      "Lux"
+     ],
+     "with": [
+      "Fiora",
+      "Chogath",
+      "Caitlyn",
+      "Milio"
+     ]
     },
     "EUW1_8003346357": {
      "win": true,
@@ -533,7 +741,20 @@
      "taken": 33053,
      "v": 4,
      "dur": 1795,
-     "at": 1791111201106
+     "at": 1791111201106,
+     "vs": [
+      "Darius",
+      "Teemo",
+      "Mel",
+      "Lucian",
+      "Nami"
+     ],
+     "with": [
+      "Ekko",
+      "Yone",
+      "Caitlyn",
+      "Poppy"
+     ]
     },
     "EUW1_8003339033": {
      "win": false,
@@ -555,7 +776,20 @@
      "taken": 8463,
      "v": 4,
      "dur": 980,
-     "at": 1791109140063
+     "at": 1791109140063,
+     "vs": [
+      "Malphite",
+      "Chogath",
+      "Locke",
+      "Jinx",
+      "Lux"
+     ],
+     "with": [
+      "Vayne",
+      "Nocturne",
+      "Vladimir",
+      "Teemo"
+     ]
     },
     "EUW1_8003038024": {
      "win": true,
@@ -577,7 +811,20 @@
      "taken": 29560,
      "v": 4,
      "dur": 1930,
-     "at": 1791066192071
+     "at": 1791066192071,
+     "vs": [
+      "Nidalee",
+      "MonkeyKing",
+      "Azir",
+      "Kaisa",
+      "Seraphine"
+     ],
+     "with": [
+      "Volibear",
+      "Sejuani",
+      "Lux",
+      "Leona"
+     ]
     },
     "EUW1_8002957178": {
      "win": false,
@@ -599,7 +846,20 @@
      "taken": 25630,
      "v": 4,
      "dur": 2071,
-     "at": 1791062742942
+     "at": 1791062742942,
+     "vs": [
+      "Jayce",
+      "FiddleSticks",
+      "Lux",
+      "Jinx",
+      "Nautilus"
+     ],
+     "with": [
+      "Singed",
+      "Shaco",
+      "Veigar",
+      "Blitzcrank"
+     ]
     },
     "EUW1_8002885225": {
      "win": false,
@@ -626,7 +886,20 @@
      "taken": 33187,
      "v": 4,
      "dur": 1910,
-     "at": 1791059511386
+     "at": 1791059511386,
+     "vs": [
+      "Malphite",
+      "Vi",
+      "Fizz",
+      "Sivir",
+      "Pyke"
+     ],
+     "with": [
+      "Tryndamere",
+      "Akshan",
+      "Lucian",
+      "Soraka"
+     ]
     },
     "EUW1_8002838807": {
      "win": false,
@@ -653,7 +926,20 @@
      "taken": 38525,
      "v": 4,
      "dur": 2062,
-     "at": 1791057346861
+     "at": 1791057346861,
+     "vs": [
+      "Yone",
+      "Chogath",
+      "Malzahar",
+      "Xayah",
+      "Zac"
+     ],
+     "with": [
+      "DrMundo",
+      "Akshan",
+      "Vayne",
+      "Anivia"
+     ]
     },
     "EUW1_8002751760": {
      "win": false,
@@ -675,7 +961,20 @@
      "taken": 20085,
      "v": 4,
      "dur": 1644,
-     "at": 1791052600214
+     "at": 1791052600214,
+     "vs": [
+      "Volibear",
+      "Sylas",
+      "Ashe",
+      "Caitlyn",
+      "Braum"
+     ],
+     "with": [
+      "Singed",
+      "Shyvana",
+      "Zeri",
+      "Thresh"
+     ]
     },
     "EUW1_8002637703": {
      "win": false,
@@ -702,7 +1001,20 @@
      "taken": 7973,
      "v": 4,
      "dur": 913,
-     "at": 1791045422070
+     "at": 1791045422070,
+     "vs": [
+      "DrMundo",
+      "FiddleSticks",
+      "Katarina",
+      "MissFortune",
+      "Alistar"
+     ],
+     "with": [
+      "Sett",
+      "Sejuani",
+      "Zed",
+      "Xerath"
+     ]
     },
     "EUW1_8002595107": {
      "win": false,
@@ -729,7 +1041,20 @@
      "taken": 30120,
      "v": 4,
      "dur": 1585,
-     "at": 1791044087699
+     "at": 1791044087699,
+     "vs": [
+      "Volibear",
+      "Evelynn",
+      "Vladimir",
+      "Yunara",
+      "Zyra"
+     ],
+     "with": [
+      "Gangplank",
+      "Ekko",
+      "Vayne",
+      "Nami"
+     ]
     },
     "EUW1_8002548207": {
      "win": true,
@@ -756,7 +1081,20 @@
      "taken": 66341,
      "v": 4,
      "dur": 2195,
-     "at": 1791042259265
+     "at": 1791042259265,
+     "vs": [
+      "Mordekaiser",
+      "Viego",
+      "Fizz",
+      "Ziggs",
+      "Seraphine"
+     ],
+     "with": [
+      "Yone",
+      "Locke",
+      "MissFortune",
+      "Pantheon"
+     ]
     },
     "EUW1_8002408456": {
      "win": true,
@@ -778,7 +1116,20 @@
      "taken": 17326,
      "v": 4,
      "dur": 1998,
-     "at": 1791033113231
+     "at": 1791033113231,
+     "vs": [
+      "KSante",
+      "Sylas",
+      "Malzahar",
+      "Vayne",
+      "Leona"
+     ],
+     "with": [
+      "Renekton",
+      "Kayn",
+      "Fizz",
+      "Alistar"
+     ]
     },
     "EUW1_8002083057": {
      "win": false,
@@ -800,7 +1151,20 @@
      "taken": 22856,
      "v": 4,
      "dur": 1504,
-     "at": 1790986072038
+     "at": 1790986072038,
+     "vs": [
+      "Malphite",
+      "RekSai",
+      "Yone",
+      "MissFortune",
+      "Renata"
+     ],
+     "with": [
+      "Tryndamere",
+      "Sylas",
+      "Jhin",
+      "Nautilus"
+     ]
     },
     "EUW1_8002049087": {
      "win": false,
@@ -822,7 +1186,20 @@
      "taken": 21660,
      "v": 4,
      "dur": 1912,
-     "at": 1790984086627
+     "at": 1790984086627,
+     "vs": [
+      "TahmKench",
+      "Sejuani",
+      "Yasuo",
+      "Tristana",
+      "Neeko"
+     ],
+     "with": [
+      "Malphite",
+      "Olaf",
+      "Fizz",
+      "Maokai"
+     ]
     },
     "EUW1_8001833606": {
      "win": true,
@@ -844,7 +1221,20 @@
      "taken": 16555,
      "v": 4,
      "dur": 1411,
-     "at": 1790972963477
+     "at": 1790972963477,
+     "vs": [
+      "Pantheon",
+      "Briar",
+      "Katarina",
+      "Tristana",
+      "Yuumi"
+     ],
+     "with": [
+      "Garen",
+      "Locke",
+      "Xerath",
+      "Swain"
+     ]
     },
     "EUW1_8001790610": {
      "win": true,
@@ -866,7 +1256,20 @@
      "taken": 25039,
      "v": 4,
      "dur": 1792,
-     "at": 1790971284773
+     "at": 1790971284773,
+     "vs": [
+      "Akshan",
+      "Lillia",
+      "Galio",
+      "Caitlyn",
+      "Yuumi"
+     ],
+     "with": [
+      "MonkeyKing",
+      "Mel",
+      "Jhin",
+      "Naafiri"
+     ]
     },
     "EUW1_8000544219": {
      "win": false,
@@ -888,7 +1291,20 @@
      "taken": 40386,
      "v": 4,
      "dur": 2948,
-     "at": 1790870469781
+     "at": 1790870469781,
+     "vs": [
+      "Illaoi",
+      "MasterYi",
+      "Yasuo",
+      "Jinx",
+      "Senna"
+     ],
+     "with": [
+      "Sett",
+      "Sylas",
+      "Yone",
+      "Zyra"
+     ]
     },
     "EUW1_8004004314": {
      "win": true,
@@ -910,7 +1326,20 @@
      "taken": 18450,
      "v": 4,
      "dur": 1526,
-     "at": 1791144137962
+     "at": 1791144137962,
+     "vs": [
+      "Teemo",
+      "Belveth",
+      "Brand",
+      "Vayne",
+      "Milio"
+     ],
+     "with": [
+      "Fiora",
+      "Shaco",
+      "Ashe",
+      "Rakan"
+     ]
     },
     "EUW1_8004052999": {
      "win": false,
@@ -932,7 +1361,20 @@
      "taken": 33074,
      "v": 4,
      "dur": 1544,
-     "at": 1791145952602
+     "at": 1791145952602,
+     "vs": [
+      "Gnar",
+      "Volibear",
+      "Sylas",
+      "Caitlyn",
+      "Pyke"
+     ],
+     "with": [
+      "Amumu",
+      "Yone",
+      "Ezreal",
+      "Sona"
+     ]
     },
     "EUW1_8004089229": {
      "win": false,
@@ -954,7 +1396,20 @@
      "taken": 19296,
      "v": 4,
      "dur": 1388,
-     "at": 1791147609776
+     "at": 1791147609776,
+     "vs": [
+      "Aatrox",
+      "MonkeyKing",
+      "Velkoz",
+      "Jinx",
+      "TahmKench"
+     ],
+     "with": [
+      "Ornn",
+      "Zed",
+      "Mel",
+      "Janna"
+     ]
     },
     "EUW1_8004134620": {
      "win": false,
@@ -981,7 +1436,20 @@
      "taken": 37038,
      "v": 4,
      "dur": 2152,
-     "at": 1791150103875
+     "at": 1791150103875,
+     "vs": [
+      "Tryndamere",
+      "Lillia",
+      "Vex",
+      "Jinx",
+      "Nami"
+     ],
+     "with": [
+      "Chogath",
+      "Swain",
+      "Kalista",
+      "Alistar"
+     ]
     },
     "EUW1_8004227241": {
      "win": false,
@@ -1003,7 +1471,20 @@
      "taken": 47937,
      "v": 4,
      "dur": 1685,
-     "at": 1791156286570
+     "at": 1791156286570,
+     "vs": [
+      "Aatrox",
+      "Diana",
+      "Kassadin",
+      "Aphelios",
+      "Thresh"
+     ],
+     "with": [
+      "Fiora",
+      "KogMaw",
+      "Veigar",
+      "Leona"
+     ]
     },
     "EUW1_8004253945": {
      "win": true,
@@ -1025,14 +1506,27 @@
      "taken": 30062,
      "v": 4,
      "dur": 2318,
-     "at": 1791159004051
+     "at": 1791159004051,
+     "vs": [
+      "Cassiopeia",
+      "Gragas",
+      "Sylas",
+      "Jinx",
+      "Bard"
+     ],
+     "with": [
+      "Singed",
+      "Teemo",
+      "Viktor",
+      "Mel"
+     ]
     }
    },
    "live": null,
    "liveErr": null,
    "icon": 6864,
    "level": 717,
-   "checkedAt": 1791160739785
+   "checkedAt": 1791161070822
   },
   "wilhump#NAEU": {
    "riotId": "wilhump#NAEU",
@@ -1096,7 +1590,20 @@
      "taken": 45701,
      "v": 4,
      "dur": 2512,
-     "at": 1791063933119
+     "at": 1791063933119,
+     "vs": [
+      "Sett",
+      "Karthus",
+      "Viktor",
+      "Tristana",
+      "Leona"
+     ],
+     "with": [
+      "DrMundo",
+      "Briar",
+      "Twitch",
+      "Brand"
+     ]
     },
     "EUW1_8002951516": {
      "win": true,
@@ -1118,7 +1625,20 @@
      "taken": 14685,
      "v": 4,
      "dur": 1144,
-     "at": 1791061104968
+     "at": 1791061104968,
+     "vs": [
+      "Riven",
+      "Belveth",
+      "Brand",
+      "Jinx",
+      "Nami"
+     ],
+     "with": [
+      "MonkeyKing",
+      "Nocturne",
+      "MissFortune",
+      "Senna"
+     ]
     },
     "EUW1_8002885225": {
      "win": false,
@@ -1145,7 +1665,20 @@
      "taken": 30142,
      "v": 4,
      "dur": 1910,
-     "at": 1791059511386
+     "at": 1791059511386,
+     "vs": [
+      "Malphite",
+      "Vi",
+      "Fizz",
+      "Sivir",
+      "Pyke"
+     ],
+     "with": [
+      "Tryndamere",
+      "Locke",
+      "Lucian",
+      "Soraka"
+     ]
     },
     "EUW1_8002838807": {
      "win": false,
@@ -1172,7 +1705,20 @@
      "taken": 29376,
      "v": 4,
      "dur": 2062,
-     "at": 1791057346861
+     "at": 1791057346861,
+     "vs": [
+      "Yone",
+      "Chogath",
+      "Malzahar",
+      "Xayah",
+      "Zac"
+     ],
+     "with": [
+      "DrMundo",
+      "Locke",
+      "Vayne",
+      "Anivia"
+     ]
     },
     "EUW1_8002637703": {
      "win": false,
@@ -1199,7 +1745,20 @@
      "taken": 10313,
      "v": 4,
      "dur": 913,
-     "at": 1791045422070
+     "at": 1791045422070,
+     "vs": [
+      "DrMundo",
+      "FiddleSticks",
+      "Katarina",
+      "MissFortune",
+      "Alistar"
+     ],
+     "with": [
+      "Sett",
+      "Sejuani",
+      "Syndra",
+      "Xerath"
+     ]
     },
     "EUW1_8002595107": {
      "win": false,
@@ -1226,7 +1785,20 @@
      "taken": 27370,
      "v": 4,
      "dur": 1585,
-     "at": 1791044087699
+     "at": 1791044087699,
+     "vs": [
+      "Volibear",
+      "Evelynn",
+      "Vladimir",
+      "Yunara",
+      "Zyra"
+     ],
+     "with": [
+      "Gangplank",
+      "Khazix",
+      "Vayne",
+      "Nami"
+     ]
     },
     "EUW1_8002548207": {
      "win": true,
@@ -1253,7 +1825,20 @@
      "taken": 31533,
      "v": 4,
      "dur": 2195,
-     "at": 1791042259265
+     "at": 1791042259265,
+     "vs": [
+      "Mordekaiser",
+      "Viego",
+      "Fizz",
+      "Ziggs",
+      "Seraphine"
+     ],
+     "with": [
+      "Yone",
+      "DrMundo",
+      "MissFortune",
+      "Pantheon"
+     ]
     },
     "EUW1_8002518013": {
      "win": false,
@@ -1280,7 +1865,20 @@
      "taken": 21418,
      "v": 4,
      "dur": 1120,
-     "at": 1791039296186
+     "at": 1791039296186,
+     "vs": [
+      "Pantheon",
+      "Warwick",
+      "Ahri",
+      "Kaisa",
+      "Lux"
+     ],
+     "with": [
+      "Jax",
+      "Viego",
+      "Yunara",
+      "Rell"
+     ]
     },
     "EUW1_8002485855": {
      "win": true,
@@ -1307,7 +1905,20 @@
      "taken": 31967,
      "v": 4,
      "dur": 1693,
-     "at": 1791037897729
+     "at": 1791037897729,
+     "vs": [
+      "Garen",
+      "Viego",
+      "Yasuo",
+      "Kalista",
+      "Pyke"
+     ],
+     "with": [
+      "Teemo",
+      "LeeSin",
+      "Yunara",
+      "Swain"
+     ]
     },
     "EUW1_8002359899": {
      "win": false,
@@ -1334,7 +1945,20 @@
      "taken": 32636,
      "v": 4,
      "dur": 2282,
-     "at": 1791030675964
+     "at": 1791030675964,
+     "vs": [
+      "Tryndamere",
+      "Trundle",
+      "Naafiri",
+      "Tristana",
+      "Braum"
+     ],
+     "with": [
+      "Garen",
+      "Lillia",
+      "Yone",
+      "Caitlyn"
+     ]
     },
     "EUW1_8002334879": {
      "win": true,
@@ -1361,7 +1985,20 @@
      "taken": 28344,
      "v": 4,
      "dur": 1449,
-     "at": 1791028080741
+     "at": 1791028080741,
+     "vs": [
+      "Cassiopeia",
+      "Viego",
+      "Viktor",
+      "Yunara",
+      "Pyke"
+     ],
+     "with": [
+      "Yone",
+      "Warwick",
+      "Ekko",
+      "Caitlyn"
+     ]
     },
     "EUW1_8002308580": {
      "win": true,
@@ -1388,7 +2025,20 @@
      "taken": 27881,
      "v": 4,
      "dur": 2233,
-     "at": 1791026185366
+     "at": 1791026185366,
+     "vs": [
+      "Warwick",
+      "Zed",
+      "Viktor",
+      "Jhin",
+      "Thresh"
+     ],
+     "with": [
+      "Sett",
+      "Kayn",
+      "Xerath",
+      "Caitlyn"
+     ]
     },
     "EUW1_8002226682": {
      "win": false,
@@ -1410,7 +2060,20 @@
      "taken": 23335,
      "v": 4,
      "dur": 2041,
-     "at": 1791018736834
+     "at": 1791018736834,
+     "vs": [
+      "Yone",
+      "MonkeyKing",
+      "Malzahar",
+      "MissFortune",
+      "Seraphine"
+     ],
+     "with": [
+      "Riven",
+      "Qiyana",
+      "Ahri",
+      "Vayne"
+     ]
     },
     "EUW1_8002216643": {
      "win": true,
@@ -1432,7 +2095,20 @@
      "taken": 20160,
      "v": 4,
      "dur": 1597,
-     "at": 1791016476700
+     "at": 1791016476700,
+     "vs": [
+      "Gragas",
+      "Jayce",
+      "Locke",
+      "Neeko",
+      "Nautilus"
+     ],
+     "with": [
+      "Garen",
+      "Nunu",
+      "Yone",
+      "Caitlyn"
+     ]
     },
     "EUW1_8002206559": {
      "win": true,
@@ -1454,7 +2130,20 @@
      "taken": 17306,
      "v": 4,
      "dur": 1578,
-     "at": 1791014529913
+     "at": 1791014529913,
+     "vs": [
+      "Yone",
+      "Ekko",
+      "Katarina",
+      "Tristana",
+      "Pyke"
+     ],
+     "with": [
+      "Sett",
+      "Aatrox",
+      "Sylas",
+      "Aphelios"
+     ]
     },
     "EUW1_8001795177": {
      "win": true,
@@ -1481,7 +2170,20 @@
      "taken": 24731,
      "v": 4,
      "dur": 1549,
-     "at": 1790971891799
+     "at": 1790971891799,
+     "vs": [
+      "Gwen",
+      "Kayn",
+      "Akali",
+      "Kaisa",
+      "Yuumi"
+     ],
+     "with": [
+      "Sylas",
+      "Viego",
+      "Malzahar",
+      "Kalista"
+     ]
     },
     "EUW1_8001755977": {
      "win": true,
@@ -1508,7 +2210,20 @@
      "taken": 42028,
      "v": 4,
      "dur": 1806,
-     "at": 1790970026452
+     "at": 1790970026452,
+     "vs": [
+      "Teemo",
+      "Nocturne",
+      "Leblanc",
+      "Jhin",
+      "Pantheon"
+     ],
+     "with": [
+      "Zaahen",
+      "DrMundo",
+      "Lissandra",
+      "Nilah"
+     ]
     },
     "EUW1_8001710744": {
      "win": false,
@@ -1535,7 +2250,20 @@
      "taken": 24069,
      "v": 4,
      "dur": 1926,
-     "at": 1790967940059
+     "at": 1790967940059,
+     "vs": [
+      "Garen",
+      "Viego",
+      "Ekko",
+      "Lucian",
+      "Nami"
+     ],
+     "with": [
+      "Yorick",
+      "Nasus",
+      "Kennen",
+      "Yunara"
+     ]
     },
     "EUW1_8001669821": {
      "win": true,
@@ -1562,7 +2290,20 @@
      "taken": 10393,
      "v": 4,
      "dur": 1571,
-     "at": 1790965531111
+     "at": 1790965531111,
+     "vs": [
+      "Riven",
+      "Viego",
+      "Zyra",
+      "Yunara",
+      "Thresh"
+     ],
+     "with": [
+      "Akali",
+      "Amumu",
+      "Viktor",
+      "KogMaw"
+     ]
     },
     "EUW1_8001626876": {
      "win": true,
@@ -1584,7 +2325,20 @@
      "taken": 33768,
      "v": 4,
      "dur": 2175,
-     "at": 1790963602542
+     "at": 1790963602542,
+     "vs": [
+      "Yone",
+      "Zeri",
+      "Tristana",
+      "Brand",
+      "Zilean"
+     ],
+     "with": [
+      "Pantheon",
+      "Olaf",
+      "Vex",
+      "Draven"
+     ]
     },
     "EUW1_8001297776": {
      "win": true,
@@ -1606,7 +2360,20 @@
      "taken": 13310,
      "v": 4,
      "dur": 1570,
-     "at": 1790939617114
+     "at": 1790939617114,
+     "vs": [
+      "Riven",
+      "Lillia",
+      "Akali",
+      "Jhin",
+      "Leona"
+     ],
+     "with": [
+      "Ornn",
+      "MonkeyKing",
+      "Galio",
+      "Yunara"
+     ]
     },
     "EUW1_8001281719": {
      "win": true,
@@ -1628,7 +2395,20 @@
      "taken": 28062,
      "v": 4,
      "dur": 1688,
-     "at": 1790937747933
+     "at": 1790937747933,
+     "vs": [
+      "Rumble",
+      "Shyvana",
+      "Yone",
+      "Jinx",
+      "Milio"
+     ],
+     "with": [
+      "Fiora",
+      "Fizz",
+      "Talon",
+      "MissFortune"
+     ]
     },
     "EUW1_8000503709": {
      "win": false,
@@ -1650,7 +2430,20 @@
      "taken": 42351,
      "v": 4,
      "dur": 1566,
-     "at": 1790865764499
+     "at": 1790865764499,
+     "vs": [
+      "Mordekaiser",
+      "Chogath",
+      "Viktor",
+      "MissFortune",
+      "Alistar"
+     ],
+     "with": [
+      "MonkeyKing",
+      "Malzahar",
+      "Ezreal",
+      "Rell"
+     ]
     },
     "EUW1_8000466199": {
      "win": false,
@@ -1672,7 +2465,20 @@
      "taken": 31590,
      "v": 4,
      "dur": 1858,
-     "at": 1790863915384
+     "at": 1790863915384,
+     "vs": [
+      "Yone",
+      "Nocturne",
+      "Ryze",
+      "Lucian",
+      "Rell"
+     ],
+     "with": [
+      "Volibear",
+      "Shaco",
+      "Leblanc",
+      "Varus"
+     ]
     },
     "EUW1_8003807867": {
      "win": false,
@@ -1694,7 +2500,20 @@
      "taken": 35698,
      "v": 4,
      "dur": 2618,
-     "at": 1791136562698
+     "at": 1791136562698,
+     "vs": [
+      "Urgot",
+      "Zyra",
+      "Akali",
+      "Yunara",
+      "Nidalee"
+     ],
+     "with": [
+      "Sett",
+      "Diana",
+      "Locke",
+      "Samira"
+     ]
     },
     "EUW1_8003764808": {
      "win": true,
@@ -1716,7 +2535,20 @@
      "taken": 75346,
      "v": 4,
      "dur": 1729,
-     "at": 1791133605434
+     "at": 1791133605434,
+     "vs": [
+      "Gwen",
+      "Shyvana",
+      "Yone",
+      "Draven",
+      "Elise"
+     ],
+     "with": [
+      "Nasus",
+      "Syndra",
+      "Zeri",
+      "Lulu"
+     ]
     },
     "EUW1_8003886278": {
      "win": true,
@@ -1743,14 +2575,27 @@
      "taken": 28782,
      "v": 4,
      "dur": 1870,
-     "at": 1791139747143
+     "at": 1791139747143,
+     "vs": [
+      "Jax",
+      "Viego",
+      "Fizz",
+      "Caitlyn",
+      "Nami"
+     ],
+     "with": [
+      "Olaf",
+      "Qiyana",
+      "Viktor",
+      "Vayne"
+     ]
     }
    },
    "live": null,
    "liveErr": null,
    "icon": 5119,
    "level": 512,
-   "checkedAt": 1791160745657
+   "checkedAt": 1791161076645
   },
   "Near#974p": {
    "riotId": "Near#974p",
@@ -1808,7 +2653,20 @@
      "taken": 9290,
      "v": 4,
      "dur": 940,
-     "at": 1791046277058
+     "at": 1791046277058,
+     "vs": [
+      "Rengar",
+      "Hecarim",
+      "LeeSin",
+      "MissFortune",
+      "Teemo"
+     ],
+     "with": [
+      "Sion",
+      "Briar",
+      "Malphite",
+      "Seraphine"
+     ]
     },
     "EUW1_8002603842": {
      "win": true,
@@ -1835,7 +2693,20 @@
      "taken": 21786,
      "v": 4,
      "dur": 1542,
-     "at": 1791044496859
+     "at": 1791044496859,
+     "vs": [
+      "Malphite",
+      "Belveth",
+      "Vladimir",
+      "Kaisa",
+      "Brand"
+     ],
+     "with": [
+      "Darius",
+      "Shyvana",
+      "Sylas",
+      "Lux"
+     ]
     },
     "EUW1_8002568695": {
      "win": false,
@@ -1862,7 +2733,20 @@
      "taken": 22843,
      "v": 4,
      "dur": 1644,
-     "at": 1791042542927
+     "at": 1791042542927,
+     "vs": [
+      "DrMundo",
+      "Ivern",
+      "Sylas",
+      "Tristana",
+      "Velkoz"
+     ],
+     "with": [
+      "Malphite",
+      "Hecarim",
+      "Ryze",
+      "Seraphine"
+     ]
     },
     "EUW1_8002541067": {
      "win": true,
@@ -1889,7 +2773,20 @@
      "taken": 12554,
      "v": 4,
      "dur": 1115,
-     "at": 1791040586698
+     "at": 1791040586698,
+     "vs": [
+      "Aatrox",
+      "Nocturne",
+      "Kennen",
+      "Yasuo",
+      "Nami"
+     ],
+     "with": [
+      "Urgot",
+      "Warwick",
+      "Taliyah",
+      "Nautilus"
+     ]
     },
     "EUW1_8002493347": {
      "win": false,
@@ -1916,7 +2813,20 @@
      "taken": 29178,
      "v": 4,
      "dur": 1999,
-     "at": 1791039050688
+     "at": 1791039050688,
+     "vs": [
+      "Darius",
+      "LeeSin",
+      "Kennen",
+      "Caitlyn",
+      "Lux"
+     ],
+     "with": [
+      "Renekton",
+      "Lillia",
+      "Yone",
+      "Milio"
+     ]
     },
     "EUW1_8002458537": {
      "win": true,
@@ -1943,7 +2853,20 @@
      "taken": 47273,
      "v": 4,
      "dur": 2436,
-     "at": 1791036710145
+     "at": 1791036710145,
+     "vs": [
+      "TahmKench",
+      "Rammus",
+      "Hwei",
+      "Jhin",
+      "Pyke"
+     ],
+     "with": [
+      "Garen",
+      "Udyr",
+      "Vex",
+      "Morgana"
+     ]
     },
     "EUW1_8002422243": {
      "win": false,
@@ -1970,7 +2893,20 @@
      "taken": 19496,
      "v": 4,
      "dur": 1297,
-     "at": 1791034021751
+     "at": 1791034021751,
+     "vs": [
+      "Akali",
+      "Shyvana",
+      "Irelia",
+      "Twitch",
+      "Sona"
+     ],
+     "with": [
+      "Tryndamere",
+      "Evelynn",
+      "Lissandra",
+      "Nami"
+     ]
     },
     "EUW1_8002402826": {
      "win": false,
@@ -1997,7 +2933,20 @@
      "taken": 20331,
      "v": 4,
      "dur": 1334,
-     "at": 1791032410295
+     "at": 1791032410295,
+     "vs": [
+      "Volibear",
+      "Sejuani",
+      "Akshan",
+      "Yunara",
+      "Lux"
+     ],
+     "with": [
+      "Shaco",
+      "Syndra",
+      "Tristana",
+      "Brand"
+     ]
     },
     "EUW1_8001795177": {
      "win": true,
@@ -2024,7 +2973,20 @@
      "taken": 22861,
      "v": 4,
      "dur": 1549,
-     "at": 1790971891799
+     "at": 1790971891799,
+     "vs": [
+      "Gwen",
+      "Kayn",
+      "Akali",
+      "Kaisa",
+      "Yuumi"
+     ],
+     "with": [
+      "Sylas",
+      "Viego",
+      "Malzahar",
+      "Blitzcrank"
+     ]
     },
     "EUW1_8001755977": {
      "win": true,
@@ -2051,7 +3013,20 @@
      "taken": 43137,
      "v": 4,
      "dur": 1806,
-     "at": 1790970026452
+     "at": 1790970026452,
+     "vs": [
+      "Teemo",
+      "Nocturne",
+      "Leblanc",
+      "Jhin",
+      "Pantheon"
+     ],
+     "with": [
+      "Zaahen",
+      "DrMundo",
+      "Lissandra",
+      "Taric"
+     ]
     },
     "EUW1_8001710744": {
      "win": false,
@@ -2078,7 +3053,20 @@
      "taken": 26608,
      "v": 4,
      "dur": 1926,
-     "at": 1790967940059
+     "at": 1790967940059,
+     "vs": [
+      "Garen",
+      "Viego",
+      "Ekko",
+      "Lucian",
+      "Nami"
+     ],
+     "with": [
+      "Yorick",
+      "Nasus",
+      "Kennen",
+      "Rell"
+     ]
     },
     "EUW1_8001669821": {
      "win": true,
@@ -2105,7 +3093,20 @@
      "taken": 15799,
      "v": 4,
      "dur": 1571,
-     "at": 1790965531111
+     "at": 1790965531111,
+     "vs": [
+      "Riven",
+      "Viego",
+      "Zyra",
+      "Yunara",
+      "Thresh"
+     ],
+     "with": [
+      "Akali",
+      "Amumu",
+      "Viktor",
+      "Lulu"
+     ]
     },
     "EUW1_8001479699": {
      "win": false,
@@ -2127,7 +3128,20 @@
      "taken": 25561,
      "v": 4,
      "dur": 1711,
-     "at": 1790954273505
+     "at": 1790954273505,
+     "vs": [
+      "Yone",
+      "XinZhao",
+      "Kayle",
+      "Jinx",
+      "Nautilus"
+     ],
+     "with": [
+      "Garen",
+      "MonkeyKing",
+      "Syndra",
+      "Brand"
+     ]
     },
     "EUW1_8001422246": {
      "win": true,
@@ -2149,7 +3163,20 @@
      "taken": 49309,
      "v": 4,
      "dur": 2657,
-     "at": 1790952172929
+     "at": 1790952172929,
+     "vs": [
+      "TahmKench",
+      "Poppy",
+      "Lissandra",
+      "KogMaw",
+      "Leona"
+     ],
+     "with": [
+      "Zac",
+      "Skarner",
+      "Viktor",
+      "Janna"
+     ]
     },
     "EUW1_8000503133": {
      "win": false,
@@ -2171,7 +3198,20 @@
      "taken": 29723,
      "v": 4,
      "dur": 2359,
-     "at": 1790867042904
+     "at": 1790867042904,
+     "vs": [
+      "Chogath",
+      "Briar",
+      "Velkoz",
+      "Caitlyn",
+      "Pantheon"
+     ],
+     "with": [
+      "Teemo",
+      "Jax",
+      "Zed",
+      "Lux"
+     ]
     },
     "EUW1_8000417804": {
      "win": true,
@@ -2193,7 +3233,20 @@
      "taken": 33556,
      "v": 4,
      "dur": 1916,
-     "at": 1790859229077
+     "at": 1790859229077,
+     "vs": [
+      "Ornn",
+      "Rengar",
+      "XinZhao",
+      "Jhin",
+      "Annie"
+     ],
+     "with": [
+      "Mordekaiser",
+      "Warwick",
+      "Lux",
+      "Zilean"
+     ]
     },
     "EUW1_8000394788": {
      "win": true,
@@ -2215,7 +3268,20 @@
      "taken": 36815,
      "v": 4,
      "dur": 1952,
-     "at": 1790856974018
+     "at": 1790856974018,
+     "vs": [
+      "Chogath",
+      "LeeSin",
+      "Velkoz",
+      "Ezreal",
+      "Pyke"
+     ],
+     "with": [
+      "Malphite",
+      "Teemo",
+      "Katarina",
+      "Thresh"
+     ]
     },
     "EUW1_8004134620": {
      "win": false,
@@ -2242,14 +3308,27 @@
      "taken": 30421,
      "v": 4,
      "dur": 2152,
-     "at": 1791150103875
+     "at": 1791150103875,
+     "vs": [
+      "Tryndamere",
+      "Lillia",
+      "Vex",
+      "Jinx",
+      "Nami"
+     ],
+     "with": [
+      "Yone",
+      "Chogath",
+      "Swain",
+      "Alistar"
+     ]
     }
    },
    "live": null,
    "liveErr": null,
    "icon": 3151,
    "level": 744,
-   "checkedAt": 1791160751516
+   "checkedAt": 1791161082500
   },
   "Lésion carieuse#Dents": {
    "riotId": "Lésion carieuse#Dents",
@@ -2306,7 +3385,20 @@
      "taken": 34215,
      "v": 4,
      "dur": 2120,
-     "at": 1791113850421
+     "at": 1791113850421,
+     "vs": [
+      "Gwen",
+      "Kayn",
+      "Vex",
+      "MissFortune",
+      "Lux"
+     ],
+     "with": [
+      "Fiora",
+      "Chogath",
+      "Aurora",
+      "Milio"
+     ]
     },
     "EUW1_8003346357": {
      "win": true,
@@ -2333,7 +3425,20 @@
      "taken": 17586,
      "v": 4,
      "dur": 1795,
-     "at": 1791111201106
+     "at": 1791111201106,
+     "vs": [
+      "Darius",
+      "Teemo",
+      "Mel",
+      "Lucian",
+      "Nami"
+     ],
+     "with": [
+      "Volibear",
+      "Ekko",
+      "Yone",
+      "Poppy"
+     ]
     },
     "EUW1_8002518013": {
      "win": false,
@@ -2360,7 +3465,20 @@
      "taken": 14783,
      "v": 4,
      "dur": 1120,
-     "at": 1791039296186
+     "at": 1791039296186,
+     "vs": [
+      "Pantheon",
+      "Warwick",
+      "Ahri",
+      "Kaisa",
+      "Lux"
+     ],
+     "with": [
+      "Jax",
+      "Viego",
+      "Locke",
+      "Rell"
+     ]
     },
     "EUW1_8002485855": {
      "win": true,
@@ -2387,7 +3505,20 @@
      "taken": 22188,
      "v": 4,
      "dur": 1693,
-     "at": 1791037897729
+     "at": 1791037897729,
+     "vs": [
+      "Garen",
+      "Viego",
+      "Yasuo",
+      "Kalista",
+      "Pyke"
+     ],
+     "with": [
+      "Teemo",
+      "LeeSin",
+      "Ekko",
+      "Swain"
+     ]
     },
     "EUW1_8002359899": {
      "win": false,
@@ -2414,7 +3545,20 @@
      "taken": 37763,
      "v": 4,
      "dur": 2282,
-     "at": 1791030675964
+     "at": 1791030675964,
+     "vs": [
+      "Tryndamere",
+      "Trundle",
+      "Naafiri",
+      "Tristana",
+      "Braum"
+     ],
+     "with": [
+      "Garen",
+      "Lillia",
+      "Yone",
+      "Zilean"
+     ]
     },
     "EUW1_8002334879": {
      "win": true,
@@ -2441,7 +3585,20 @@
      "taken": 13945,
      "v": 4,
      "dur": 1449,
-     "at": 1791028080741
+     "at": 1791028080741,
+     "vs": [
+      "Cassiopeia",
+      "Viego",
+      "Viktor",
+      "Yunara",
+      "Pyke"
+     ],
+     "with": [
+      "Yone",
+      "Warwick",
+      "Ekko",
+      "Alistar"
+     ]
     },
     "EUW1_8002308580": {
      "win": true,
@@ -2468,7 +3625,20 @@
      "taken": 24986,
      "v": 4,
      "dur": 2233,
-     "at": 1791026185366
+     "at": 1791026185366,
+     "vs": [
+      "Warwick",
+      "Zed",
+      "Viktor",
+      "Jhin",
+      "Thresh"
+     ],
+     "with": [
+      "Sett",
+      "Kayn",
+      "Xerath",
+      "Karma"
+     ]
     },
     "EUW1_8002257238": {
      "win": false,
@@ -2490,7 +3660,20 @@
      "taken": 45127,
      "v": 4,
      "dur": 2541,
-     "at": 1791023279885
+     "at": 1791023279885,
+     "vs": [
+      "Kayle",
+      "Nunu",
+      "Leblanc",
+      "MissFortune",
+      "Zilean"
+     ],
+     "with": [
+      "Chogath",
+      "Kindred",
+      "Malzahar",
+      "Kaisa"
+     ]
     },
     "EUW1_8001506407": {
      "win": false,
@@ -2512,7 +3695,20 @@
      "taken": 37869,
      "v": 4,
      "dur": 2290,
-     "at": 1790957321592
+     "at": 1790957321592,
+     "vs": [
+      "Renekton",
+      "Ekko",
+      "Quinn",
+      "Xayah",
+      "Rakan"
+     ],
+     "with": [
+      "Illaoi",
+      "Yone",
+      "Urgot",
+      "Yunara"
+     ]
     },
     "EUW1_8001465021": {
      "win": true,
@@ -2534,7 +3730,20 @@
      "taken": 49823,
      "v": 4,
      "dur": 2828,
-     "at": 1790954623637
+     "at": 1790954623637,
+     "vs": [
+      "Darius",
+      "Nidalee",
+      "Ekko",
+      "Caitlyn",
+      "Karma"
+     ],
+     "with": [
+      "Teemo",
+      "Viego",
+      "Zed",
+      "Yunara"
+     ]
     },
     "EUW1_8001425483": {
      "win": false,
@@ -2556,14 +3765,27 @@
      "taken": 34903,
      "v": 4,
      "dur": 1833,
-     "at": 1790950428795
+     "at": 1790950428795,
+     "vs": [
+      "Zaahen",
+      "Shaco",
+      "Syndra",
+      "Xayah",
+      "Bard"
+     ],
+     "with": [
+      "Garen",
+      "Kindred",
+      "Aurora",
+      "Caitlyn"
+     ]
     }
    },
    "live": null,
    "liveErr": null,
    "icon": 7139,
    "level": 587,
-   "checkedAt": 1791160757325
+   "checkedAt": 1791161088340
   }
  }
 }
