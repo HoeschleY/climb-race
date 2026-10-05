@@ -143,6 +143,20 @@ for (const p of cfg.players) {
   }
 }
 
+// Allies/enemies per game, from the saved scoreboards (no API calls)
+for (const pl of Object.values(out.players)) {
+  for (const [id, m] of Object.entries(pl.matches || {})) {
+    if (m.vs) continue;
+    try {
+      const sb = JSON.parse(await readFile(`matches/${id}.json`, "utf8"));
+      const me = sb.players.find(x => x.tracked === pl.riotId) || sb.players.find(x => x.champ === m.champ && x.k === m.k && x.d === m.d);
+      if (!me) continue;
+      m.vs = sb.players.filter(x => x.team !== me.team).map(x => x.champ);
+      m.with = sb.players.filter(x => x.team === me.team && x !== me).map(x => x.champ);
+    } catch {}
+  }
+}
+
 if (alerts.length && process.env.DISCORD_WEBHOOK) {
   const site = process.env.SITE_URL ? `\n<${process.env.SITE_URL}>` : "";
   const res = await fetch(process.env.DISCORD_WEBHOOK, { method: "POST", headers: { "Content-Type": "application/json" },

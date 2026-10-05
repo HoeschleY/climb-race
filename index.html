@@ -169,7 +169,7 @@ svg text{fill:var(--muted);font:12px var(--body)}
 .brand{display:flex;align-items:center;gap:10px;flex:none}
 .brand h1{font-size:1.45rem;white-space:nowrap}
 .topbar .tabs{flex:1;border:0;align-self:stretch;align-items:stretch}
-.topbar .tabs button{padding:0 12px}
+.topbar .tabs button{padding:0 10px}
 .topbar .refresh{flex:none}
 main{padding-block:18px 56px}
 /* Home */
@@ -216,6 +216,23 @@ main{padding-block:18px 56px}
 .items{display:flex!important;gap:3px}.it{width:27px;height:27px;border-radius:4px;background:var(--panel2)}
 .it.trinket{border-radius:50%;margin-left:4px}.emptyit{border:1px solid var(--line)}
 @media (max-width:900px){.homegrid{grid-template-columns:1fr}.barin{flex-wrap:wrap;gap:6px 14px;padding-top:8px}.topbar .tabs{order:3;flex-basis:100%}.topbar .tabs button{padding:10px 12px}}
+/* Champions */
+.ctot{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);margin-bottom:14px}
+.ctot div{background:var(--panel);padding:12px 16px}.ctot b{display:block;font-size:1.15rem}.ctot span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.ctable{overflow-x:auto}
+.crow{display:grid;grid-template-columns:minmax(170px,1.3fr) 60px minmax(150px,1fr) 70px 70px 76px minmax(150px,1fr);gap:12px;align-items:center;padding:8px 16px;border-top:1px solid var(--line);font-size:.88rem;min-width:820px;cursor:pointer}
+.crow:hover{background:var(--panel2)}.crow:first-child{border-top:0}
+.chd{cursor:default;padding-block:6px}.chd:hover{background:none}
+.chd button{background:none;border:0;padding:0;text-align:left;font:600 .7rem var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer}
+.chd button:hover{color:var(--fg)}
+.cname{display:flex;align-items:center;gap:10px;min-width:0}.cname img{width:32px;height:32px;border-radius:6px}.cname b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cwr{display:grid;gap:4px}.cwr .tr{height:6px;border-radius:3px;background:var(--line);overflow:hidden}.cwr .tr span{display:block;height:100%}
+.cwho{display:flex;flex-wrap:wrap;gap:6px}.cw{display:inline-flex;align-items:center;gap:3px}.cw .ava{border-width:2px}.cw small{color:var(--muted)}
+.cdet{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;padding:8px 16px 12px 58px;background:var(--panel2);font-size:.84rem;color:var(--muted);min-width:820px}
+.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.mrow{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:7px 16px;border-top:1px solid var(--line);font-size:.86rem}
+.mrow:first-child{border-top:0}.mrow img{width:28px;height:28px;border-radius:5px}
+@media (max-width:900px){.ctot{grid-template-columns:1fr 1fr}.mgrid{grid-template-columns:1fr}}
 footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
 
 @media (max-width:760px){
@@ -234,6 +251,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
       <button role="tab" data-tab="standings" aria-selected="false">Standings</button>
       <button role="tab" data-tab="graph" aria-selected="false">LP graph</button>
       <button role="tab" data-tab="matches" aria-selected="false">Match history</button>
+      <button role="tab" data-tab="champions" aria-selected="false">Champions</button>
       <button role="tab" data-tab="h2h" aria-selected="false">Duos &amp; rivalries</button>
       <button role="tab" data-tab="records" aria-selected="false">Records</button>
     </nav>
@@ -274,6 +292,18 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
 <section id="matches" hidden>
   <div class="chips" id="pchips"></div>
   <div class="panel" id="mlist"></div>
+</section>
+
+<section id="champions" hidden>
+  <div class="chips" id="cchips"></div>
+  <div class="ctot panel" id="ctotals"></div>
+  <div class="panel ctable" id="champs"></div>
+  <p class="note">Click a column to sort, click a champion for who plays it and their best game.</p>
+  <div class="mgrid">
+    <div class="panel"><div class="shd"><span class="eyebrow" style="color:var(--loss)">Toughest opponents</span><span class="muted" style="font-size:.78rem">Enemy champions you lose to most</span></div><div id="nemesis"></div></div>
+    <div class="panel"><div class="shd"><span class="eyebrow" style="color:var(--win)">Favorite victims</span><span class="muted" style="font-size:.78rem">Enemy champions you beat most</span></div><div id="victims"></div></div>
+    <div class="panel"><div class="shd"><span class="eyebrow">Best allies</span><span class="muted" style="font-size:.78rem">Teammate champions you win with</span></div><div id="allies"></div></div>
+  </div>
 </section>
 
 <section id="h2h" hidden>
@@ -328,7 +358,7 @@ const splash=c=>`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${c
 function perf(g){const m=Math.max(g.dur||1800,300)/60,kda=(g.k+g.a)/Math.max(1,g.d);
   return 2*Math.min(kda,10)+(g.kp||0)/12+(g.dmg||0)/m/180+(g.cs||0)/m*0.4+(g.vis||0)/m*1.2+(g.win?3:-1)+(g.multi>=3?2:0)+(g.penta||0)*6+(g.solo||0)*0.4-(g.d>=10?g.d-9:0)}
 
-const TABS=["home","standings","graph","matches","h2h","records"];
+const TABS=["home","standings","graph","matches","champions","h2h","records"];
 function show(tab){document.querySelectorAll("[role=tab]").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
   TABS.forEach(id=>document.getElementById(id).hidden=id!==tab);window.scrollTo({top:0});history.replaceState(null,"","#"+tab);if(tab==="graph")renderGraph()}
 document.querySelectorAll("[role=tab]").forEach(b=>b.onclick=()=>show(b.dataset.tab));
@@ -352,7 +382,7 @@ function renderAll(){
   const t0=Date.parse(DATA.raceStart),day=Math.round((dayKey(Date.now())-dayKey(t0))/864e5)+1;
   document.getElementById("daypill").textContent=`Day ${day}`;
   document.getElementById("sub").textContent=`Since ${new Date(t0).toLocaleDateString("en-GB",{day:"numeric",month:"long"})} · ${players.reduce((s,p)=>s+p.games.length,0)} games played · updated ${ago(Date.parse(DATA.updatedAt))} · ${Date.now()-Date.parse(DATA.updatedAt)>20*6e4?"updates are delayed":"updates every 5 min"}`;
-  for(const f of [renderHome,renderSpotlight,renderStandings,renderGraph,renderMatches,renderH2H,renderRecords]){try{f()}catch(e){console.error(f.name,e)}}
+  for(const f of [renderHome,renderSpotlight,renderStandings,renderGraph,renderMatches,renderH2H,renderRecords,renderChamps]){try{f()}catch(e){console.error(f.name,e)}}
 }
 
 /* LP series, shared by graph, today and records */
@@ -594,6 +624,55 @@ async function openMatch(g){
       const it=el("div","items");x.items.slice(0,6).forEach(i=>it.append(itemImg(i)));const tr=itemImg(x.items[6]);tr.classList.add("trinket");it.append(tr);r.append(it);
       tbl.append(r)});
     box.append(tbl);mbody.append(box)});
+}
+
+/* Champions tab: global pool + totals + matchups */
+let cFilter="all",cSort={k:"n",dir:-1},cOpen=null;
+function aggChamps(games,key){const m={};games.forEach(g=>{const k=key(g);const e=m[k]||(m[k]={k,n:0,w:0,K:0,D:0,A:0,cs:0,dmg:0,min:0,by:{},best:null});
+  e.n++;if(g.win)e.w++;e.K+=g.k;e.D+=g.d;e.A+=g.a;e.cs+=g.cs||0;e.dmg+=g.dmg||0;e.min+=(g.dur||0)/60;
+  const b=e.by[g.riotId]||(e.by[g.riotId]={n:0,w:0});b.n++;if(g.win)b.w++;if(!e.best||perf(g)>perf(e.best))e.best=g});return Object.values(m)}
+const kdaOf=e=>e.D?(e.K+e.A)/e.D:e.K+e.A;
+function renderChamps(){
+  const box=document.getElementById("champs");if(!box||!players.length)return;
+  // filter chips
+  const ch=document.getElementById("cchips");ch.innerHTML="";
+  [["all","Everyone",null],...players.map(p=>[p.riotId,short(p.riotId),p.color])].forEach(([id,label,c])=>{const b=el("button");if(c)b.append(dot(c));b.append(label);
+    b.setAttribute("aria-pressed",cFilter===id);b.onclick=()=>{cFilter=id;cOpen=null;renderChamps()};ch.append(b)});
+  const games=(cFilter==="all"?players.flatMap(p=>p.games):players.find(p=>p.riotId===cFilter)?.games)||[];
+  // totals
+  const tot=document.getElementById("ctotals");tot.innerHTML="";
+  const n=games.length,w=games.filter(g=>g.win).length,mins=games.reduce((s,g)=>s+(g.dur||0)/60,0),sum=k=>games.reduce((s,g)=>s+(g[k]||0),0);
+  const champs=aggChamps(games,g=>g.champ),most=[...champs].sort((a,b)=>b.n-a.n)[0],bestWr=[...champs].filter(c=>c.n>=3).sort((a,b)=>b.w/b.n-a.w/a.n||b.n-a.n)[0];
+  [["Player-games",n],["Win rate",n?Math.round(w/n*100)+"%":"–"],["Hours played",(mins/60).toFixed(1)],["Champions played",champs.length],
+   ["Kills / deaths",`${sum("k")} / ${sum("d")}`],["Avg game",n?Math.round(mins/n)+" min":"–"],["Most played",most?`${most.k} (${most.n})`:"–"],["Best win rate (3+ games)",bestWr?`${bestWr.k} ${Math.round(bestWr.w/bestWr.n*100)}%`:"–"]]
+   .forEach(([k,v])=>{const d=el("div");d.append(el("b","num",v),el("span",null,k));tot.append(d)});
+  // table
+  const cols=[["k","Champion"],["n","Games"],["wr","Win rate"],["kda","KDA"],["csm","CS/min"],["dmm","Dmg/min"],["who","Played by"]];
+  const val={k:e=>e.k,n:e=>e.n,wr:e=>e.w/e.n,kda:kdaOf,csm:e=>e.min?e.cs/e.min:0,dmm:e=>e.min?e.dmg/e.min:0,who:e=>Object.keys(e.by).length};
+  champs.sort((a,b)=>{const x=val[cSort.k](a),y=val[cSort.k](b);return (x<y?-1:x>y?1:0)*cSort.dir||b.n-a.n});
+  box.innerHTML="";const hr=el("div","crow chd");
+  cols.forEach(([k,l])=>{const b=el("button",null,l+(cSort.k===k?(cSort.dir<0?" ▼":" ▲"):""));b.onclick=()=>{cSort=cSort.k===k?{k,dir:-cSort.dir}:{k,dir:k==="k"?1:-1};renderChamps()};hr.append(b)});box.append(hr);
+  if(!champs.length)box.append(el("div","empty","No games yet."));
+  champs.forEach(e=>{const r=el("div","crow");r.tabIndex=0;const toggle=()=>{cOpen=cOpen===e.k?null:e.k;renderChamps()};r.onclick=toggle;r.onkeydown=x=>{if(x.key==="Enter")toggle()};
+    const c=el("div","cname");const im=el("img");im.src=icon(e.k);im.alt="";im.loading="lazy";c.append(im,el("b",null,e.k));r.append(c);
+    r.append(el("span","num",`${e.n}`));
+    const wr=el("div","cwr");const t=el("div","tr"),f=el("span");f.style.width=e.w/e.n*100+"%";f.style.background=wrCol(e.w/e.n);t.append(f);
+    wr.append(el("span","num",`${Math.round(e.w/e.n*100)}% · ${e.w}W ${e.n-e.w}L`),t);r.append(wr);
+    r.append(el("span","num",e.D?kdaOf(e).toFixed(2):"Perfect"),el("span","num",e.min?(e.cs/e.min).toFixed(1):"–"),el("span","num",e.min?Math.round(e.dmg/e.min):"–"));
+    const who=el("div","cwho");Object.entries(e.by).sort((a,b)=>b[1].n-a[1].n).forEach(([id,b])=>{const p=players.find(x=>x.riotId===id);const s=el("span","cw");s.title=`${short(id)}: ${b.n} games, ${b.w}W`;if(p)s.append(avatar(p,22));s.append(el("small","num",b.n));who.append(s)});r.append(who);
+    box.append(r);
+    if(cOpen===e.k){const d=el("div","cdet");
+      Object.entries(e.by).sort((a,b)=>b[1].n-a[1].n).forEach(([id,b])=>d.append(el("span","num",`${short(id)}: ${b.n} game${b.n>1?"s":""}, ${Math.round(b.w/b.n*100)}% win rate`)));
+      if(e.best){const bg=el("button","lnk",`Best game: ${short(e.best.riotId)} ${e.best.k}/${e.best.d}/${e.best.a} ›`);bg.onclick=x=>{x.stopPropagation();openMatch(e.best)};d.append(bg)}
+      box.append(d)}});
+  // matchups
+  const mu=(key,elId,worst)=>{const m={};games.forEach(g=>(g[key]||[]).forEach(c=>{const e=m[c]||(m[c]={c,n:0,w:0});e.n++;if(g.win)e.w++}));
+    const list=Object.values(m).filter(e=>e.n>=2).sort((a,b)=>worst?(a.w/a.n-b.w/b.n)||b.n-a.n:(b.w/b.n-a.w/a.n)||b.n-a.n).slice(0,6);
+    const b=document.getElementById(elId);b.innerHTML="";
+    if(!list.length){b.append(el("div","empty",games.some(g=>g[key])?"Not enough games yet (2+ against the same champion).":"Builds up after the next update."));return}
+    list.forEach(e=>{const r=el("div","mrow");const im=el("img");im.src=icon(e.c);im.alt="";r.append(im,el("b",null,e.c));
+      const s=el("span","num",`${Math.round(e.w/e.n*100)}% · ${e.w}W ${e.n-e.w}L`);s.style.color=wrCol(e.w/e.n);r.append(s);b.append(r)})};
+  mu("vs","nemesis",true);mu("vs","victims",false);mu("with","allies",false);
 }
 
 /* Duos & rivalries */
