@@ -1,6 +1,7 @@
 // Fetches every player's Solo/Duo rank and race matches from the Riot API
 // and writes data.json for the website. Runs in GitHub Actions.
 import { readFile, writeFile, mkdir, access } from "node:fs/promises";
+import { rateGame, RATING_VERSION } from "./rating.mjs";
 await mkdir("matches", { recursive: true });
 const exists = f => access(f).then(() => true, () => false);
 
@@ -153,14 +154,22 @@ for (const p of cfg.players) {
 // Allies/enemies per game, from the saved scoreboards (no API calls)
 for (const pl of Object.values(out.players)) {
   for (const [id, m] of Object.entries(pl.matches || {})) {
-    if (m.vs) continue;
+    if (m.vs && m.rv === RATING_VERSION) continue;
     try {
-      const sb = JSON.parse(await readFile(`matches/${id}.json`, "utf8"));
+      const file = `matches/${id}.json`, sb = JSON.parse(await readFile(file, "utf8"));
       const me = sb.players.find(x => x.tracked === pl.riotId) || sb.players.find(x => x.champ === m.champ && x.k === m.k && x.d === m.d);
       if (!me) continue;
       m.vs = sb.players.filter(x => x.team !== me.team).map(x => x.champ);
       m.with = sb.players.filter(x => x.team === me.team && x !== me).map(x => x.champ);
-    } catch {}
+      // Lobby rating: saved on the game, and for all 10 players in the scoreboard file
+      const r = rateGame(sb);
+      if (sb.rv !== RATING_VERSION) {
+        sb.players.forEach((x, i) => { x.rating = r[i].rating; x.place = r[i].place; });
+        sb.rv = RATING_VERSION; await writeFile(file, JSON.stringify(sb));
+      }
+      const mine = r[sb.players.indexOf(me)];
+      Object.assign(m, { rating: mine.rating, place: mine.place, good: mine.good, bad: mine.bad, laneGold: mine.laneGold, rv: RATING_VERSION });
+    } catch (e) { console.error(`rating failed for ${id}: ${e.message}`); }
   }
 }
 
