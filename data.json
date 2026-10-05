@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-05T16:41:43.649Z",
+ "updatedAt": "2026-10-05T16:47:15.800Z",
  "build": "202610051605",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -609,7 +609,7 @@
    "liveErr": null,
    "icon": 7143,
    "level": 421,
-   "checkedAt": 1791218510032
+   "checkedAt": 1791218842070
   },
   "Ymine#000": {
    "riotId": "Ymine#000",
@@ -1569,11 +1569,21 @@
      ]
     }
    },
-   "live": null,
+   "live": {
+    "champId": 777,
+    "queue": 420,
+    "start": 1791218681048,
+    "mates": [
+     {
+      "id": "Near#974p",
+      "same": true
+     }
+    ]
+   },
    "liveErr": null,
    "icon": 6864,
    "level": 717,
-   "checkedAt": 1791218516041
+   "checkedAt": 1791218848053
   },
   "wilhump#NAEU": {
    "riotId": "wilhump#NAEU",
@@ -2642,7 +2652,7 @@
    "liveErr": null,
    "icon": 5119,
    "level": 512,
-   "checkedAt": 1791218522084
+   "checkedAt": 1791218854036
   },
   "Near#974p": {
    "riotId": "Near#974p",
@@ -3458,11 +3468,21 @@
      ]
     }
    },
-   "live": null,
+   "live": {
+    "champId": 804,
+    "queue": 420,
+    "start": 1791218681048,
+    "mates": [
+     {
+      "id": "Ymine#000",
+      "same": true
+     }
+    ]
+   },
    "liveErr": null,
    "icon": 3151,
    "level": 745,
-   "checkedAt": 1791218528043
+   "checkedAt": 1791218860143
   },
   "Lésion carieuse#Dents": {
    "riotId": "Lésion carieuse#Dents",
@@ -3475,8 +3495,8 @@
    "current": {
     "tier": "GOLD",
     "division": "II",
-    "lp": 3,
-    "wins": 168,
+    "lp": 21,
+    "wins": 169,
     "losses": 161
    },
    "history": [
@@ -3491,6 +3511,12 @@
      "tier": "GOLD",
      "division": "II",
      "lp": 3
+    },
+    {
+     "t": 1791218864944,
+     "tier": "GOLD",
+     "division": "II",
+     "lp": 21
     }
    ],
    "matches": {
@@ -3913,18 +3939,48 @@
       "Aurora",
       "Caitlyn"
      ]
+    },
+    "EUW1_8004657173": {
+     "win": true,
+     "champ": "Caitlyn",
+     "role": "BOTTOM",
+     "k": 11,
+     "d": 9,
+     "a": 13,
+     "cs": 210,
+     "dmg": 34588,
+     "vis": 39,
+     "gold": 15955,
+     "kp": 48,
+     "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": true,
+     "solo": 3,
+     "taken": 27491,
+     "v": 4,
+     "dur": 1931,
+     "at": 1791218676450,
+     "vs": [
+      "Mordekaiser",
+      "Khazix",
+      "Akshan",
+      "Jinx",
+      "Brand"
+     ],
+     "with": [
+      "Yone",
+      "Hecarim",
+      "Locke",
+      "Lux"
+     ]
     }
    },
-   "live": {
-    "champId": 51,
-    "queue": 420,
-    "start": 1791216715317,
-    "mates": []
-   },
+   "live": null,
    "liveErr": null,
    "icon": 7139,
    "level": 587,
-   "checkedAt": 1791218534074
+   "checkedAt": 1791218867971
   }
  }
 }
