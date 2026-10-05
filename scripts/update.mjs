@@ -54,7 +54,11 @@ const DIVS = { IV: 0, III: 1, II: 2, I: 3 }, TIERS = ["IRON","BRONZE","SILVER","
 const step = r => r ? TIERS.indexOf(r.tier) * 4 + (TIERS.indexOf(r.tier) >= 7 ? 0 : DIVS[r.division]) : null;
 const rankName = r => TIERS.indexOf(r.tier) >= 7 ? r.tier[0] + r.tier.slice(1).toLowerCase() : `${r.tier[0] + r.tier.slice(1).toLowerCase()} ${r.division}`;
 
-const out = { updatedAt: new Date().toISOString(), raceStart: cfg.raceStart, players: {} };
+// Version of the website, so open tabs can switch to a newly deployed page
+let build = null;
+try { build = (await readFile("index.html", "utf8")).match(/const BUILD="(\d+)"/)?.[1] ?? null; } catch {}
+
+const out = { updatedAt: new Date().toISOString(), build, raceStart: cfg.raceStart, players: {} };
 
 for (const p of cfg.players) {
   const [name, tag] = p.riotId.split("#");

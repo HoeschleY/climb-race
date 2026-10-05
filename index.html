@@ -233,6 +233,14 @@ main{padding-block:18px 56px}
 .mrow{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:7px 16px;border-top:1px solid var(--line);font-size:.86rem}
 .mrow:first-child{border-top:0}.mrow img{width:28px;height:28px;border-radius:5px}
 @media (max-width:900px){.ctot{grid-template-columns:1fr 1fr}.mgrid{grid-template-columns:1fr}}
+.livepill{display:inline-flex;align-items:center;gap:8px;flex:none;font:600 .82rem var(--body);color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:6px 14px;cursor:pointer;white-space:nowrap}
+.livepill:hover{border-color:var(--gold)}
+.livepill i{width:8px;height:8px;border-radius:50%;background:var(--win);box-shadow:0 0 0 0 #43c28688;animation:beat 2s infinite}
+.livepill.stale i{background:var(--gold);animation:none}.livepill.off i{background:var(--loss);animation:none}
+@keyframes beat{0%{box-shadow:0 0 0 0 #43c28688}70%{box-shadow:0 0 0 7px #43c28600}100%{box-shadow:0 0 0 0 #43c28600}}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--panel2);border:1px solid var(--gold);color:var(--gold2);font:600 .88rem var(--body);padding:9px 18px;border-radius:99px;transition:.25s;z-index:60}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){.livepill i{animation:none}.toast{transition:none}}
 footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
 
 @media (max-width:760px){
@@ -255,7 +263,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
       <button role="tab" data-tab="h2h" aria-selected="false">Duos &amp; rivalries</button>
       <button role="tab" data-tab="records" aria-selected="false">Records</button>
     </nav>
-    <button class="refresh" id="refresh" type="button"><svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path d="M20 11a8 8 0 1 0-2.3 5.7M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Refresh</span></button>
+    <button class="livepill" id="livepill" type="button" title="Updates automatically. Click to check now."><i></i><span id="livetxt">Connecting…</span></button>
   </div>
 </header>
 <main>
@@ -324,7 +332,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
   <div class="scards" id="scards"></div>
 </section>
 
-<footer>Ranked by LP gained since the race start. Data from the Riot Games API, refreshed every 5 minutes; this page reloads its data every 3 minutes. Climb Race isn't endorsed by Riot Games.</footer>
+<footer>Ranked by LP gained since the race start. Data from the Riot Games API, refreshed every 5 minutes; this page updates itself automatically. Climb Race isn't endorsed by Riot Games.</footer>
 </main>
 <div class="modal" id="modal" hidden><div class="mpanel" role="dialog" aria-modal="true" aria-label="Match details"><button class="mclose" aria-label="Close">✕</button><div id="mbody"></div></div></div>
 
@@ -364,20 +372,45 @@ function show(tab){document.querySelectorAll("[role=tab]").forEach(b=>b.setAttri
 document.querySelectorAll("[role=tab]").forEach(b=>b.onclick=()=>show(b.dataset.tab));
 document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dataset.m;document.querySelectorAll("#gmode button").forEach(c=>c.setAttribute("aria-pressed",c===b));renderGraph()});
 
-// Read files straight from the repo (always current); fall back to the GitHub Pages copy (can lag several minutes).
+// Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
+// ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
+// fall back to the GitHub Pages copy for 10 minutes.
+const BUILD="202610051605";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
+let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
-  try{const r=await fetch(API+path+"?ref=main&t="+Date.now(),{headers:{Accept:"application/vnd.github.raw+json"},cache:"no-store"});if(r.ok)return await r.json()}catch{}
+  if(Date.now()>apiOffUntil){try{const r=await fetch(API+path+"?ref=main",{headers:{Accept:"application/vnd.github.raw+json"},cache:"no-store"});if(r.ok)return await r.json();if(r.status===403||r.status===429)apiOffUntil=Date.now()+6e5}catch{}}
   const r=await fetch(path+"?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw new Error(r.status);return r.json()}
+async function fetchData(){
+  if(Date.now()>apiOffUntil){
+    try{const h={Accept:"application/vnd.github.raw+json"};if(etag)h["If-None-Match"]=etag;
+      const r=await fetch(API+"data.json?ref=main",{headers:h,cache:"no-store"});
+      if(r.status===304)return null;
+      if(r.ok){etag=r.headers.get("ETag");return await r.json()}
+      if(r.status===403||r.status===429)apiOffUntil=Date.now()+6e5}catch{}}
+  const r=await fetch("data.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw new Error(r.status);return r.json()}
 async function load(){
-  try{DATA=await getFile("data.json")}catch{document.getElementById("sub").textContent="Standings aren't available yet.";return}
+  let d;try{d=await fetchData();lastCheck=Date.now()}catch{if(!DATA)document.getElementById("sub").textContent="Standings aren't available yet.";tickLive(true);return}
+  if(!d||(DATA&&d.updatedAt===DATA.updatedAt)){tickLive();return}
+  // A newer version of the page is deployed: switch to it (at most once per 10 minutes)
+  if(d.build&&d.build>BUILD){let last=0;try{last=+sessionStorage.getItem("cr-reload")||0}catch{}
+    if(Date.now()-last>6e5){try{sessionStorage.setItem("cr-reload",Date.now())}catch{}location.replace(location.pathname+"?v="+d.build+location.hash);return}}
+  const first=!DATA;DATA=d;if(!first){lastChange=Date.now();toast("Standings updated")}
+  const y=window.scrollY;
   players=Object.values(DATA.players).map((p,i)=>{
     const games=Object.entries(p.matches||{}).map(([id,m])=>({id,...m,riotId:p.riotId})).sort((a,b)=>b.at-a.at);
     const w=games.filter(x=>x.win).length,s0=score(p.start),s1=score(p.current);
     return{...p,color:COLORS[i%COLORS.length],games,w,l:games.length-w,gain:s0!=null&&s1!=null?s1-s0:null};
   });
-  renderAll();
+  renderAll();window.scrollTo({top:y});tickLive();
 }
+function tickLive(err){const t=document.getElementById("livetxt"),pill=document.getElementById("livepill");if(!t)return;
+  if(!DATA){t.textContent=err?"Offline":"Connecting…";pill.className="livepill"+(err?" off":"");return}
+  const age=Date.now()-Date.parse(DATA.updatedAt),stale=age>20*6e4;
+  pill.className="livepill"+(stale?" stale":err?" off":"");t.textContent=(stale?"Delayed":"Live")+" · updated "+ago(Date.parse(DATA.updatedAt));
+  const sub=document.getElementById("sub");if(sub)sub.textContent=sub.textContent.replace(/updated [^·]+·/,"updated "+ago(Date.parse(DATA.updatedAt))+" ·")}
+function toast(msg){let el_=document.getElementById("toast");if(!el_){el_=el("div","toast");el_.id="toast";el_.setAttribute("role","status");document.body.append(el_)}
+  el_.textContent=msg;el_.classList.add("show");clearTimeout(el_._t);el_._t=setTimeout(()=>el_.classList.remove("show"),2600)}
 function renderAll(){
   const t0=Date.parse(DATA.raceStart),day=Math.round((dayKey(Date.now())-dayKey(t0))/864e5)+1;
   document.getElementById("daypill").textContent=`Day ${day}`;
@@ -746,12 +779,11 @@ function renderRecords(){
 }
 
 const h=location.hash.slice(1);if(TABS.includes(h))show(h);
-const rb=document.getElementById("refresh"),rl=rb.querySelector("span");
-rb.onclick=async()=>{rb.disabled=true;rb.classList.add("spin");rl.textContent="Refreshing…";const before=DATA?.updatedAt;
-  await load();await new Promise(r=>setTimeout(r,400));rb.classList.remove("spin");
-  rl.textContent=DATA?.updatedAt!==before?"New data loaded":"Up to date";
-  setTimeout(()=>{rl.textContent="Refresh";rb.disabled=false},2500)};
-load();setInterval(load,3*60*1000);
+document.getElementById("livepill").onclick=()=>{document.getElementById("livetxt").textContent="Checking…";load()};
+document.addEventListener("visibilitychange",()=>{if(!document.hidden&&Date.now()-lastCheck>15e3)load()});
+load();
+setInterval(()=>{if(!document.hidden)load()},30e3);   // check for new data
+setInterval(tickLive,20e3);                            // keep "updated x min ago" current
 </script>
 </body>
 </html>
