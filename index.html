@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Solo/Duo Climb Race</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://api.github.com" crossorigin>
+<link rel="preconnect" href="https://ddragon.leagueoflegends.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Barlow:wght@400;500;600;700&display=swap">
 <style>
 /* Layout: one centered column. Header, "today" spotlight (game/inter of the day + awards), then tabs. Single dark "Rift at night" look. */
@@ -22,13 +24,6 @@ main{max-width:1240px;margin:0 auto;padding-block:32px 56px;display:grid;gap:22p
 h1{font-family:var(--display);font-size:clamp(1.9rem,5vw,2.8rem);margin:0;letter-spacing:.04em;color:var(--gold2);text-wrap:balance}
 .top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:8px 20px;border-bottom:1px solid var(--line);padding-bottom:16px}
 .daypill{font:600 .8rem var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--gold);border:1px solid #c8aa6e55;border-radius:99px;padding:4px 12px}
-.topr{display:flex;align-items:center;gap:10px}
-.refresh{display:inline-flex;align-items:center;gap:7px;font:600 .85rem var(--body);color:var(--gold2);background:var(--panel);border:1px solid #c8aa6e66;border-radius:99px;padding:6px 14px;cursor:pointer}
-.refresh:hover{background:var(--panel2);border-color:var(--gold)}
-.refresh[disabled]{opacity:.7;cursor:default}
-.refresh.spin svg{animation:spin .8s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
-@media (prefers-reduced-motion:reduce){.refresh.spin svg{animation:none}}
 .sub{color:var(--muted);font-size:.9rem;margin-top:4px}
 .eyebrow{font:600 .75rem var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--gold)}
 h2{font-family:var(--display);font-size:1.15rem;letter-spacing:.06em;margin:0 0 12px}
@@ -85,8 +80,6 @@ svg text{fill:var(--muted);font:12px var(--body)}
 .tip{position:absolute;pointer-events:none;background:#0d131dee;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font-size:.85rem;white-space:nowrap}
 .tip div{display:flex;gap:8px;align-items:center}.tip i{width:10px;height:3px}
 
-.msum{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--line);border-bottom:1px solid var(--line)}
-.msum div{background:var(--panel);padding:12px 16px}.msum b{display:block;font-size:1.1rem}.msum span{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 .game{display:grid;grid-template-columns:4px 48px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 18px 10px 0;border-top:1px solid var(--line)}
 .game:first-of-type{border-top:0}
 .game .bar{align-self:stretch}.game.w .bar{background:var(--win)}.game.l .bar{background:var(--loss)}
@@ -170,7 +163,6 @@ svg text{fill:var(--muted);font:12px var(--body)}
 .brand h1{font-size:1.45rem;white-space:nowrap}
 .topbar .tabs{flex:1;border:0;align-self:stretch;align-items:stretch}
 .topbar .tabs button{padding:0 10px}
-.topbar .refresh{flex:none}
 main{padding-block:18px 56px}
 /* Home */
 .homegrid{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:18px;align-items:start}
@@ -290,7 +282,7 @@ main{padding-block:18px 56px}
 .dmstats>div{display:grid;gap:1px;border-left:2px solid var(--line);padding-left:12px}
 .dmstats span{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}.dmstats b{font-size:1.2rem}
 .rlegend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;color:var(--muted)}.rlegend span{display:flex;align-items:center;gap:6px}.rlegend i{width:10px;height:10px;border-radius:50%}
-.mmap .dmrow{margin-top:8px}.mcap{display:grid;gap:6px;justify-items:start}.mmap .note{flex:1;min-width:180px;align-self:center}
+
 .dmbottom{padding:18px 20px;border-top:1px solid var(--line)}
 #mbody .sbr:not(.sbh){cursor:pointer}#mbody .sbr:not(.sbh):hover{background-color:#ffffff08}
 #mbody .sbr.sel{box-shadow:inset 3px 0 0 var(--gold2);background-color:#c8aa6e14}
@@ -337,6 +329,7 @@ main section>h2::after{content:"";flex:1;height:1px;background:linear-gradient(9
 .dbar{margin-top:2px}
 .gsvg{height:120px}
 #goldbox{margin:6px 0 10px}
+.alert{border:1px solid #e5555f66;background:#e5555f14;color:#ffb3b3;border-radius:10px;padding:10px 14px;font-size:.9rem}
 footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
 
 @media (max-width:760px){
@@ -363,6 +356,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
   </div>
 </header>
 <main>
+<div class="alert" id="alert" role="status" hidden></div>
 <div class="sub num" id="sub">Loading…</div>
 <section id="home">
   <div class="homegrid">
@@ -483,7 +477,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610062326";
+const BUILD="202610062350";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
@@ -497,21 +491,32 @@ async function fetchData(){
       if(r.ok){etag=r.headers.get("ETag");return await r.json()}
       if(r.status===403||r.status===429)apiOffUntil=Date.now()+6e5}catch{}}
   const r=await fetch("data.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw new Error(r.status);return r.json()}
+function cacheData(d){try{localStorage.setItem("cr-data",JSON.stringify(d))}catch{}}
+function cachedData(){try{return JSON.parse(localStorage.getItem("cr-data")||"null")}catch{return null}}
 async function load(){
+  if(!DATA){const c=cachedData();if(c&&c.players){applyData(c,true)}}
   let d;try{d=await fetchData();lastCheck=Date.now()}catch{if(!DATA)document.getElementById("sub").textContent="Standings aren't available yet.";tickLive(true);return}
-  if(!d||(DATA&&d.updatedAt===DATA.updatedAt)){tickLive();return}
+  if(!d){tickLive();return}
+  if(DATA&&d.updatedAt===DATA.updatedAt&&!DATA._cached){tickLive();return}
   // A newer version of the page is deployed: switch to it (at most once per 10 minutes)
   if(d.build&&d.build>BUILD){let last=0;try{last=+sessionStorage.getItem("cr-reload")||0}catch{}
     if(Date.now()-last>6e5){try{sessionStorage.setItem("cr-reload",Date.now())}catch{}location.replace(location.pathname+"?v="+d.build+location.hash);return}}
-  const first=!DATA;DATA=d;if(!first){lastChange=Date.now();toast("Standings updated")}
+  cacheData(d);applyData(d,false);
+}
+function applyData(d,fromCache){
+  const first=!DATA||DATA._cached,changed=!first&&DATA.updatedAt!==d.updatedAt;DATA=d;if(fromCache)DATA._cached=true;if(changed){lastChange=Date.now();toast("Standings updated")}
   const y=window.scrollY;
   players=Object.values(DATA.players).map((p,i)=>{
     const games=Object.entries(p.matches||{}).map(([id,m])=>({id,...m,riotId:p.riotId})).sort((a,b)=>b.at-a.at);
     const w=games.filter(x=>x.win).length,s0=score(p.start),s1=score(p.current);
     return{...p,color:COLORS[i%COLORS.length],games,w,l:games.length-w,gain:s0!=null&&s1!=null?s1-s0:null};
   });
-  TEAMBASE=null;renderAll();window.scrollTo({top:y});tickLive();
+  TEAMBASE=null;renderAll();window.scrollTo({top:y});tickLive();healthCheck();
 }
+function healthCheck(){const a=document.getElementById("alert");if(!a||!DATA)return;const st=DATA.diag?.status||{},errs=Object.values(DATA.players).filter(p=>p.error);
+  let msg="";if(st[401]||st[403])msg="Riot isn't accepting the API key, so standings have stopped updating. The key needs renewing in the repository's settings (Secrets → RIOT_API_KEY).";
+  else if(errs.length===Object.keys(DATA.players).length&&errs.length)msg=`No player could be updated in the last round (${errs[0].error}). It usually clears up within a few minutes.`;
+  a.textContent=msg;a.hidden=!msg}
 function tickLive(err){const t=document.getElementById("livetxt"),pill=document.getElementById("livepill");if(!t)return;
   if(!DATA){t.textContent=err?"Offline":"Connecting…";pill.className="livepill"+(err?" off":"");return}
   const age=Date.now()-Date.parse(DATA.updatedAt),stale=age>20*6e4;

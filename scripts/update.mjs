@@ -260,5 +260,5 @@ console.log("round health:", JSON.stringify(out.diag));
 const strip = d => JSON.stringify({ ...d, updatedAt: 0, diag: 0, players: Object.fromEntries(Object.entries(d.players || {}).map(([k, v]) => [k, { ...v, iconAt: 0, checkedAt: 0 }])) });
 const changed = strip(out) !== strip(old), heartbeat = !old.updatedAt || Date.now() - Date.parse(old.updatedAt) > 5 * 60e3;
 const trouble = diag.budgetHit || diag.timeouts > 2 || Object.keys(diag.status).some(k => k !== "200" && k !== "404");
-if (changed || heartbeat || trouble) await writeFile("data.json", JSON.stringify(out, null, 1));
+if (changed || heartbeat || trouble) await writeFile("data.json", JSON.stringify(out));
 console.log(changed ? "data changed" : heartbeat ? "heartbeat" : "no change");
