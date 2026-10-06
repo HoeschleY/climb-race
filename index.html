@@ -276,6 +276,10 @@ main{padding-block:18px 56px}
 .pstats span{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
 .pstats b{font-size:1.15rem;font-weight:700}
 @media (max-width:900px){.phdr{grid-template-columns:1fr}.pstats{grid-template-columns:repeat(2,1fr)}}
+.tteam{display:inline-flex;align-items:center;font:600 .66rem var(--body);letter-spacing:.06em;text-transform:uppercase;padding:1px 8px;border-radius:99px;vertical-align:2px;border:1px solid}
+.tteam.good{color:var(--win);border-color:#43c28666;background:#43c2861a}
+.tteam.bad{color:#ff8a8a;border-color:#e5555f66;background:#e5555f1a}
+.tteam.avg{color:var(--muted);border-color:var(--line)}
 footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
 
 @media (max-width:760px){
@@ -422,7 +426,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610061341";
+const BUILD="202610061738";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
@@ -449,7 +453,7 @@ async function load(){
     const w=games.filter(x=>x.win).length,s0=score(p.start),s1=score(p.current);
     return{...p,color:COLORS[i%COLORS.length],games,w,l:games.length-w,gain:s0!=null&&s1!=null?s1-s0:null};
   });
-  renderAll();window.scrollTo({top:y});tickLive();
+  TEAMBASE=null;renderAll();window.scrollTo({top:y});tickLive();
 }
 function tickLive(err){const t=document.getElementById("livetxt"),pill=document.getElementById("livepill");if(!t)return;
   if(!DATA){t.textContent=err?"Offline":"Connecting…";pill.className="livepill"+(err?" off":"");return}
@@ -633,6 +637,14 @@ function pstats(p){const r=p.games.filter(g=>g.rating!=null),l=p.games.filter(g=
     gd15:avg(l.map(g=>g.gd15)),teamR:avg(p.games.filter(g=>g.teamR!=null).map(g=>g.teamR)),enemyR:avg(p.games.filter(g=>g.enemyR!=null).map(g=>g.enemyR)),csd15:avg(l.map(g=>g.csd15)),laned:l.length,laneWins:l.filter(g=>g.gd15>0).length}}
 const kfmt=n=>(n>=0?"+":"−")+(Math.abs(n)>=1000?(Math.abs(n)/1000).toFixed(1)+"k":Math.round(Math.abs(n)));
 function avgBadge(v,label){const b=el("span","rbadge num");if(v==null)return b;b.style.color=ratingCol(v);b.style.borderColor=ratingCol(v);b.append(el("b",null,v.toFixed(1)),el("span",null,label||"avg rating"));b.title="Average lobby rating over the race";return b}
+// Team quality label: teammates compared with a typical win or loss (the rating favours winners, so
+// comparing against the same result keeps the label meaningful). Baselines come from all race games.
+let TEAMBASE=null;
+function teamBase(){const g=players.flatMap(p=>p.games).filter(x=>x.teamR!=null),st=a=>{const m=a.reduce((s,x)=>s+x,0)/(a.length||1);return{m,sd:Math.sqrt(a.reduce((s,x)=>s+(x-m)**2,0)/(a.length||1))||.6}};
+  TEAMBASE={w:st(g.filter(x=>x.win).map(x=>x.teamR)),l:st(g.filter(x=>!x.win).map(x=>x.teamR))}}
+function teamLabel(g){if(g.teamR==null)return null;if(!TEAMBASE)teamBase();const b=g.win?TEAMBASE.w:TEAMBASE.l,z=(g.teamR-b.m)/b.sd;
+  const kind=z>=.6?"good":z<=-.6?"bad":"avg",t=el("span","tteam "+kind,kind==="good"?"Good team":kind==="bad"?"Bad team":"Average team");
+  t.title=`Teammates averaged ${g.teamR.toFixed(1)}, against ${b.m.toFixed(1)} in a typical ${g.win?"win":"loss"}. Enemies averaged ${g.enemyR.toFixed(1)}.`;return t}
 // Rating badge: "8.4 · MVP" / "#9 of 10"
 function ratingCol(r){return r>=7.5?"var(--gold2)":r>=6?"var(--win)":r>=4?"var(--muted)":"var(--loss)"}
 function placeTxt(p){return p===1?"MVP":p===10?"Worst in lobby":`#${p} of 10`}
@@ -676,6 +688,7 @@ function gameRow(g,best,showName){
   if(g.penta)tag("Pentakill");else if(g.multi>=4)tag("Quadra");else if(g.multi===3)tag("Triple");
   if(best!=null&&perf(g)===best)tag("Best game");
   const rbg=ratingBadge(g);if(rbg){top.append(" ");top.append(rbg)}
+  const tl=teamLabel(g);if(tl){top.append(" ");top.append(tl)}
   const duo=(g.mates||[]).filter(x=>x.same),vs=(g.mates||[]).filter(x=>!x.same);
   if(duo.length)tag("Duo with "+duo.map(x=>short(x.id)).join(", "));if(vs.length)tag("vs "+vs.map(x=>short(x.id)).join(", "));
   m.append(top);const st=el("div","stats num"),dm=(g.dur||0)/60;
