@@ -16,13 +16,24 @@ const startSec = Math.floor(new Date(cfg.raceStart).getTime() / 1000);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // Dev keys allow 100 requests / 2 min, so space calls out.
+// Every round has a hard time budget: once it's used up, no more Riot calls are made and the round
+// saves what it has, so a slow or rate-limiting Riot can never stop the site from updating.
+const ROUND_START = Date.now(), DEADLINE = ROUND_START + 110e3;
+const diag = { calls: 0, status: {}, slow: 0, timeouts: 0, retryAfter: 0, budgetHit: false };
 async function riot(host, path) {
-  for (let attempt = 0; attempt < 4; attempt++) {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    if (Date.now() > DEADLINE) { diag.budgetHit = true; throw new Error("round time budget used up"); }
     await sleep(700);
-    let res;
-    try { res = await fetch(`https://${host}.api.riotgames.com${path}`, { headers: { "X-Riot-Token": KEY }, signal: AbortSignal.timeout(10000) }); }
-    catch (e) { if (attempt === 3) throw new Error(`no response on ${path}`); continue; }
-    if (res.status === 429) { await sleep((+res.headers.get("retry-after") || 10) * 1000); continue; }
+    let res; const t = Date.now(); diag.calls++;
+    try { res = await fetch(`https://${host}.api.riotgames.com${path}`, { headers: { "X-Riot-Token": KEY }, signal: AbortSignal.timeout(8000) }); }
+    catch (e) { diag.timeouts++; if (attempt === 2) throw new Error(`no response on ${path}`); continue; }
+    if (Date.now() - t > 3000) diag.slow++;
+    diag.status[res.status] = (diag.status[res.status] || 0) + 1;
+    if (res.status === 429) {
+      const ra = +res.headers.get("retry-after") || 10; diag.retryAfter = Math.max(diag.retryAfter, ra);
+      if (ra > 20 || Date.now() + ra * 1000 > DEADLINE) { diag.budgetHit = true; throw new Error(`rate limited for ${ra}s`); }
+      await sleep(ra * 1000); continue;
+    }
     if (res.status === 404) return null;
     if (!res.ok) throw new Error(`${res.status} on ${path}`);
     return res.json();
@@ -227,7 +238,10 @@ if (alerts.length && process.env.DISCORD_WEBHOOK) {
   console.log(`Discord: ${alerts.length} alert(s), status ${res.status}`);
 }
 
-const strip = d => JSON.stringify({ ...d, updatedAt: 0, players: Object.fromEntries(Object.entries(d.players || {}).map(([k, v]) => [k, { ...v, iconAt: 0, checkedAt: 0 }])) });
+out.diag = { at: new Date().toISOString(), secs: Math.round((Date.now() - ROUND_START) / 1000), ...diag };
+console.log("round health:", JSON.stringify(out.diag));
+const strip = d => JSON.stringify({ ...d, updatedAt: 0, diag: 0, players: Object.fromEntries(Object.entries(d.players || {}).map(([k, v]) => [k, { ...v, iconAt: 0, checkedAt: 0 }])) });
 const changed = strip(out) !== strip(old), heartbeat = !old.updatedAt || Date.now() - Date.parse(old.updatedAt) > 5 * 60e3;
-if (changed || heartbeat) await writeFile("data.json", JSON.stringify(out, null, 1));
+const trouble = diag.budgetHit || diag.timeouts > 2 || Object.keys(diag.status).some(k => k !== "200" && k !== "404");
+if (changed || heartbeat || trouble) await writeFile("data.json", JSON.stringify(out, null, 1));
 console.log(changed ? "data changed" : heartbeat ? "heartbeat" : "no change");
