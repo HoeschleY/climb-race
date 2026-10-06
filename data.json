@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T13:26:00.018Z",
+ "updatedAt": "2026-10-06T13:26:59.948Z",
  "build": "202610061158",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -1124,19 +1124,66 @@
      ],
      "laneGold": 1430,
      "rv": 1
+    },
+    "EUW1_8005398619": {
+     "win": false,
+     "champ": "Lissandra",
+     "role": "MIDDLE",
+     "k": 7,
+     "d": 7,
+     "a": 15,
+     "cs": 287,
+     "dmg": 36173,
+     "vis": 42,
+     "gold": 16415,
+     "kp": 49,
+     "mates": [
+      {
+       "id": "Ymine#000",
+       "same": true
+      }
+     ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 32651,
+     "v": 4,
+     "dur": 2378,
+     "at": 1791293211380,
+     "g15": 5709,
+     "cs15": 138,
+     "gd15": 65,
+     "csd15": 25,
+     "xpd15": 755,
+     "vs": [
+      "Malphite",
+      "Shyvana",
+      "Kennen",
+      "Aphelios",
+      "Shaco"
+     ],
+     "with": [
+      "Sylas",
+      "Viego",
+      "Jinx",
+      "Thresh"
+     ],
+     "rating": 4.5,
+     "place": 6,
+     "good": [
+      "7.2 CS/min",
+      "7 deaths"
+     ],
+     "bad": [
+      "14% of team damage taken",
+      "19% of team gold"
+     ],
+     "laneGold": 325,
+     "rv": 1
     }
    },
-   "live": {
-    "champId": 127,
-    "queue": 420,
-    "start": 1791290802847,
-    "mates": [
-     {
-      "id": "Ymine#000",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 7143,
    "level": 422,
@@ -1153,9 +1200,9 @@
    "current": {
     "tier": "GOLD",
     "division": "III",
-    "lp": 92,
+    "lp": 72,
     "wins": 132,
-    "losses": 137
+    "losses": 138
    },
    "history": [
     {
@@ -1253,6 +1300,12 @@
      "tier": "GOLD",
      "division": "III",
      "lp": 92
+    },
+    {
+     "t": 1791293231984,
+     "tier": "GOLD",
+     "division": "III",
+     "lp": 72
     }
    ],
    "matches": {
@@ -2932,19 +2985,67 @@
      "bad": [],
      "laneGold": 6785,
      "rv": 1
+    },
+    "EUW1_8005398619": {
+     "win": false,
+     "champ": "Sylas",
+     "role": "TOP",
+     "k": 7,
+     "d": 7,
+     "a": 4,
+     "cs": 265,
+     "dmg": 34875,
+     "vis": 37,
+     "gold": 17177,
+     "kp": 24,
+     "mates": [
+      {
+       "id": "Kohmira#44160",
+       "same": true
+      }
+     ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 60945,
+     "v": 4,
+     "dur": 2378,
+     "at": 1791293211380,
+     "g15": 6613,
+     "cs15": 126,
+     "gd15": 1559,
+     "csd15": 22,
+     "xpd15": 317,
+     "vs": [
+      "Malphite",
+      "Shyvana",
+      "Kennen",
+      "Aphelios",
+      "Shaco"
+     ],
+     "with": [
+      "Viego",
+      "Lissandra",
+      "Jinx",
+      "Thresh"
+     ],
+     "rating": 4.3,
+     "place": 7,
+     "good": [
+      "26% of team damage taken",
+      "7 deaths",
+      "6.7 CS/min"
+     ],
+     "bad": [
+      "24% kill participation",
+      "1.6 KDA"
+     ],
+     "laneGold": -632,
+     "rv": 1
     }
    },
-   "live": {
-    "champId": 517,
-    "queue": 420,
-    "start": 1791290802847,
-    "mates": [
-     {
-      "id": "Kohmira#44160",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 6864,
    "level": 717,
