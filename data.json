@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T19:35:16.863Z",
+ "updatedAt": "2026-10-06T19:38:16.773Z",
  "build": "202610061738",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -1233,7 +1233,7 @@
    "liveErr": null,
    "icon": 7143,
    "level": 422,
-   "iconAt": 1791314423018
+   "iconAt": 1791315502618
   },
   "Ymine#000": {
    "riotId": "Ymine#000",
@@ -3352,7 +3352,7 @@
    "liveErr": null,
    "icon": 6864,
    "level": 718,
-   "iconAt": 1791314429422
+   "iconAt": 1791315509105
   },
   "wilhump#NAEU": {
    "riotId": "wilhump#NAEU",
@@ -5249,7 +5249,7 @@
    "liveErr": null,
    "icon": 5119,
    "level": 513,
-   "iconAt": 1791314433048
+   "iconAt": 1791315512677
   },
   "Near#974p": {
    "riotId": "Near#974p",
@@ -6932,11 +6932,21 @@
      "enemyR": 6.3
     }
    },
-   "live": null,
+   "live": {
+    "champId": 429,
+    "queue": 420,
+    "start": 1791315514396,
+    "mates": [
+     {
+      "id": "Kohmira#44160",
+      "same": true
+     }
+    ]
+   },
    "liveErr": null,
    "icon": 3151,
    "level": 745,
-   "iconAt": 1791314436664
+   "iconAt": 1791315516247
   },
   "Lésion carieuse#Dents": {
    "riotId": "Lésion carieuse#Dents",
@@ -8024,16 +8034,16 @@
    "liveErr": null,
    "icon": 7139,
    "level": 588,
-   "iconAt": 1791314441186
+   "iconAt": 1791315520801
   }
  },
  "diag": {
-  "at": "2026-10-06T19:35:37.328Z",
-  "secs": 20,
-  "calls": 22,
+  "at": "2026-10-06T19:38:41.723Z",
+  "secs": 25,
+  "calls": 27,
   "status": {
-   "200": 17,
-   "404": 5
+   "200": 23,
+   "404": 4
   },
   "slow": 0,
   "timeouts": 0,
