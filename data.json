@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T20:30:16.885Z",
+ "updatedAt": "2026-10-06T20:31:17.137Z",
  "build": "202610061738",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -1319,9 +1319,9 @@
    "current": {
     "tier": "GOLD",
     "division": "III",
-    "lp": 52,
+    "lp": 32,
     "wins": 133,
-    "losses": 140
+    "losses": 141
    },
    "history": [
     {
@@ -1443,6 +1443,12 @@
      "tier": "GOLD",
      "division": "III",
      "lp": 52
+    },
+    {
+     "t": 1791318688357,
+     "tier": "GOLD",
+     "division": "III",
+     "lp": 32
     }
    ],
    "matches": {
@@ -3419,6 +3425,65 @@
      "rv": 1,
      "teamR": 3.3,
      "enemyR": 6.3
+    },
+    "EUW1_8005838027": {
+     "win": false,
+     "champ": "MonkeyKing",
+     "role": "JUNGLE",
+     "k": 6,
+     "d": 5,
+     "a": 3,
+     "cs": 212,
+     "dmg": 24425,
+     "vis": 25,
+     "gold": 13719,
+     "kp": 38,
+     "mates": [
+      {
+       "id": "Lésion carieuse#Dents",
+       "same": true
+      }
+     ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 32351,
+     "v": 4,
+     "dur": 1816,
+     "at": 1791318626423,
+     "teamR": 2.8,
+     "enemyR": 7,
+     "g15": 6487,
+     "cs15": 122,
+     "gd15": 1454,
+     "csd15": 28,
+     "xpd15": 2133,
+     "vs": [
+      "Singed",
+      "Nocturne",
+      "Vladimir",
+      "Yunara",
+      "Morgana"
+     ],
+     "with": [
+      "TahmKench",
+      "Sylas",
+      "Jinx",
+      "Leona"
+     ],
+     "rating": 4.1,
+     "place": 7,
+     "good": [
+      "25% of team gold",
+      "5 deaths"
+     ],
+     "bad": [
+      "38% kill participation",
+      "1.8 KDA"
+     ],
+     "laneGold": 1954,
+     "rv": 1
     }
    },
    "live": null,
@@ -8243,11 +8308,11 @@
   }
  },
  "diag": {
-  "at": "2026-10-06T20:30:40.214Z",
-  "secs": 23,
-  "calls": 24,
+  "at": "2026-10-06T20:31:38.592Z",
+  "secs": 21,
+  "calls": 23,
   "status": {
-   "200": 21,
+   "200": 20,
    "404": 3
   },
   "slow": 0,
