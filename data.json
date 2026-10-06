@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T11:38:40.831Z",
+ "updatedAt": "2026-10-06T11:39:41.085Z",
  "build": "202610061049",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -14,9 +14,9 @@
    "current": {
     "tier": "GOLD",
     "division": "III",
-    "lp": 13,
+    "lp": 1,
     "wins": 16,
-    "losses": 14
+    "losses": 15
    },
    "history": [
     {
@@ -48,6 +48,12 @@
      "tier": "GOLD",
      "division": "III",
      "lp": 13
+    },
+    {
+     "t": 1791286783042,
+     "tier": "GOLD",
+     "division": "III",
+     "lp": 1
     }
    ],
    "matches": {
@@ -1060,7 +1066,7 @@
    "liveErr": null,
    "icon": 7143,
    "level": 421,
-   "iconAt": 1791285824111
+   "iconAt": 1791286783974
   },
   "Ymine#000": {
    "riotId": "Ymine#000",
@@ -2797,7 +2803,7 @@
    "liveErr": null,
    "icon": 6864,
    "level": 717,
-   "iconAt": 1791285827669
+   "iconAt": 1791286787501
   },
   "wilhump#NAEU": {
    "riotId": "wilhump#NAEU",
@@ -4630,7 +4636,7 @@
    "liveErr": null,
    "icon": 5119,
    "level": 513,
-   "iconAt": 1791285831338
+   "iconAt": 1791286791019
   },
   "Near#974p": {
    "riotId": "Near#974p",
@@ -6023,7 +6029,7 @@
    "liveErr": null,
    "icon": 3151,
    "level": 745,
-   "iconAt": 1791285834847
+   "iconAt": 1791286794545
   },
   "Lésion carieuse#Dents": {
    "riotId": "Lésion carieuse#Dents",
@@ -6900,7 +6906,7 @@
    "liveErr": null,
    "icon": 7139,
    "level": 588,
-   "iconAt": 1791285838338
+   "iconAt": 1791286798086
   }
  }
 }
