@@ -320,6 +320,23 @@ main section>h2::after{content:"";flex:1;height:1px;background:linear-gradient(9
 .award,.scard,.hcard{transition:border-color .2s}
 .scard[style*="cursor"]:hover{border-color:var(--gold)}
 @media (max-width:900px){.game{grid-template-columns:4px 44px minmax(0,1fr) auto!important}.gstats{display:none}}
+/* Compact scoreboard: both teams fit on one screen */
+.modal{padding:18px 16px}
+.mpanel{padding:16px 18px}
+.mhead{margin-bottom:10px}.mhead h2{font-size:1.25rem;margin:2px 0 0}
+.team{margin-bottom:8px}
+.thead{padding:7px 14px}
+.sbr{padding:3px 14px;font-size:.84rem;row-gap:0}
+.sbh{padding-block:4px}
+#mbody .team ~ .team .sbh{display:none}
+.sbc img{width:30px;height:30px}
+.sbs{grid-template-columns:repeat(2,15px)}.sbs img{width:15px;height:15px}
+.it{width:23px;height:23px}
+.sbr small{font-size:.72rem;line-height:1.2}
+.sbn span{font-size:.72rem}
+.dbar{margin-top:2px}
+.gsvg{height:120px}
+#goldbox{margin:6px 0 10px}
 footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
 
 @media (max-width:760px){
@@ -466,7 +483,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610062325";
+const BUILD="202610062326";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
@@ -821,7 +838,7 @@ async function openMatch(g){
   t.append(el("div","muted",`${Math.floor(m.dur/60)}:${String(m.dur%60).padStart(2,"0")} · ${new Date(m.at).toLocaleString("en-GB",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}`));
   head.append(t);mbody.append(head);
   if(m.tl?.goldDiff?.length>2){const me2=m.players.find(x=>x.tracked===g.riotId),sign=me2&&me2.team===200?-1:1,gd=m.tl.goldDiff.map(v=>v*sign);
-    const box=el("div","gwrap");box.append(el("div","eyebrow","Gold lead · your team"));const W=900,H=150,P=34,max=Math.max(1000,...gd.map(Math.abs)),n=gd.length-1;
+    const box=el("div","gwrap");box.id="goldbox";box.append(el("div","eyebrow","Gold lead · your team"));const W=900,H=120,P=34,max=Math.max(1000,...gd.map(Math.abs)),n=gd.length-1;
     const X=i=>P+i/n*(W-P-8),Y=v=>H/2-v/max*(H/2-12);
     let pts=gd.map((v,i)=>`${X(i)},${Y(v)}`).join(" ");
     let svg=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" class="gsvg" role="img" aria-label="Gold lead over time"><defs><clipPath id="up"><rect x="0" y="0" width="${W}" height="${H/2}"/></clipPath><clipPath id="dn"><rect x="0" y="${H/2}" width="${W}" height="${H/2}"/></clipPath></defs>`;
@@ -859,6 +876,7 @@ async function openMatch(g){
       const it=el("div","items");x.items.slice(0,6).forEach(i=>it.append(itemImg(i)));const tr=itemImg(x.items[6]);tr.classList.add("trinket");it.append(tr);r.append(it);
       tbl.append(r)});
     box.append(tbl);mbody.append(box)});
+  const gb=document.getElementById("goldbox");if(gb)mbody.append(gb);   // gold graph goes below the teams
   const panel=el("div","gwrap ppanel");panel.id="ppanel";mbody.append(panel);
   const start=m.players.findIndex(x=>x.tracked===g.riotId);selectSbPlayer(m,start>=0?start:0,g,true);
 }
