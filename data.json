@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T12:52:41.309Z",
+ "updatedAt": "2026-10-06T12:55:41.521Z",
  "build": "202610061158",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -6229,7 +6229,12 @@
      "rv": 1
     }
    },
-   "live": null,
+   "live": {
+    "champId": 45,
+    "queue": 420,
+    "start": 1791291343978,
+    "mates": []
+   },
    "liveErr": null,
    "icon": 3151,
    "level": 745,
