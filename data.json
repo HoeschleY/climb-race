@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T18:52:16.949Z",
+ "updatedAt": "2026-10-06T18:55:17.143Z",
  "build": "202610061738",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -3282,7 +3282,17 @@
      "enemyR": 3.2
     }
    },
-   "live": null,
+   "live": {
+    "champId": 106,
+    "queue": 420,
+    "start": 1791312895299,
+    "mates": [
+     {
+      "id": "Lésion carieuse#Dents",
+      "same": true
+     }
+    ]
+   },
    "liveErr": null,
    "icon": 6864,
    "level": 718,
@@ -7891,7 +7901,17 @@
      "enemyR": 5.6
     }
    },
-   "live": null,
+   "live": {
+    "champId": 22,
+    "queue": 420,
+    "start": 1791312895299,
+    "mates": [
+     {
+      "id": "Ymine#000",
+      "same": true
+     }
+    ]
+   },
    "liveErr": null,
    "icon": 7139,
    "level": 588,
