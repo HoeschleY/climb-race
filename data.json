@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T20:45:16.998Z",
+ "updatedAt": "2026-10-06T20:46:16.539Z",
  "build": "202610061738",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -1290,19 +1290,69 @@
      "rv": 1,
      "teamR": 3.5,
      "enemyR": 6.5
+    },
+    "EUW1_8005866557": {
+     "win": false,
+     "champ": "Viktor",
+     "role": "MIDDLE",
+     "k": 10,
+     "d": 4,
+     "a": 5,
+     "cs": 235,
+     "dmg": 23463,
+     "vis": 12,
+     "gold": 14069,
+     "kp": 54,
+     "mates": [
+      {
+       "id": "Near#974p",
+       "same": true
+      }
+     ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 19308,
+     "v": 4,
+     "dur": 1788,
+     "at": 1791319533106,
+     "g15": 4520,
+     "cs15": 110,
+     "gd15": -607,
+     "csd15": -15,
+     "xpd15": 496,
+     "vs": [
+      "Azir",
+      "Viego",
+      "Yasuo",
+      "Kalista",
+      "Renata"
+     ],
+     "with": [
+      "Fiora",
+      "Qiyana",
+      "Yunara",
+      "Alistar"
+     ],
+     "rating": 5.8,
+     "place": 3,
+     "good": [
+      "4 deaths",
+      "3.8 KDA",
+      "7.9 CS/min"
+     ],
+     "bad": [
+      "13% of team damage taken",
+      "12 vision score"
+     ],
+     "laneGold": 1744,
+     "rv": 1,
+     "teamR": 3.4,
+     "enemyR": 6
     }
    },
-   "live": {
-    "champId": 112,
-    "queue": 420,
-    "start": 1791317714377,
-    "mates": [
-     {
-      "id": "Near#974p",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 7143,
    "level": 422,
@@ -7145,6 +7195,65 @@
      "rv": 1,
      "teamR": 3.2,
      "enemyR": 6.5
+    },
+    "EUW1_8005866557": {
+     "win": false,
+     "champ": "Yunara",
+     "role": "BOTTOM",
+     "k": 5,
+     "d": 7,
+     "a": 11,
+     "cs": 264,
+     "dmg": 32716,
+     "vis": 7,
+     "gold": 15884,
+     "kp": 57,
+     "mates": [
+      {
+       "id": "Kohmira#44160",
+       "same": true
+      }
+     ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 28510,
+     "v": 4,
+     "dur": 1788,
+     "at": 1791319533106,
+     "g15": 5161,
+     "cs15": 110,
+     "gd15": -890,
+     "csd15": -2,
+     "xpd15": -128,
+     "vs": [
+      "Azir",
+      "Viego",
+      "Yasuo",
+      "Kalista",
+      "Renata"
+     ],
+     "with": [
+      "Fiora",
+      "Qiyana",
+      "Viktor",
+      "Alistar"
+     ],
+     "rating": 5.8,
+     "place": 4,
+     "good": [
+      "+4.3k gold vs lane opponent",
+      "8.9 CS/min",
+      "32% of team damage"
+     ],
+     "bad": [
+      "7 vision score"
+     ],
+     "laneGold": 4330,
+     "rv": 1,
+     "teamR": 3.4,
+     "enemyR": 6
     }
    },
    "live": null,
@@ -8318,11 +8427,11 @@
   }
  },
  "diag": {
-  "at": "2026-10-06T20:45:41.737Z",
-  "secs": 25,
-  "calls": 27,
+  "at": "2026-10-06T20:46:40.145Z",
+  "secs": 24,
+  "calls": 25,
   "status": {
-   "200": 25,
+   "200": 23,
    "404": 2
   },
   "slow": 0,
