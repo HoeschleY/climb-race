@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T17:35:59.665Z",
+ "updatedAt": "2026-10-06T17:36:59.949Z",
  "build": "202610061341",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -1246,9 +1246,9 @@
    "current": {
     "tier": "GOLD",
     "division": "III",
-    "lp": 72,
+    "lp": 52,
     "wins": 132,
-    "losses": 138
+    "losses": 139
    },
    "history": [
     {
@@ -1352,6 +1352,12 @@
      "tier": "GOLD",
      "division": "III",
      "lp": 72
+    },
+    {
+     "t": 1791308232834,
+     "tier": "GOLD",
+     "division": "III",
+     "lp": 52
     }
    ],
    "matches": {
