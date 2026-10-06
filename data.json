@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T21:03:17.433Z",
+ "updatedAt": "2026-10-06T21:04:17.163Z",
  "build": "202610061738",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -3549,6 +3549,63 @@
       "1.8 KDA"
      ],
      "laneGold": 1954,
+     "rv": 1
+    },
+    "EUW1_8005895474": {
+     "win": true,
+     "champ": "Jinx",
+     "role": "BOTTOM",
+     "k": 10,
+     "d": 4,
+     "a": 10,
+     "cs": 222,
+     "dmg": 30941,
+     "vis": 16,
+     "gold": 15012,
+     "kp": 65,
+     "mates": [
+      {
+       "id": "Lésion carieuse#Dents",
+       "same": true
+      }
+     ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 15698,
+     "v": 4,
+     "dur": 1663,
+     "at": 1791320601503,
+     "teamR": 6.6,
+     "enemyR": 3.2,
+     "g15": 7007,
+     "cs15": 113,
+     "gd15": 1178,
+     "csd15": 4,
+     "xpd15": 614,
+     "vs": [
+      "Yorick",
+      "Chogath",
+      "Akali",
+      "Yunara",
+      "Nautilus"
+     ],
+     "with": [
+      "DrMundo",
+      "Jax",
+      "TwistedFate",
+      "Leona"
+     ],
+     "rating": 7.3,
+     "place": 3,
+     "good": [
+      "27% of team damage",
+      "24% of team gold",
+      "+4.6k gold vs lane opponent"
+     ],
+     "bad": [],
+     "laneGold": 4591,
      "rv": 1
     }
    },
@@ -8494,11 +8551,11 @@
   }
  },
  "diag": {
-  "at": "2026-10-06T21:03:40.683Z",
-  "secs": 23,
-  "calls": 24,
+  "at": "2026-10-06T21:04:38.454Z",
+  "secs": 21,
+  "calls": 23,
   "status": {
-   "200": 21,
+   "200": 20,
    "404": 3
   },
   "slow": 0,
