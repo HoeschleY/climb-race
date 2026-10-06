@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T20:27:17.167Z",
+ "updatedAt": "2026-10-06T20:30:16.885Z",
  "build": "202610061738",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -3421,17 +3421,7 @@
      "enemyR": 6.3
     }
    },
-   "live": {
-    "champId": 62,
-    "queue": 420,
-    "start": 1791316780410,
-    "mates": [
-     {
-      "id": "Lésion carieuse#Dents",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 6864,
    "level": 718,
@@ -7109,9 +7099,9 @@
    "current": {
     "tier": "GOLD",
     "division": "III",
-    "lp": 89,
+    "lp": 66,
     "wins": 171,
-    "losses": 165
+    "losses": 166
    },
    "history": [
     {
@@ -7167,6 +7157,12 @@
      "tier": "GOLD",
      "division": "III",
      "lp": 89
+    },
+    {
+     "t": 1791318637814,
+     "tier": "GOLD",
+     "division": "III",
+     "lp": 66
     }
    ],
    "matches": {
@@ -8178,19 +8174,68 @@
      "rv": 1,
      "teamR": 4.8,
      "enemyR": 6.3
+    },
+    "EUW1_8005838027": {
+     "win": false,
+     "champ": "Sylas",
+     "role": "MIDDLE",
+     "k": 6,
+     "d": 8,
+     "a": 7,
+     "cs": 165,
+     "dmg": 25600,
+     "vis": 31,
+     "gold": 10887,
+     "kp": 54,
+     "mates": [
+      {
+       "id": "Ymine#000",
+       "same": true
+      }
+     ],
+     "multi": 1,
+     "penta": 0,
+     "fb": true,
+     "solo": 2,
+     "taken": 33910,
+     "v": 4,
+     "dur": 1816,
+     "at": 1791318626423,
+     "g15": 5497,
+     "cs15": 80,
+     "gd15": -116,
+     "csd15": -38,
+     "xpd15": -494,
+     "vs": [
+      "Singed",
+      "Nocturne",
+      "Vladimir",
+      "Yunara",
+      "Morgana"
+     ],
+     "with": [
+      "TahmKench",
+      "MonkeyKing",
+      "Jinx",
+      "Leona"
+     ],
+     "rating": 3.3,
+     "place": 8,
+     "good": [
+      "54% kill participation"
+     ],
+     "bad": [
+      "−3.0k gold vs lane opponent",
+      "20% of team gold",
+      "8 deaths"
+     ],
+     "laneGold": -3049,
+     "rv": 1,
+     "teamR": 3,
+     "enemyR": 7
     }
    },
-   "live": {
-    "champId": 517,
-    "queue": 420,
-    "start": 1791316780410,
-    "mates": [
-     {
-      "id": "Ymine#000",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 7139,
    "level": 588,
@@ -8198,12 +8243,12 @@
   }
  },
  "diag": {
-  "at": "2026-10-06T20:27:42.149Z",
-  "secs": 25,
-  "calls": 27,
+  "at": "2026-10-06T20:30:40.214Z",
+  "secs": 23,
+  "calls": 24,
   "status": {
-   "200": 26,
-   "404": 1
+   "200": 21,
+   "404": 3
   },
   "slow": 0,
   "timeouts": 0,
