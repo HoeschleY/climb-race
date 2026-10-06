@@ -220,7 +220,7 @@ main{padding-block:18px 56px}
 .ctot{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);margin-bottom:14px}
 .ctot div{background:var(--panel);padding:12px 16px}.ctot b{display:block;font-size:1.15rem}.ctot span{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
 .ctable{overflow-x:auto}
-.crow{display:grid;grid-template-columns:minmax(170px,1.3fr) 60px minmax(150px,1fr) 70px 70px 76px minmax(150px,1fr);gap:12px;align-items:center;padding:8px 16px;border-top:1px solid var(--line);font-size:.88rem;min-width:820px;cursor:pointer}
+.crow{display:grid;grid-template-columns:minmax(170px,1.3fr) 60px minmax(150px,1fr) 66px 84px 66px 72px minmax(150px,1fr);gap:12px;align-items:center;padding:8px 16px;border-top:1px solid var(--line);font-size:.88rem;min-width:820px;cursor:pointer}
 .crow:hover{background:var(--panel2)}.crow:first-child{border-top:0}
 .chd{cursor:default;padding-block:6px}.chd:hover{background:none}
 .chd button{background:none;border:0;padding:0;text-align:left;font:600 .7rem var(--body);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer}
@@ -344,7 +344,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
   <div class="chips" id="cchips"></div>
   <div class="ctot panel" id="ctotals"></div>
   <div class="panel ctable" id="champs"></div>
-  <p class="note">Click a column to sort, click a champion for who plays it and their best game.</p>
+  <p class="note">Click a column to sort, click a champion for who plays it and their best game. Rating is the average lobby rating (0–10) on that champion; sorting by rating or win rate lists champions with 2+ games first.</p>
   <div class="mgrid">
     <div class="panel"><div class="shd"><span class="eyebrow" style="color:var(--loss)">Toughest opponents</span><span class="muted" style="font-size:.78rem">Enemy champions you lose to most</span></div><div id="nemesis"></div></div>
     <div class="panel"><div class="shd"><span class="eyebrow" style="color:var(--win)">Favorite victims</span><span class="muted" style="font-size:.78rem">Enemy champions you beat most</span></div><div id="victims"></div></div>
@@ -419,7 +419,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610061149";
+const BUILD="202610061158";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
@@ -636,11 +636,12 @@ function ratingBadge(g){if(g.rating==null)return null;const b=el("span","rbadge 
 function wrCol(w){return w>=.55?"var(--win)":w<=.45?"var(--loss)":"var(--gold)"}
 function profileOf(p){
   const box=el("div","prof"),agg=(key)=>{const m={};p.games.forEach(g=>{const k=key(g);if(k==null)return;const e=m[k]||(m[k]={k,n:0,w:0,K:0,D:0,A:0,cs:0,min:0});
-    e.n++;if(g.win)e.w++;e.K+=g.k;e.D+=g.d;e.A+=g.a;e.cs+=g.cs||0;e.min+=(g.dur||0)/60});return Object.values(m).sort((a,b)=>b.n-a.n||b.w-a.w)};
+    e.n++;if(g.win)e.w++;e.K+=g.k;e.D+=g.d;e.A+=g.a;e.cs+=g.cs||0;e.min+=(g.dur||0)/60;if(g.rating!=null){e.rs=(e.rs||0)+g.rating;e.rn=(e.rn||0)+1}});return Object.values(m).sort((a,b)=>b.n-a.n||b.w-a.w)};
   // Champion pool
   const pc=el("div");pc.append(el("h3",null,"Champion pool"));const pool=el("div","pool");
   agg(g=>g.champ).slice(0,6).forEach(e=>{const r=el("div","prow"),img=el("img");img.src=icon(e.k);img.alt="";img.loading="lazy";
     const mid=el("div");mid.append(el("div","nm",e.k),el("div","sm num",`${e.n} game${e.n>1?"s":""} · ${e.D?((e.K+e.A)/e.D).toFixed(2):"Perfect"} KDA · ${e.min?(e.cs/e.min).toFixed(1):"–"} CS/min`));
+    if(e.rn){const rb=avgBadge(e.rs/e.rn,"avg");rb.style.marginLeft="8px";mid.firstChild.append(rb)}
     const wr=el("div","wr num",Math.round(e.w/e.n*100)+"%");wr.style.color=wrCol(e.w/e.n);r.append(img,mid,wr);pool.append(r)});
   pc.append(pool);box.append(pc);
   // Roles
@@ -758,9 +759,9 @@ async function openMatch(g){
 
 /* Champions tab: global pool + totals + matchups */
 let cFilter="all",cSort={k:"n",dir:-1},cOpen=null;
-function aggChamps(games,key){const m={};games.forEach(g=>{const k=key(g);const e=m[k]||(m[k]={k,n:0,w:0,K:0,D:0,A:0,cs:0,dmg:0,min:0,by:{},best:null});
-  e.n++;if(g.win)e.w++;e.K+=g.k;e.D+=g.d;e.A+=g.a;e.cs+=g.cs||0;e.dmg+=g.dmg||0;e.min+=(g.dur||0)/60;
-  const b=e.by[g.riotId]||(e.by[g.riotId]={n:0,w:0});b.n++;if(g.win)b.w++;if(!e.best||perf(g)>perf(e.best))e.best=g});return Object.values(m)}
+function aggChamps(games,key){const m={};games.forEach(g=>{const k=key(g);const e=m[k]||(m[k]={k,n:0,w:0,K:0,D:0,A:0,cs:0,dmg:0,min:0,rs:0,rn:0,by:{},best:null});
+  e.n++;if(g.win)e.w++;e.K+=g.k;e.D+=g.d;e.A+=g.a;e.cs+=g.cs||0;e.dmg+=g.dmg||0;e.min+=(g.dur||0)/60;if(g.rating!=null){e.rs+=g.rating;e.rn++}
+  const b=e.by[g.riotId]||(e.by[g.riotId]={n:0,w:0,rs:0,rn:0});b.n++;if(g.win)b.w++;if(g.rating!=null){b.rs+=g.rating;b.rn++}if(!e.best||perf(g)>perf(e.best))e.best=g});return Object.values(m)}
 const kdaOf=e=>e.D?(e.K+e.A)/e.D:e.K+e.A;
 function renderChamps(){
   const box=document.getElementById("champs");if(!box||!players.length)return;
@@ -777,9 +778,9 @@ function renderChamps(){
    ["Kills / deaths",`${sum("k")} / ${sum("d")}`],["Avg game",n?Math.round(mins/n)+" min":"–"],["Most played",most?`${most.k} (${most.n})`:"–"],["Best win rate (3+ games)",bestWr?`${bestWr.k} ${Math.round(bestWr.w/bestWr.n*100)}%`:"–"]]
    .forEach(([k,v])=>{const d=el("div");d.append(el("b","num",v),el("span",null,k));tot.append(d)});
   // table
-  const cols=[["k","Champion"],["n","Games"],["wr","Win rate"],["kda","KDA"],["csm","CS/min"],["dmm","Dmg/min"],["who","Played by"]];
-  const val={k:e=>e.k,n:e=>e.n,wr:e=>e.w/e.n,kda:kdaOf,csm:e=>e.min?e.cs/e.min:0,dmm:e=>e.min?e.dmg/e.min:0,who:e=>Object.keys(e.by).length};
-  champs.sort((a,b)=>{const x=val[cSort.k](a),y=val[cSort.k](b);return (x<y?-1:x>y?1:0)*cSort.dir||b.n-a.n});
+  const cols=[["k","Champion"],["n","Games"],["wr","Win rate"],["kda","KDA"],["rt","Rating"],["csm","CS/min"],["dmm","Dmg/min"],["who","Played by"]];
+  const val={k:e=>e.k,n:e=>e.n,wr:e=>e.w/e.n,kda:kdaOf,rt:e=>e.rn?e.rs/e.rn:-1,csm:e=>e.min?e.cs/e.min:0,dmm:e=>e.min?e.dmg/e.min:0,who:e=>Object.keys(e.by).length};
+  champs.sort((a,b)=>{if((cSort.k==="rt"||cSort.k==="wr")&&(a.n>=2)!==(b.n>=2))return a.n>=2?-1:1;const x=val[cSort.k](a),y=val[cSort.k](b);return (x<y?-1:x>y?1:0)*cSort.dir||b.n-a.n});
   box.innerHTML="";const hr=el("div","crow chd");
   cols.forEach(([k,l])=>{const b=el("button",null,l+(cSort.k===k?(cSort.dir<0?" ▼":" ▲"):""));b.onclick=()=>{cSort=cSort.k===k?{k,dir:-cSort.dir}:{k,dir:k==="k"?1:-1};renderChamps()};hr.append(b)});box.append(hr);
   if(!champs.length)box.append(el("div","empty","No games yet."));
@@ -788,11 +789,12 @@ function renderChamps(){
     r.append(el("span","num",`${e.n}`));
     const wr=el("div","cwr");const t=el("div","tr"),f=el("span");f.style.width=e.w/e.n*100+"%";f.style.background=wrCol(e.w/e.n);t.append(f);
     wr.append(el("span","num",`${Math.round(e.w/e.n*100)}% · ${e.w}W ${e.n-e.w}L`),t);r.append(wr);
-    r.append(el("span","num",e.D?kdaOf(e).toFixed(2):"Perfect"),el("span","num",e.min?(e.cs/e.min).toFixed(1):"–"),el("span","num",e.min?Math.round(e.dmg/e.min):"–"));
+    const rv=e.rn?e.rs/e.rn:null,rt=el("b","num",rv!=null?rv.toFixed(1):"–");if(rv!=null)rt.style.color=ratingCol(rv);
+    r.append(el("span","num",e.D?kdaOf(e).toFixed(2):"Perfect"),rt,el("span","num",e.min?(e.cs/e.min).toFixed(1):"–"),el("span","num",e.min?Math.round(e.dmg/e.min):"–"));
     const who=el("div","cwho");Object.entries(e.by).sort((a,b)=>b[1].n-a[1].n).forEach(([id,b])=>{const p=players.find(x=>x.riotId===id);const s=el("span","cw");s.title=`${short(id)}: ${b.n} games, ${b.w}W`;if(p)s.append(avatar(p,22));s.append(el("small","num",b.n));who.append(s)});r.append(who);
     box.append(r);
     if(cOpen===e.k){const d=el("div","cdet");
-      Object.entries(e.by).sort((a,b)=>b[1].n-a[1].n).forEach(([id,b])=>d.append(el("span","num",`${short(id)}: ${b.n} game${b.n>1?"s":""}, ${Math.round(b.w/b.n*100)}% win rate`)));
+      Object.entries(e.by).sort((a,b)=>b[1].n-a[1].n).forEach(([id,b])=>d.append(el("span","num",`${short(id)}: ${b.n} game${b.n>1?"s":""}, ${Math.round(b.w/b.n*100)}% win rate${b.rn?`, ${(b.rs/b.rn).toFixed(1)} avg rating`:""}`)));
       if(e.best){const bg=el("button","lnk",`Best game: ${short(e.best.riotId)} ${e.best.k}/${e.best.d}/${e.best.a} ›`);bg.onclick=x=>{x.stopPropagation();openMatch(e.best)};d.append(bg)}
       box.append(d)}});
   // matchups
