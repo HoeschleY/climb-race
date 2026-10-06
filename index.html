@@ -314,8 +314,8 @@ main{padding-block:18px 56px}
 .gstats div{display:grid;gap:1px}.gstats b{font-size:.92rem;font-weight:600;white-space:nowrap}.gstats span{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
 .res{display:grid;gap:1px}
 /* Section headings */
-h2{display:flex;align-items:center;gap:12px}
-h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+main section>h2{display:flex;align-items:center;gap:12px}
+main section>h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
 /* Panels lift slightly on hover where clickable */
 .award,.scard,.hcard{transition:border-color .2s}
 .scard[style*="cursor"]:hover{border-color:var(--gold)}
@@ -466,7 +466,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610062317";
+const BUILD="202610062325";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
