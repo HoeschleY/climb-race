@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T13:24:00.227Z",
+ "updatedAt": "2026-10-06T13:24:59.756Z",
  "build": "202610061158",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -6227,14 +6227,59 @@
      ],
      "laneGold": 9943,
      "rv": 1
+    },
+    "EUW1_8005396094": {
+     "win": false,
+     "champ": "Veigar",
+     "role": "BOTTOM",
+     "k": 6,
+     "d": 8,
+     "a": 12,
+     "cs": 211,
+     "dmg": 26356,
+     "vis": 14,
+     "gold": 14040,
+     "kp": 46,
+     "mates": [],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 24652,
+     "v": 4,
+     "dur": 1732,
+     "at": 1791293093841,
+     "g15": 5404,
+     "cs15": 100,
+     "gd15": -571,
+     "csd15": -16,
+     "xpd15": 463,
+     "vs": [
+      "Irelia",
+      "Quinn",
+      "Hwei",
+      "Yunara",
+      "Leona"
+     ],
+     "with": [
+      "Varus",
+      "Qiyana",
+      "Locke",
+      "Pantheon"
+     ],
+     "rating": 4.5,
+     "place": 7,
+     "good": [
+      "25% of team damage",
+      "7.3 CS/min",
+      "46% kill participation"
+     ],
+     "bad": [],
+     "laneGold": -442,
+     "rv": 1
     }
    },
-   "live": {
-    "champId": 45,
-    "queue": 420,
-    "start": 1791291331695,
-    "mates": []
-   },
+   "live": null,
    "liveErr": null,
    "icon": 3151,
    "level": 745,
