@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T18:46:16.879Z",
+ "updatedAt": "2026-10-06T18:47:16.826Z",
  "build": "202610061738",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -1246,8 +1246,8 @@
    "current": {
     "tier": "GOLD",
     "division": "III",
-    "lp": 52,
-    "wins": 132,
+    "lp": 72,
+    "wins": 133,
     "losses": 139
    },
    "history": [
@@ -1358,6 +1358,12 @@
      "tier": "GOLD",
      "division": "III",
      "lp": 52
+    },
+    {
+     "t": 1791312448291,
+     "tier": "GOLD",
+     "division": "III",
+     "lp": 72
     }
    ],
    "matches": {
@@ -3220,14 +3226,61 @@
      ],
      "laneGold": 3159,
      "rv": 1
+    },
+    "EUW1_8005693153": {
+     "win": true,
+     "champ": "Jhin",
+     "role": "BOTTOM",
+     "k": 13,
+     "d": 9,
+     "a": 10,
+     "cs": 216,
+     "dmg": 30292,
+     "vis": 23,
+     "gold": 15488,
+     "kp": 55,
+     "mates": [],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 24197,
+     "v": 4,
+     "dur": 1830,
+     "at": 1791312390326,
+     "g15": 6267,
+     "cs15": 94,
+     "gd15": 1132,
+     "csd15": 3,
+     "xpd15": 595,
+     "vs": [
+      "JarvanIV",
+      "FiddleSticks",
+      "Lux",
+      "Caitlyn",
+      "Poppy"
+     ],
+     "with": [
+      "KSante",
+      "Amumu",
+      "Riven",
+      "Seraphine"
+     ],
+     "rating": 6.4,
+     "place": 5,
+     "good": [
+      "25% of team damage",
+      "23% of team gold",
+      "+3.7k gold vs lane opponent"
+     ],
+     "bad": [
+      "9 deaths"
+     ],
+     "laneGold": 3722,
+     "rv": 1
     }
    },
-   "live": {
-    "champId": 202,
-    "queue": 420,
-    "start": 1791310530267,
-    "mates": []
-   },
+   "live": null,
    "liveErr": null,
    "icon": 6864,
    "level": 718,
