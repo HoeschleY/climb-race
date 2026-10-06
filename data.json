@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T15:51:59.989Z",
+ "updatedAt": "2026-10-06T15:55:59.848Z",
  "build": "202610061341",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -1233,7 +1233,7 @@
    "liveErr": null,
    "icon": 7143,
    "level": 422,
-   "iconAt": 1791301025819
+   "iconAt": 1791302165761
   },
   "Ymine#000": {
    "riotId": "Ymine#000",
@@ -3159,7 +3159,7 @@
    "liveErr": null,
    "icon": 6864,
    "level": 717,
-   "iconAt": 1791301032340
+   "iconAt": 1791302172259
   },
   "wilhump#NAEU": {
    "riotId": "wilhump#NAEU",
@@ -5056,7 +5056,7 @@
    "liveErr": null,
    "icon": 5119,
    "level": 513,
-   "iconAt": 1791301035969
+   "iconAt": 1791302175885
   },
   "Near#974p": {
    "riotId": "Near#974p",
@@ -6676,7 +6676,7 @@
    "liveErr": null,
    "icon": 3151,
    "level": 745,
-   "iconAt": 1791301039577
+   "iconAt": 1791302179462
   },
   "Lésion carieuse#Dents": {
    "riotId": "Lésion carieuse#Dents",
@@ -7637,11 +7637,16 @@
      "enemyR": 7
     }
    },
-   "live": null,
+   "live": {
+    "champId": 22,
+    "queue": 420,
+    "start": 1791302132329,
+    "mates": []
+   },
    "liveErr": null,
    "icon": 7139,
    "level": 588,
-   "iconAt": 1791301044124
+   "iconAt": 1791302184115
   }
  }
 }
