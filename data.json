@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T21:34:17.025Z",
+ "updatedAt": "2026-10-06T21:38:17.237Z",
  "build": "202610061738",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -1440,8 +1440,8 @@
    "current": {
     "tier": "GOLD",
     "division": "III",
-    "lp": 51,
-    "wins": 134,
+    "lp": 71,
+    "wins": 135,
     "losses": 141
    },
    "history": [
@@ -1576,6 +1576,12 @@
      "tier": "GOLD",
      "division": "III",
      "lp": 51
+    },
+    {
+     "t": 1791322708564,
+     "tier": "GOLD",
+     "division": "III",
+     "lp": 71
     }
    ],
    "matches": {
@@ -3668,19 +3674,68 @@
      "bad": [],
      "laneGold": 4591,
      "rv": 1
+    },
+    "EUW1_8005926144": {
+     "win": true,
+     "champ": "Caitlyn",
+     "role": "BOTTOM",
+     "k": 22,
+     "d": 8,
+     "a": 4,
+     "cs": 223,
+     "dmg": 43458,
+     "vis": 23,
+     "gold": 20401,
+     "kp": 59,
+     "mates": [
+      {
+       "id": "Lésion carieuse#Dents",
+       "same": true
+      }
+     ],
+     "multi": 5,
+     "penta": 1,
+     "fb": false,
+     "solo": 4,
+     "taken": 20956,
+     "v": 4,
+     "dur": 1765,
+     "at": 1791322658626,
+     "g15": 7937,
+     "cs15": 124,
+     "gd15": 1107,
+     "csd15": -4,
+     "xpd15": 629,
+     "vs": [
+      "Jax",
+      "Qiyana",
+      "Zed",
+      "Varus",
+      "Taric"
+     ],
+     "with": [
+      "Yone",
+      "Nocturne",
+      "TwistedFate",
+      "Leona"
+     ],
+     "rating": 7.5,
+     "place": 2,
+     "good": [
+      "37% of team damage",
+      "29% of team gold",
+      "3.3 KDA"
+     ],
+     "bad": [
+      "16% of team damage taken"
+     ],
+     "laneGold": 3144,
+     "rv": 1,
+     "teamR": 5.9,
+     "enemyR": 3.8
     }
    },
-   "live": {
-    "champId": 51,
-    "queue": 420,
-    "start": 1791320863107,
-    "mates": [
-     {
-      "id": "Lésion carieuse#Dents",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 6864,
    "level": 718,
@@ -7472,9 +7527,9 @@
    },
    "current": {
     "tier": "GOLD",
-    "division": "III",
-    "lp": 83,
-    "wins": 172,
+    "division": "II",
+    "lp": 1,
+    "wins": 173,
     "losses": 166
    },
    "history": [
@@ -7543,6 +7598,12 @@
      "tier": "GOLD",
      "division": "III",
      "lp": 83
+    },
+    {
+     "t": 1791322718654,
+     "tier": "GOLD",
+     "division": "II",
+     "lp": 1
     }
    ],
    "matches": {
@@ -8668,19 +8729,66 @@
      "rv": 1,
      "teamR": 7.2,
      "enemyR": 3.2
+    },
+    "EUW1_8005926144": {
+     "win": true,
+     "champ": "TwistedFate",
+     "role": "MIDDLE",
+     "k": 2,
+     "d": 8,
+     "a": 14,
+     "cs": 133,
+     "dmg": 11736,
+     "vis": 37,
+     "gold": 10751,
+     "kp": 36,
+     "mates": [
+      {
+       "id": "Ymine#000",
+       "same": true
+      }
+     ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 21371,
+     "v": 4,
+     "dur": 1765,
+     "at": 1791322658626,
+     "g15": 5484,
+     "cs15": 81,
+     "gd15": -720,
+     "csd15": -23,
+     "xpd15": -794,
+     "vs": [
+      "Jax",
+      "Qiyana",
+      "Zed",
+      "Varus",
+      "Taric"
+     ],
+     "with": [
+      "Yone",
+      "Nocturne",
+      "Caitlyn",
+      "Leona"
+     ],
+     "rating": 4.5,
+     "place": 8,
+     "good": [],
+     "bad": [
+      "10% of team damage",
+      "15% of team gold",
+      "17% of team damage taken"
+     ],
+     "laneGold": 164,
+     "rv": 1,
+     "teamR": 6.6,
+     "enemyR": 3.8
     }
    },
-   "live": {
-    "champId": 4,
-    "queue": 420,
-    "start": 1791320863107,
-    "mates": [
-     {
-      "id": "Ymine#000",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 7139,
    "level": 588,
@@ -8688,12 +8796,12 @@
   }
  },
  "diag": {
-  "at": "2026-10-06T21:34:41.849Z",
-  "secs": 25,
-  "calls": 27,
+  "at": "2026-10-06T21:38:41.213Z",
+  "secs": 24,
+  "calls": 25,
   "status": {
-   "200": 24,
-   "404": 3
+   "200": 20,
+   "404": 5
   },
   "slow": 0,
   "timeouts": 0,
