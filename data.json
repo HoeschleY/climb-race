@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T13:56:59.941Z",
+ "updatedAt": "2026-10-06T14:01:59.886Z",
  "build": "202610061341",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -6667,7 +6667,9 @@
       "4 vision score"
      ],
      "laneGold": 8101,
-     "rv": 1
+     "rv": 1,
+     "teamR": 6.1,
+     "enemyR": 3.2
     }
    },
    "live": null,
