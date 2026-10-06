@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T10:57:40.875Z",
+ "updatedAt": "2026-10-06T10:58:41.034Z",
  "build": "202610061049",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -999,7 +999,17 @@
      "xpd15": -418
     }
    },
-   "live": null,
+   "live": {
+    "champId": 910,
+    "queue": 420,
+    "start": 1791284259891,
+    "mates": [
+     {
+      "id": "Ymine#000",
+      "same": true
+     }
+    ]
+   },
    "liveErr": null,
    "icon": 7143,
    "level": 421,
@@ -2675,7 +2685,17 @@
      "xpd15": 834
     }
    },
-   "live": null,
+   "live": {
+    "champId": 498,
+    "queue": 420,
+    "start": 1791284259891,
+    "mates": [
+     {
+      "id": "Kohmira#44160",
+      "same": true
+     }
+    ]
+   },
    "liveErr": null,
    "icon": 6864,
    "level": 717,
