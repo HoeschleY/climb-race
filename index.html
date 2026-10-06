@@ -271,7 +271,7 @@ main{padding-block:18px 56px}
 .pname2{font-weight:700;font-size:1.25rem;overflow-wrap:anywhere}.pname2 small{color:var(--muted);font-weight:400;font-size:.85rem}
 .prank2{display:flex;align-items:center;gap:6px;font-weight:600;font-size:.9rem;color:#d6d0c0}
 .pgain2{font-weight:700;font-size:.95rem}
-.pstats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 18px}
+.pstats{display:grid;grid-template-columns:repeat(5,1fr);gap:14px 18px}
 .pstats div{display:grid;gap:2px;border-left:2px solid var(--line);padding-left:12px}
 .pstats span{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
 .pstats b{font-size:1.15rem;font-weight:700}
@@ -369,6 +369,9 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
   <h2>Luck meter</h2>
   <p class="note" style="margin:-6px 0 12px"><b>Robbed:</b> rated 6.5+ but lost. <b>Carried:</b> rated under 4 but won. More robbed than carried means the climb is harder than it should be.</p>
   <div class="scards" id="luck" style="margin-bottom:26px"></div>
+  <h2>Teammates</h2>
+  <p class="note" style="margin:-6px 0 12px">Average lobby rating of your 4 teammates and of the 5 enemies in your games. If your teammates rate lower than the enemies, your games are harder than they look.</p>
+  <div class="panel" id="mates" style="margin-bottom:26px"></div>
   <h2>Laning</h2>
   <p class="note" style="margin:-6px 0 12px">Average gold and CS difference against the direct lane opponent at 15 minutes.</p>
   <div class="panel" id="laning" style="margin-bottom:26px"></div>
@@ -419,7 +422,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610061158";
+const BUILD="202610061341";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
@@ -609,8 +612,10 @@ function renderMatches(){
   const stats=[
     ["Record",`${p.w}W ${p.l}L`,""],["Win rate",Math.round(p.w/n*100)+"%",tone(1,p.w/n>=.5)],
     ["KDA",kda,""],["Avg rating",ps.rating!=null?ps.rating.toFixed(1):"–",ps.rating==null?"":ps.rating>=5.5?"up":ps.rating<4.5?"down":""],
+    ["Teammates",ps.teamR!=null?ps.teamR.toFixed(1):"…",ps.teamR==null?"":ps.teamR>=5.2?"up":ps.teamR<4.8?"down":""],
     ["CS/min",mins?(sum("cs")/mins).toFixed(1):"–",""],["Damage/min",mins?Math.round(sum("dmg")/mins):"–",""],
-    ["Gold @15",ps.gd15!=null?kfmt(ps.gd15):"…",tone(ps.gd15,ps.gd15>=0)],["CS @15",ps.csd15!=null?(ps.csd15>=0?"+":"−")+Math.abs(ps.csd15).toFixed(1):"…",tone(ps.csd15,ps.csd15>=0)]];
+    ["Gold @15",ps.gd15!=null?kfmt(ps.gd15):"…",tone(ps.gd15,ps.gd15>=0)],["CS @15",ps.csd15!=null?(ps.csd15>=0?"+":"−")+Math.abs(ps.csd15).toFixed(1):"…",tone(ps.csd15,ps.csd15>=0)],
+    ["Enemies",ps.enemyR!=null?ps.enemyR.toFixed(1):"…",ps.enemyR==null?"":ps.enemyR<=4.8?"up":ps.enemyR>5.2?"down":""]];
   const grid=el("div","pstats");stats.forEach(([k,v,t])=>{const d=el("div");d.append(el("span",null,k),el("b","num "+t,v));grid.append(d)});
   if(ps.mvp)grid.title=`${ps.mvp} MVP game${ps.mvp>1?"s":""}`;
   hdr.append(grid);list.append(hdr);
@@ -625,7 +630,7 @@ function pstats(p){const r=p.games.filter(g=>g.rating!=null),l=p.games.filter(g=
   const avg=a=>a.length?a.reduce((s,x)=>s+x,0)/a.length:null;
   return{rating:avg(r.map(g=>g.rating)),rated:r.length,mvp:r.filter(g=>g.place===1).length,
     robbed:r.filter(g=>!g.win&&g.rating>=6.5),carried:r.filter(g=>g.win&&g.rating<4),
-    gd15:avg(l.map(g=>g.gd15)),csd15:avg(l.map(g=>g.csd15)),laned:l.length,laneWins:l.filter(g=>g.gd15>0).length}}
+    gd15:avg(l.map(g=>g.gd15)),teamR:avg(p.games.filter(g=>g.teamR!=null).map(g=>g.teamR)),enemyR:avg(p.games.filter(g=>g.enemyR!=null).map(g=>g.enemyR)),csd15:avg(l.map(g=>g.csd15)),laned:l.length,laneWins:l.filter(g=>g.gd15>0).length}}
 const kfmt=n=>(n>=0?"+":"−")+(Math.abs(n)>=1000?(Math.abs(n)/1000).toFixed(1)+"k":Math.round(Math.abs(n)));
 function avgBadge(v,label){const b=el("span","rbadge num");if(v==null)return b;b.style.color=ratingCol(v);b.style.borderColor=ratingCol(v);b.append(el("b",null,v.toFixed(1)),el("span",null,label||"avg rating"));b.title="Average lobby rating over the race";return b}
 // Rating badge: "8.4 · MVP" / "#9 of 10"
@@ -674,7 +679,7 @@ function gameRow(g,best,showName){
   const duo=(g.mates||[]).filter(x=>x.same),vs=(g.mates||[]).filter(x=>!x.same);
   if(duo.length)tag("Duo with "+duo.map(x=>short(x.id)).join(", "));if(vs.length)tag("vs "+vs.map(x=>short(x.id)).join(", "));
   m.append(top);const st=el("div","stats num"),dm=(g.dur||0)/60;
-  [role(g.role),g.gd15!=null&&`@15 ${kfmt(g.gd15)}g ${g.csd15>=0?"+":"−"}${Math.abs(g.csd15)}cs vs lane`,g.cs!=null&&`${g.cs} CS${dm?` (${(g.cs/dm).toFixed(1)})`:""}`,g.dmg!=null&&`${(g.dmg/1000).toFixed(1)}k dmg`,g.kp!=null&&`${g.kp}% KP`,g.vis!=null&&`${g.vis} vision`].filter(Boolean).forEach(t=>st.append(el("span",null,t)));
+  [role(g.role),g.teamR!=null&&`team ${g.teamR.toFixed(1)} vs ${g.enemyR.toFixed(1)}`,g.gd15!=null&&`@15 ${kfmt(g.gd15)}g ${g.csd15>=0?"+":"−"}${Math.abs(g.csd15)}cs vs lane`,g.cs!=null&&`${g.cs} CS${dm?` (${(g.cs/dm).toFixed(1)})`:""}`,g.dmg!=null&&`${(g.dmg/1000).toFixed(1)}k dmg`,g.kp!=null&&`${g.kp}% KP`,g.vis!=null&&`${g.vis} vision`].filter(Boolean).forEach(t=>st.append(el("span",null,t)));
   m.append(st);r.append(m);
   const res=el("div","res");res.append(el("b",null,g.win?"Victory":"Defeat"),el("span",null,`${dm?Math.round(dm)+" min · ":""}${ago(g.at)}`),el("span","more","Details ›"));r.append(res);return r}
 
@@ -867,6 +872,14 @@ function renderRecords(){
     const dl=el("dl"),add=(k,v)=>dl.append(el("dt",null,k),el("dd","num",v));add("Robbed",s.robbed.length);add("Carried",s.carried.length);
     const worst=[...s.robbed].sort((x,y)=>y.rating-x.rating)[0];add("Most robbed",worst?`${worst.rating.toFixed(1)} on ${worst.champ}, lost`:"–");
     c.append(dl,bar);if(worst){c.style.cursor="pointer";c.title="Open that game";c.onclick=()=>openMatch(worst)}lk.append(c)});
+  // Teammates table
+  const mt=document.getElementById("mates");mt.innerHTML="";const mh=el("div","lrow lhd");["Player","You","Teammates","Enemies","Team gap"].forEach(x=>mh.append(el("span",null,x)));mt.append(mh);
+  const MS=players.map(p=>({p,s:pstats(p)})).filter(x=>x.s.teamR!=null).sort((a,b)=>(a.s.teamR-a.s.enemyR)-(b.s.teamR-b.s.enemyR));
+  MS.forEach(({p,s})=>{const r=el("div","lrow"),nm=el("div","pair");nm.append(dot(p.color),short(p.riotId));r.append(nm);
+    const cell=(v,good)=>{const b=el("b","num",v!=null?v.toFixed(1):"–");if(v!=null)b.style.color=ratingCol(v);return b};
+    r.append(cell(s.rating),cell(s.teamR),cell(s.enemyR));const gap=s.teamR-s.enemyR,g=el("span","num",(gap>=0?"+":"−")+Math.abs(gap).toFixed(1));
+    g.style.color=gap>=.05?"var(--win)":gap<=-.05?"var(--loss)":"var(--muted)";g.title=gap<0?"Teammates rated lower than enemies":"Teammates rated higher than enemies";r.append(g);mt.append(r)});
+  if(!MS.length)mt.append(el("div","empty","Teammate ratings are being filled in, give it a minute."));
   // Laning table
   const ln=document.getElementById("laning");ln.innerHTML="";const hd=el("div","lrow lhd");["Player","Gold @15","CS @15","Lane won","Games"].forEach(x=>hd.append(el("span",null,x)));ln.append(hd);
   const LS=players.map(p=>({p,s:pstats(p)})).sort((a,b)=>(b.s.gd15??-1e9)-(a.s.gd15??-1e9));
