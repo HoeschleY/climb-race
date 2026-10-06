@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T11:33:41.014Z",
+ "updatedAt": "2026-10-06T11:38:40.831Z",
  "build": "202610061049",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -997,19 +997,66 @@
      "gd15": -570,
      "csd15": -24,
      "xpd15": -418
+    },
+    "EUW1_8005331951": {
+     "win": false,
+     "champ": "Hwei",
+     "role": "MIDDLE",
+     "k": 6,
+     "d": 7,
+     "a": 13,
+     "cs": 270,
+     "dmg": 23812,
+     "vis": 28,
+     "gold": 15168,
+     "kp": 46,
+     "mates": [
+      {
+       "id": "Ymine#000",
+       "same": true
+      }
+     ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 30898,
+     "v": 4,
+     "dur": 2382,
+     "at": 1791286671760,
+     "g15": 4633,
+     "cs15": 109,
+     "gd15": -551,
+     "csd15": -19,
+     "xpd15": 152,
+     "vs": [
+      "Garen",
+      "Chogath",
+      "Viktor",
+      "Sivir",
+      "Morgana"
+     ],
+     "with": [
+      "Fiora",
+      "Shyvana",
+      "Xayah",
+      "Thresh"
+     ],
+     "rating": 3.5,
+     "place": 7,
+     "good": [
+      "7 deaths"
+     ],
+     "bad": [
+      "13% of team damage",
+      "46% kill participation",
+      "18% of team gold"
+     ],
+     "laneGold": -438,
+     "rv": 1
     }
    },
-   "live": {
-    "champId": 910,
-    "queue": 420,
-    "start": 1791284259891,
-    "mates": [
-     {
-      "id": "Ymine#000",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 7143,
    "level": 421,
@@ -1026,9 +1073,9 @@
    "current": {
     "tier": "GOLD",
     "division": "III",
-    "lp": 92,
+    "lp": 72,
     "wins": 131,
-    "losses": 136
+    "losses": 137
    },
    "history": [
     {
@@ -1114,6 +1161,12 @@
      "tier": "GOLD",
      "division": "III",
      "lp": 92
+    },
+    {
+     "t": 1791286727354,
+     "tier": "GOLD",
+     "division": "III",
+     "lp": 72
     }
    ],
    "matches": {
@@ -2683,19 +2736,64 @@
      "gd15": 1842,
      "csd15": 26,
      "xpd15": 834
+    },
+    "EUW1_8005331951": {
+     "win": false,
+     "champ": "Xayah",
+     "role": "BOTTOM",
+     "k": 17,
+     "d": 8,
+     "a": 7,
+     "cs": 359,
+     "dmg": 68955,
+     "vis": 32,
+     "gold": 24461,
+     "kp": 59,
+     "mates": [
+      {
+       "id": "Kohmira#44160",
+       "same": true
+      }
+     ],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 5,
+     "taken": 46185,
+     "v": 4,
+     "dur": 2382,
+     "at": 1791286671760,
+     "g15": 7210,
+     "cs15": 108,
+     "gd15": -928,
+     "csd15": -16,
+     "xpd15": 615,
+     "vs": [
+      "Garen",
+      "Chogath",
+      "Viktor",
+      "Sivir",
+      "Morgana"
+     ],
+     "with": [
+      "Fiora",
+      "Shyvana",
+      "Hwei",
+      "Thresh"
+     ],
+     "rating": 6,
+     "place": 5,
+     "good": [
+      "39% of team damage",
+      "29% of team gold",
+      "9.0 CS/min"
+     ],
+     "bad": [],
+     "laneGold": 881,
+     "rv": 1
     }
    },
-   "live": {
-    "champId": 498,
-    "queue": 420,
-    "start": 1791284259891,
-    "mates": [
-     {
-      "id": "Kohmira#44160",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 6864,
    "level": 717,
