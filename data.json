@@ -1,6 +1,6 @@
 {
- "updatedAt": "2026-10-06T13:43:00.372Z",
- "build": "202610061158",
+ "updatedAt": "2026-10-06T13:44:59.591Z",
+ "build": "202610061341",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
   "Kohmira#44160": {
@@ -7577,7 +7577,9 @@
       "−3.2k gold vs lane opponent"
      ],
      "laneGold": -3178,
-     "rv": 1
+     "rv": 1,
+     "teamR": 3.5,
+     "enemyR": 7
     }
    },
    "live": null,
