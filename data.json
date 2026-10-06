@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T13:24:59.756Z",
+ "updatedAt": "2026-10-06T13:26:00.018Z",
  "build": "202610061158",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -4794,9 +4794,9 @@
    "current": {
     "tier": "PLATINUM",
     "division": "IV",
-    "lp": 21,
+    "lp": 2,
     "wins": 310,
-    "losses": 314
+    "losses": 315
    },
    "history": [
     {
@@ -4858,6 +4858,12 @@
      "tier": "PLATINUM",
      "division": "IV",
      "lp": 21
+    },
+    {
+     "t": 1791293175800,
+     "tier": "PLATINUM",
+     "division": "IV",
+     "lp": 2
     }
    ],
    "matches": {
