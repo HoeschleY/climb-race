@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T21:01:17.273Z",
+ "updatedAt": "2026-10-06T21:03:17.433Z",
  "build": "202610061738",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -3552,17 +3552,7 @@
      "rv": 1
     }
    },
-   "live": {
-    "champId": 222,
-    "queue": 420,
-    "start": 1791318908403,
-    "mates": [
-     {
-      "id": "Lésion carieuse#Dents",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 6864,
    "level": 718,
@@ -7299,8 +7289,8 @@
    "current": {
     "tier": "GOLD",
     "division": "III",
-    "lp": 66,
-    "wins": 171,
+    "lp": 83,
+    "wins": 172,
     "losses": 166
    },
    "history": [
@@ -7363,6 +7353,12 @@
      "tier": "GOLD",
      "division": "III",
      "lp": 66
+    },
+    {
+     "t": 1791320618225,
+     "tier": "GOLD",
+     "division": "III",
+     "lp": 83
     }
    ],
    "matches": {
@@ -8433,19 +8429,64 @@
      "rv": 1,
      "teamR": 3,
      "enemyR": 7
+    },
+    "EUW1_8005895474": {
+     "win": true,
+     "champ": "TwistedFate",
+     "role": "MIDDLE",
+     "k": 1,
+     "d": 5,
+     "a": 14,
+     "cs": 137,
+     "dmg": 15319,
+     "vis": 27,
+     "gold": 10405,
+     "kp": 48,
+     "mates": [
+      {
+       "id": "Ymine#000",
+       "same": true
+      }
+     ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 17491,
+     "v": 4,
+     "dur": 1663,
+     "at": 1791320601503,
+     "g15": 5316,
+     "cs15": 102,
+     "gd15": 88,
+     "csd15": 4,
+     "xpd15": 79,
+     "vs": [
+      "Yorick",
+      "Chogath",
+      "Akali",
+      "Yunara",
+      "Nautilus"
+     ],
+     "with": [
+      "DrMundo",
+      "Jax",
+      "Jinx",
+      "Leona"
+     ],
+     "rating": 4.9,
+     "place": 4,
+     "good": [],
+     "bad": [
+      "13% of team damage"
+     ],
+     "laneGold": 430,
+     "rv": 1,
+     "teamR": 7.2,
+     "enemyR": 3.2
     }
    },
-   "live": {
-    "champId": 4,
-    "queue": 420,
-    "start": 1791318908403,
-    "mates": [
-     {
-      "id": "Ymine#000",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 7139,
    "level": 588,
@@ -8453,12 +8494,12 @@
   }
  },
  "diag": {
-  "at": "2026-10-06T21:01:42.198Z",
-  "secs": 25,
-  "calls": 27,
+  "at": "2026-10-06T21:03:40.683Z",
+  "secs": 23,
+  "calls": 24,
   "status": {
-   "200": 26,
-   "404": 1
+   "200": 21,
+   "404": 3
   },
   "slow": 0,
   "timeouts": 0,
