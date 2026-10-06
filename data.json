@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T12:48:41.148Z",
+ "updatedAt": "2026-10-06T12:51:40.580Z",
  "build": "202610061158",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -6168,14 +6168,62 @@
      "gd15": 3555,
      "csd15": 35,
      "xpd15": 1584
+    },
+    "EUW1_8005375797": {
+     "win": true,
+     "champ": "Zeri",
+     "role": "BOTTOM",
+     "k": 11,
+     "d": 9,
+     "a": 10,
+     "cs": 411,
+     "dmg": 46290,
+     "vis": 29,
+     "gold": 25747,
+     "kp": 47,
+     "mates": [],
+     "multi": 2,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 37683,
+     "v": 4,
+     "dur": 2294,
+     "at": 1791291067824,
+     "g15": 6347,
+     "cs15": 133,
+     "gd15": 1085,
+     "csd15": 40,
+     "xpd15": 1472,
+     "vs": [
+      "Malphite",
+      "Viego",
+      "Mel",
+      "Kaisa",
+      "Thresh"
+     ],
+     "with": [
+      "Riven",
+      "Rengar",
+      "Ahri",
+      "Sona"
+     ],
+     "rating": 7.2,
+     "place": 1,
+     "good": [
+      "28% of team gold",
+      "10.7 CS/min",
+      "+9.9k gold vs lane opponent"
+     ],
+     "bad": [
+      "2.3 KDA",
+      "47% kill participation"
+     ],
+     "laneGold": 9943,
+     "rv": 1
     }
    },
-   "live": {
-    "champId": 221,
-    "queue": 420,
-    "start": 1791288743272,
-    "mates": []
-   },
+   "live": null,
    "liveErr": null,
    "icon": 3151,
    "level": 745,
