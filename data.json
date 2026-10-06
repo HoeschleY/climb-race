@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T20:46:16.539Z",
+ "updatedAt": "2026-10-06T20:47:16.864Z",
  "build": "202610061738",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -13,10 +13,10 @@
    },
    "current": {
     "tier": "GOLD",
-    "division": "III",
-    "lp": 4,
+    "division": "IV",
+    "lp": 90,
     "wins": 17,
-    "losses": 17
+    "losses": 18
    },
    "history": [
     {
@@ -72,6 +72,12 @@
      "tier": "GOLD",
      "division": "III",
      "lp": 4
+    },
+    {
+     "t": 1791319641628,
+     "tier": "GOLD",
+     "division": "IV",
+     "lp": 90
     }
    ],
    "matches": {
@@ -5462,7 +5468,7 @@
     "division": "IV",
     "lp": 0,
     "wins": 311,
-    "losses": 317
+    "losses": 318
    },
    "history": [
     {
@@ -8427,12 +8433,12 @@
   }
  },
  "diag": {
-  "at": "2026-10-06T20:46:40.145Z",
-  "secs": 24,
-  "calls": 25,
+  "at": "2026-10-06T20:47:37.015Z",
+  "secs": 20,
+  "calls": 22,
   "status": {
-   "200": 23,
-   "404": 2
+   "200": 19,
+   "404": 3
   },
   "slow": 0,
   "timeouts": 0,
