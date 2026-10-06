@@ -170,7 +170,7 @@ for (const p of cfg.players) {
   for (const id of ids) {
     const file = `matches/${id}.json`;
     let sb; try { sb = JSON.parse(await readFile(file, "utf8")); } catch { continue; }
-    if (!sb.tl || sb.tlv !== 2) {
+    if (!sb.tl || sb.tlv !== 3) {
       if (fetched >= 12) continue;
       fetched++;
       try {
@@ -188,7 +188,9 @@ for (const p of cfg.players) {
         // Every champion kill with map position: [victim, killer, seconds, x, y] (indexes into players; killer -1 = tower/minion)
         sb.kills = fr.flatMap(f => (f.events || []).filter(e => e.type === "CHAMPION_KILL" && e.position)
           .map(e => [e.victimId - 1, (e.killerId || 0) - 1, Math.round(e.timestamp / 1000), e.position.x, e.position.y]));
-        sb.tlv = 2;
+        // Each player's total gold, one value per minute
+        sb.tl.pg = sb.players.map((_, i) => fr.map(f => pf(f, i).totalGold || 0));
+        sb.tlv = 3;
         await writeFile(file, JSON.stringify(sb));
       } catch (e) { console.error(`timeline failed for ${id}: ${e.message}`); continue; }
     }
