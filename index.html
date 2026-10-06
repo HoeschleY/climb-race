@@ -15,7 +15,7 @@
   color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:radial-gradient(1200px 500px at 50% -200px,#1a2740 0%,var(--bg) 70%) var(--bg);color:var(--fg);font:15px/1.5 var(--body);padding:0 16px;min-height:100vh}
-main{max-width:1040px;margin:0 auto;padding-block:32px 56px;display:grid;gap:22px}
+main{max-width:1240px;margin:0 auto;padding-block:32px 56px;display:grid;gap:22px}
 .num{font-variant-numeric:tabular-nums}
 .muted{color:var(--muted)}
 .up{color:var(--win)}.down{color:var(--loss)}
@@ -300,6 +300,26 @@ main{padding-block:18px 56px}
 .ppgold{flex:1;min-width:320px}.ppgold h3,.ppmap h3{font:600 .72rem var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
 .ppsvg{width:100%;height:auto;display:block}.ppsvg text{font-size:11px}
 .ppmap{display:grid;gap:8px;justify-items:start}
+/* Game rows v2 */
+.game{grid-template-columns:4px 52px minmax(0,1.25fr) minmax(300px,1fr) 104px!important;gap:14px;padding:12px 18px 12px 0}
+.game img{width:52px;height:52px;border-radius:10px}
+.gmain{display:grid;gap:6px;min-width:0}
+.gtop{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;min-width:0}
+.gname{color:var(--muted);font-weight:600}.gchamp{font-size:1rem}.game .kda{font-weight:700;font-size:1rem;letter-spacing:.02em}
+.grole{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.gchips{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.gchips .tag,.gchips .tteam,.gchips .rbadge{white-space:nowrap;vertical-align:0}
+.tag.hot{background:#f2c65a26;color:#f2c65a}.tag.duo{background:#7593e61f;color:#a9bdf5}
+.gstats{display:grid;grid-template-columns:repeat(4,1fr);gap:4px 12px}
+.gstats div{display:grid;gap:1px}.gstats b{font-size:.92rem;font-weight:600;white-space:nowrap}.gstats span{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;white-space:nowrap}
+.res{display:grid;gap:1px}
+/* Section headings */
+h2{display:flex;align-items:center;gap:12px}
+h2::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+/* Panels lift slightly on hover where clickable */
+.award,.scard,.hcard{transition:border-color .2s}
+.scard[style*="cursor"]:hover{border-color:var(--gold)}
+@media (max-width:900px){.game{grid-template-columns:4px 44px minmax(0,1fr) auto!important}.gstats{display:none}}
 footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
 
 @media (max-width:760px){
@@ -446,7 +466,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610062252";
+const BUILD="202610062317";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
@@ -486,7 +506,7 @@ function renderAll(){
   const t0=Date.parse(DATA.raceStart),day=Math.round((dayKey(Date.now())-dayKey(t0))/864e5)+1;
   document.getElementById("daypill").textContent=`Day ${day}`;
   document.getElementById("sub").textContent=`Since ${new Date(t0).toLocaleDateString("en-GB",{day:"numeric",month:"long"})} · ${players.reduce((s,p)=>s+p.games.length,0)} games played · updated ${ago(Date.parse(DATA.updatedAt))} · ${Date.now()-Date.parse(DATA.updatedAt)>20*6e4?"updates are delayed":"updates every minute"}`;
-  for(const f of [renderHome,renderSpotlight,renderStandings,renderGraph,renderMatches,renderH2H,renderRecords,renderChamps]){try{f()}catch(e){console.error(f.name,e)}}
+  for(const f of [renderHome,renderSpotlight,renderStandings,renderGraph,renderMatches,renderH2H,renderRecords,renderChamps,fitAll]){try{f()}catch(e){console.error(f.name,e)}}
 }
 
 /* LP series, shared by graph, today and records */
@@ -589,7 +609,7 @@ function renderGraph(){
   const series=players.map(buildSeries).filter(Boolean);if(!series.length)return;
   const now=Date.now(),t0=Date.parse(DATA.raceStart),gmax=Math.max(1,...series.map(x=>x.total));
   const all=series.flatMap(x=>x.pts.map(q=>q.s)),lo=Math.floor((Math.min(...all)-20)/100)*100,hi=Math.ceil((Math.max(...all)+20)/100)*100;
-  const W=Math.max(wrap.clientWidth,560),H=380,L=86,R=14,T=10,B=28;
+  const W=Math.max(wrap.clientWidth,560),H=400,L=86,R=150,T=10,B=28;
   const xv=q=>gmode==="time"?q.t:q.g,x0=gmode==="time"?t0:0,x1=gmode==="time"?now:gmax;
   const X=v=>L+(v-x0)/(x1-x0)*(W-L-R),Y=s=>T+(hi-s)/(hi-lo)*(H-T-B);
   let svg=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="LP per player">`;
@@ -601,7 +621,11 @@ function renderGraph(){
     const path=(arr,endX)=>{let d=`M${X(xv(arr[0]))},${Y(arr[0].s)}`;arr.slice(1).forEach(q=>d+=` H${X(xv(q))} V${Y(q.s)}`);if(endX!=null)d+=` H${endX}`;return d};
     const lastEst=pts.reduce((k,q,i)=>q.est?i:k,-1),est=pts.slice(0,lastEst+1),real=pts.slice(Math.max(lastEst,0)),endX=gmode==="time"?X(now):X(total);
     if(est.length>1)svg+=`<path d="${path(est)}" fill="none" stroke="${p.color}" stroke-width="2" stroke-dasharray="5 4" opacity=".85"/>`;
-    svg+=`<path d="${path(real,endX)}" fill="none" stroke="${p.color}" stroke-width="2.4" stroke-linejoin="round"/><circle cx="${endX}" cy="${Y(pts[pts.length-1].s)}" r="4" fill="${p.color}" stroke="#0a0e15" stroke-width="2"/>`});
+    svg+=`<path d="${path(real,endX)}" fill="none" stroke="${p.color}" stroke-width="2.8" stroke-linejoin="round"/><circle cx="${endX}" cy="${Y(pts[pts.length-1].s)}" r="4" fill="${p.color}" stroke="#0a0e15" stroke-width="2"/>`});
+  // name labels at the end of each line, nudged apart so they never overlap
+  const ends=series.map(({p,pts,total})=>({p,y:Y(pts[pts.length-1].s),x:(gmode==="time"?X(now):X(total)),s:pts[pts.length-1].s})).sort((a,b)=>a.y-b.y);
+  for(let i=1;i<ends.length;i++)if(ends[i].y-ends[i-1].y<15)ends[i].y=ends[i-1].y+15;
+  ends.forEach(e=>{svg+=`<text x="${W-R+10}" y="${e.y+4}" style="fill:${e.p.color};font-weight:600;font-size:12.5px">${short(e.p.riotId).length>16?short(e.p.riotId).slice(0,15)+"…":short(e.p.riotId)}</text>`});
   svg+=`<line id="cross" x1="0" x2="0" y1="${T}" y2="${H-B}" stroke="#8d96a8" opacity="0"/></svg>`;
   wrap.innerHTML=svg;const tip=el("div","tip");tip.hidden=true;wrap.append(tip);
   const svgEl=wrap.querySelector("svg"),cross=svgEl.querySelector("#cross");
@@ -738,18 +762,23 @@ function profileOf(p){
 function gameRow(g,best,showName){
   const r=el("div","game "+(g.win?"w":"l"));r.tabIndex=0;r.setAttribute("role","button");r.onclick=()=>openMatch(g);r.onkeydown=e=>{if(e.key==="Enter")openMatch(g)};
   r.append(el("div","bar"));const img=el("img");img.alt=g.champ;img.loading="lazy";img.src=icon(g.champ);r.append(img);
-  const m=el("div"),top=el("div");if(showName)top.append(el("span","gname",short(g.riotId)+" · "));
-  top.append(el("b",null,g.champ+"  "),el("span","kda num",`${g.k}/${g.d}/${g.a}`));
-  const tag=t=>top.append(" ",el("span","tag",t));
-  if(g.penta)tag("Pentakill");else if(g.multi>=4)tag("Quadra");else if(g.multi===3)tag("Triple");
-  if(best!=null&&perf(g)===best)tag("Best game");
-  const rbg=ratingBadge(g);if(rbg){top.append(" ");top.append(rbg)}
-  const tl=teamLabel(g);if(tl){top.append(" ");top.append(tl)}
+  // left: who, champion, KDA, then one line of labels
+  const m=el("div","gmain"),top=el("div","gtop");if(showName)top.append(el("span","gname",short(g.riotId)));
+  top.append(el("b","gchamp",g.champ),el("span","kda num",`${g.k} / ${g.d} / ${g.a}`));if(role(g.role))top.append(el("span","grole",role(g.role)));m.append(top);
+  const chips=el("div","gchips");const tag=(t,c)=>chips.append(el("span","tag"+(c?" "+c:""),t));
+  const rbg=ratingBadge(g);if(rbg)chips.append(rbg);const tl=teamLabel(g);if(tl)chips.append(tl);
+  if(g.penta)tag("Pentakill","hot");else if(g.multi>=4)tag("Quadra","hot");else if(g.multi===3)tag("Triple");
+  if(best!=null&&perf(g)===best)tag("Best game","hot");
   const duo=(g.mates||[]).filter(x=>x.same),vs=(g.mates||[]).filter(x=>!x.same);
-  if(duo.length)tag("Duo with "+duo.map(x=>short(x.id)).join(", "));if(vs.length)tag("vs "+vs.map(x=>short(x.id)).join(", "));
-  m.append(top);const st=el("div","stats num"),dm=(g.dur||0)/60;
-  [role(g.role),g.teamR!=null&&`team ${g.teamR.toFixed(1)} vs ${g.enemyR.toFixed(1)}`,g.gd15!=null&&`@15 ${kfmt(g.gd15)}g ${g.csd15>=0?"+":"−"}${Math.abs(g.csd15)}cs vs lane`,g.cs!=null&&`${g.cs} CS${dm?` (${(g.cs/dm).toFixed(1)})`:""}`,g.dmg!=null&&`${(g.dmg/1000).toFixed(1)}k dmg`,g.kp!=null&&`${g.kp}% KP`,g.vis!=null&&`${g.vis} vision`].filter(Boolean).forEach(t=>st.append(el("span",null,t)));
-  m.append(st);r.append(m);
+  if(duo.length)tag("Duo · "+duo.map(x=>short(x.id)).join(", "),"duo");if(vs.length)tag("vs "+vs.map(x=>short(x.id)).join(", "),"duo");
+  m.append(chips);r.append(m);
+  // middle: compact stats
+  const dm=(g.dur||0)/60,st=el("div","gstats num");
+  const cell=(v,k)=>{const d=el("div");d.append(el("b",null,v),el("span",null,k));st.append(d)};
+  cell(g.cs!=null?String(g.cs):"–",g.cs!=null&&dm?`CS · ${(g.cs/dm).toFixed(1)}/min`:"CS");cell(g.dmg!=null?(g.dmg/1000).toFixed(1)+"k":"–","Damage");
+  cell(g.kp!=null?g.kp+"%":"–","Kill part.");
+  if(g.gd15!=null){const d=el("div");const v=el("b",null,kfmt(g.gd15)+"g");v.className=g.gd15>=0?"up":"down";d.append(v,el("span",null,"@15 vs lane"));st.append(d)}else cell(g.vis!=null?g.vis:"–","Vision");
+  r.append(st);
   const res=el("div","res");res.append(el("b",null,g.win?"Victory":"Defeat"),el("span",null,`${dm?Math.round(dm)+" min · ":""}${ago(g.at)}`),el("span","more","Details ›"));r.append(res);return r}
 
 /* Home */
@@ -947,6 +976,11 @@ function renderH2H(){
     c.append(el("div","muted",`${e.aw===e.bw?"Tied":short(e.aw>e.bw?e.a:e.b)+" leads"} · ${e.aw+e.bw} game${e.aw+e.bw>1?"s":""} against each other · last ${ago(e.last)}`));rbox.append(c)});
 }
 
+/* Pick a column count that leaves no lonely cards in the last row */
+function fitCols(box,maxC,minC=2){if(!box||innerWidth<900){if(box)box.style.gridTemplateColumns="";return}const n=box.children.length;if(n<2)return;
+  let best=maxC,bl=1e9;for(let c=Math.min(maxC,n);c>=minC;c--){const left=n%c?c-n%c:0;if(left<bl){bl=left;best=c}}box.style.gridTemplateColumns=`repeat(${best},minmax(0,1fr))`}
+function fitAll(){[["fame",5],["shame",5],["luck",5],["scards",3],["duos",4],["rivals",4]].forEach(([id,c])=>fitCols(document.getElementById(id),c));fitCols(document.getElementById("awards"),4)}
+window.addEventListener("resize",()=>fitAll());
 /* Records */
 function statsOf(p){
   const g=[...p.games].sort((a,b)=>a.at-b.at);let cur=0,best=0,worst=0,run=0,runL=0;
