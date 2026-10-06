@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T17:30:59.710Z",
+ "updatedAt": "2026-10-06T17:34:59.978Z",
  "build": "202610061341",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -3155,17 +3155,7 @@
      "enemyR": 6.1
     }
    },
-   "live": {
-    "champId": 17,
-    "queue": 420,
-    "start": 1791306314972,
-    "mates": [
-     {
-      "id": "Near#974p",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 6864,
    "level": 717,
@@ -6680,19 +6670,68 @@
      "rv": 1,
      "teamR": 6.1,
      "enemyR": 3.2
+    },
+    "EUW1_8005618656": {
+     "win": false,
+     "champ": "Jinx",
+     "role": "BOTTOM",
+     "k": 8,
+     "d": 11,
+     "a": 8,
+     "cs": 202,
+     "dmg": 35250,
+     "vis": 28,
+     "gold": 14918,
+     "kp": 50,
+     "mates": [
+      {
+       "id": "Ymine#000",
+       "same": true
+      }
+     ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 31552,
+     "v": 4,
+     "dur": 1763,
+     "at": 1791308108504,
+     "g15": 6799,
+     "cs15": 109,
+     "gd15": -956,
+     "csd15": -8,
+     "xpd15": -1247,
+     "vs": [
+      "Chogath",
+      "Briar",
+      "Ahri",
+      "Quinn",
+      "Seraphine"
+     ],
+     "with": [
+      "Teemo",
+      "DrMundo",
+      "Xerath",
+      "Soraka"
+     ],
+     "rating": 3.2,
+     "place": 9,
+     "good": [
+      "28% of team damage",
+      "24% of team gold",
+      "6.9 CS/min"
+     ],
+     "bad": [
+      "−4.3k gold vs lane opponent",
+      "11 deaths",
+      "1.5 KDA"
+     ],
+     "laneGold": -4343,
+     "rv": 1
     }
    },
-   "live": {
-    "champId": 222,
-    "queue": 420,
-    "start": 1791306314972,
-    "mates": [
-     {
-      "id": "Ymine#000",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 3151,
    "level": 745,
