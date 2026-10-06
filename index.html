@@ -193,7 +193,7 @@ main{padding-block:18px 56px}
 /* Match modal */
 .modal{position:fixed;inset:0;z-index:50;background:#05080dcc;display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;overflow-y:auto}
 .modal[hidden]{display:none}
-.mpanel{position:relative;width:100%;max-width:980px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:22px}
+.mpanel{position:relative;width:100%;max-width:1120px;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:22px}
 .mclose{position:absolute;top:12px;right:12px;background:var(--panel);border:1px solid var(--line);color:var(--fg);border-radius:8px;width:34px;height:34px;cursor:pointer;font-size:.9rem}
 .mhead{margin-bottom:16px}.mhead h2{font-size:1.4rem;margin:4px 0 2px}
 .team{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-bottom:14px}
@@ -202,7 +202,7 @@ main{padding-block:18px 56px}
 .tw .thead>b{color:var(--win)}.tl .thead>b{color:var(--loss)}
 .obj{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.82rem;color:var(--muted)}.obj b{color:var(--fg)}
 .sb{overflow-x:auto}
-.sbr{display:grid;grid-template-columns:minmax(240px,1.6fr) 84px 86px 110px 66px 52px 230px;gap:10px;align-items:center;padding:7px 14px;border-top:1px solid var(--line);font-size:.86rem;min-width:940px}
+.sbr{display:grid;grid-template-columns:minmax(230px,1.6fr) 80px 82px 84px 104px 62px 50px 226px;gap:10px;align-items:center;padding:7px 14px;border-top:1px solid var(--line);font-size:.86rem;min-width:1020px}
 .sbh{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border-top:0;padding-block:6px}
 .sbr.mine{background:linear-gradient(90deg,#c8aa6e22,transparent 70%)}.sbr.mine .sbn b{color:var(--gold2)}
 .sbr>div{display:grid;min-width:0}.sbr small{font-size:.75rem}
@@ -259,6 +259,13 @@ main{padding-block:18px 56px}
   .topbar .tabs button{padding:10px 10px}
   .topbar .livepill{margin-left:auto}
 }
+.gwrap{border:1px solid var(--line);border-radius:12px;padding:12px 14px 10px;margin-bottom:14px;background:var(--panel)}
+.gsvg{width:100%;height:150px;display:block;margin-top:6px}.gsvg text{font-size:11px}
+.gnote{font-size:.78rem;margin-top:4px}
+.pcard .rbadge{justify-self:center}.rec .rbadge{margin-left:6px}
+.luckbar{display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--line);margin-top:10px}.luckbar .lr{background:var(--loss)}.luckbar .lc{background:var(--win)}
+.lrow{display:grid;grid-template-columns:minmax(140px,1.4fr) repeat(4,1fr);gap:12px;align-items:center;padding:10px 16px;border-top:1px solid var(--line);font-size:.9rem}
+.lrow:first-child{border-top:0}.lhd{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-block:7px}
 footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
 
 @media (max-width:760px){
@@ -349,6 +356,12 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
   <div class="fame" id="fame"></div>
   <h2>Wall of shame</h2>
   <div class="fame shame" id="shame"></div>
+  <h2>Luck meter</h2>
+  <p class="note" style="margin:-6px 0 12px"><b>Robbed:</b> rated 6.5+ but lost. <b>Carried:</b> rated under 4 but won. More robbed than carried means the climb is harder than it should be.</p>
+  <div class="scards" id="luck" style="margin-bottom:26px"></div>
+  <h2>Laning</h2>
+  <p class="note" style="margin:-6px 0 12px">Average gold and CS difference against the direct lane opponent at 15 minutes.</p>
+  <div class="panel" id="laning" style="margin-bottom:26px"></div>
   <h2>Player records</h2>
   <div class="scards" id="scards"></div>
 </section>
@@ -396,7 +409,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610052142";
+const BUILD="202610061049";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
@@ -515,6 +528,7 @@ function renderStandings(){
     const lb=liveBadge(p);if(lb)c.append(lb);
     const rk=el("div","prank");rk.append(emblem(p.current?.tier,r.pos===1?40:32),el("span",null,fmt(p.current)));c.append(rk);
     c.append(el("div","pgain num "+(p.gain>0?"up":p.gain<0?"down":""),p.gain==null?"–":sgn(p.gain)+" LP"));
+    const ps=pstats(p);if(ps.rating!=null)c.append(avgBadge(ps.rating));
     c.append(el("div","psub num",`${p.games.length} games · ${p.games.length?Math.round(p.w/p.games.length*100):0}% · started ${fmt(p.start)}`));
     c.append(el("div","psub num",todayTxt(r.today)));if(p.error)c.append(el("div","err","Couldn't update: "+p.error));pod.append(c)});
   // Remaining rows
@@ -522,7 +536,8 @@ function renderStandings(){
   order.slice(3).forEach(r=>{const p=r.p,row=el("div","st");row.onclick=()=>go(p);
     const ps=el("div","pos");ps.append(el("span",null,r.pos),moveBadge(r.move));row.append(ps);
     const who=el("div","who2");who.append(avatar(p,40));const tx=el("div");const nm=el("div","name",short(p.riotId)+" ");nm.append(el("small",null,"#"+p.riotId.split("#")[1]));
-    const lb=liveBadge(p);if(lb)nm.append(lb);tx.append(nm,el("div","rec num",p.games.length?`${p.games.length} games · ${p.w}W ${p.l}L · ${Math.round(p.w/p.games.length*100)}%`:"No games yet"));
+    const lb=liveBadge(p);if(lb)nm.append(lb);const rec=el("div","rec num",p.games.length?`${p.games.length} games · ${p.w}W ${p.l}L · ${Math.round(p.w/p.games.length*100)}% `:"No games yet");
+    const ps2=pstats(p);if(ps2.rating!=null)rec.append(avgBadge(ps2.rating));tx.append(nm,rec);
     if(p.error)tx.append(el("div","err","Couldn't update: "+p.error));who.append(tx);row.append(who);
     const rk=el("div","rank");const bd=el("span","badge");bd.append(emblem(p.current?.tier,22),fmt(p.current));
     const bar=el("div","lpbar"),f=el("span");f.style.width=Math.min(100,p.current?.lp||0)+"%";f.style.background=TCOL[p.current?.tier]||"#666";bar.append(f);
@@ -571,7 +586,8 @@ function renderMatches(){
   const p=players.find(p=>p.riotId===selected),list=document.getElementById("mlist");list.innerHTML="";
   if(!p.games.length){list.append(el("div","empty","No ranked Solo/Duo games since the race started."));return}
   const n=p.games.length,sum=k=>p.games.reduce((s,g)=>s+(g[k]||0),0),mins=sum("dur")/60,sm=el("div","msum");
-  [["Record",`${p.w}W ${p.l}L`],["Win rate",Math.round(p.w/n*100)+"%"],["KDA",sum("d")?((sum("k")+sum("a"))/sum("d")).toFixed(2):"Perfect"],["CS/min",mins?(sum("cs")/mins).toFixed(1):"–"],["Damage/min",mins?Math.round(sum("dmg")/mins):"–"],["LP",p.gain==null?"–":sgn(p.gain)]]
+  [["Record",`${p.w}W ${p.l}L`],["Win rate",Math.round(p.w/n*100)+"%"],["KDA",sum("d")?((sum("k")+sum("a"))/sum("d")).toFixed(2):"Perfect"],["CS/min",mins?(sum("cs")/mins).toFixed(1):"–"],["Damage/min",mins?Math.round(sum("dmg")/mins):"–"],["Avg rating",(x=>x.rating!=null?x.rating.toFixed(1)+(x.mvp?` · ${x.mvp} MVP`:""):"–")(pstats(p))],
+   ["Gold @15 vs lane",(x=>x.gd15!=null?kfmt(x.gd15):"…")(pstats(p))],["CS @15 vs lane",(x=>x.csd15!=null?(x.csd15>=0?"+":"−")+Math.abs(x.csd15).toFixed(1):"…")(pstats(p))],["LP",p.gain==null?"–":sgn(p.gain)]]
     .forEach(([k,v])=>{const d=el("div");d.append(el("b","num",v),el("span",null,k));sm.append(d)});list.append(sm);
   list.append(profileOf(p));
   const best=Math.max(...p.games.map(perf));
@@ -579,6 +595,14 @@ function renderMatches(){
 }
 
 /* Player profile: champion pool, roles, time of day */
+// Per-player aggregates from game ratings and timelines
+function pstats(p){const r=p.games.filter(g=>g.rating!=null),l=p.games.filter(g=>g.gd15!=null);
+  const avg=a=>a.length?a.reduce((s,x)=>s+x,0)/a.length:null;
+  return{rating:avg(r.map(g=>g.rating)),rated:r.length,mvp:r.filter(g=>g.place===1).length,
+    robbed:r.filter(g=>!g.win&&g.rating>=6.5),carried:r.filter(g=>g.win&&g.rating<4),
+    gd15:avg(l.map(g=>g.gd15)),csd15:avg(l.map(g=>g.csd15)),laned:l.length,laneWins:l.filter(g=>g.gd15>0).length}}
+const kfmt=n=>(n>=0?"+":"−")+(Math.abs(n)>=1000?(Math.abs(n)/1000).toFixed(1)+"k":Math.round(Math.abs(n)));
+function avgBadge(v,label){const b=el("span","rbadge num");if(v==null)return b;b.style.color=ratingCol(v);b.style.borderColor=ratingCol(v);b.append(el("b",null,v.toFixed(1)),el("span",null,label||"avg rating"));b.title="Average lobby rating over the race";return b}
 // Rating badge: "8.4 · MVP" / "#9 of 10"
 function ratingCol(r){return r>=7.5?"var(--gold2)":r>=6?"var(--win)":r>=4?"var(--muted)":"var(--loss)"}
 function placeTxt(p){return p===1?"MVP":p===10?"Worst in lobby":`#${p} of 10`}
@@ -624,7 +648,7 @@ function gameRow(g,best,showName){
   const duo=(g.mates||[]).filter(x=>x.same),vs=(g.mates||[]).filter(x=>!x.same);
   if(duo.length)tag("Duo with "+duo.map(x=>short(x.id)).join(", "));if(vs.length)tag("vs "+vs.map(x=>short(x.id)).join(", "));
   m.append(top);const st=el("div","stats num"),dm=(g.dur||0)/60;
-  [role(g.role),g.cs!=null&&`${g.cs} CS${dm?` (${(g.cs/dm).toFixed(1)})`:""}`,g.dmg!=null&&`${(g.dmg/1000).toFixed(1)}k dmg`,g.kp!=null&&`${g.kp}% KP`,g.vis!=null&&`${g.vis} vision`].filter(Boolean).forEach(t=>st.append(el("span",null,t)));
+  [role(g.role),g.gd15!=null&&`@15 ${kfmt(g.gd15)}g ${g.csd15>=0?"+":"−"}${Math.abs(g.csd15)}cs vs lane`,g.cs!=null&&`${g.cs} CS${dm?` (${(g.cs/dm).toFixed(1)})`:""}`,g.dmg!=null&&`${(g.dmg/1000).toFixed(1)}k dmg`,g.kp!=null&&`${g.kp}% KP`,g.vis!=null&&`${g.vis} vision`].filter(Boolean).forEach(t=>st.append(el("span",null,t)));
   m.append(st);r.append(m);
   const res=el("div","res");res.append(el("b",null,g.win?"Victory":"Defeat"),el("span",null,`${dm?Math.round(dm)+" min · ":""}${ago(g.at)}`),el("span","more","Details ›"));r.append(res);return r}
 
@@ -667,6 +691,21 @@ async function openMatch(g){
   const h=el("h2",null,`${g.win?"Victory":"Defeat"} · ${short(g.riotId)} on ${g.champ}`);h.className=g.win?"up":"down";t.append(h);
   t.append(el("div","muted",`${Math.floor(m.dur/60)}:${String(m.dur%60).padStart(2,"0")} · ${new Date(m.at).toLocaleString("en-GB",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}`));
   head.append(t);mbody.append(head);
+  if(m.tl?.goldDiff?.length>2){const me2=m.players.find(x=>x.tracked===g.riotId),sign=me2&&me2.team===200?-1:1,gd=m.tl.goldDiff.map(v=>v*sign);
+    const box=el("div","gwrap");box.append(el("div","eyebrow","Gold lead · your team"));const W=900,H=150,P=34,max=Math.max(1000,...gd.map(Math.abs)),n=gd.length-1;
+    const X=i=>P+i/n*(W-P-8),Y=v=>H/2-v/max*(H/2-12);
+    let pts=gd.map((v,i)=>`${X(i)},${Y(v)}`).join(" ");
+    let svg=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" class="gsvg" role="img" aria-label="Gold lead over time"><defs><clipPath id="up"><rect x="0" y="0" width="${W}" height="${H/2}"/></clipPath><clipPath id="dn"><rect x="0" y="${H/2}" width="${W}" height="${H/2}"/></clipPath></defs>`;
+    svg+=`<line x1="${P}" x2="${W}" y1="${H/2}" y2="${H/2}" stroke="#2c3a54"/>`;
+    [max,-max].forEach(v=>svg+=`<text x="${P-6}" y="${Y(v)+4}" text-anchor="end">${kfmt(Math.round(v/100)*100)}</text>`);
+    for(let i=5;i<=n;i+=5)svg+=`<line x1="${X(i)}" x2="${X(i)}" y1="6" y2="${H-6}" stroke="#1b2536" stroke-dasharray="2 4"/><text x="${X(i)}" y="${H-2}" text-anchor="middle">${i}'</text>`;
+    const area=`M${X(0)},${H/2} L${pts.split(" ").join(" L")} L${X(n)},${H/2} Z`;
+    svg+=`<path d="${area}" fill="#43c28655" clip-path="url(#up)"/><path d="${area}" fill="#e5555f55" clip-path="url(#dn)"/><polyline points="${pts}" fill="none" stroke="#ece6d6" stroke-width="1.6"/>`;
+    const fin=gd[n];svg+=`<circle cx="${X(n)}" cy="${Y(fin)}" r="3.5" fill="${fin>=0?"#43c286":"#e5555f"}"/></svg>`;
+    box.insertAdjacentHTML("beforeend",svg);
+    const peak=gd.reduce((a,v,i)=>v>a.v?{v,i}:a,{v:-1e9,i:0}),low=gd.reduce((a,v,i)=>v<a.v?{v,i}:a,{v:1e9,i:0});
+    box.append(el("div","muted gnote num",`Biggest lead ${kfmt(peak.v)} at ${peak.i}' · biggest deficit ${kfmt(low.v)} at ${low.i}' · at 15': ${gd[15]!=null?kfmt(gd[15]):"–"}`));
+    mbody.append(box)}
   const maxDmg=Math.max(...m.players.map(x=>x.dmg)),itemImg=id=>{const i=el("img","it");if(id){i.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/item/${id}.png`;i.alt=""}else i.classList.add("emptyit");return i};
   [...m.teams].sort((a,b)=>(b.id===myTeam)-(a.id===myTeam)).forEach(tm=>{
     const box=el("div","team "+(tm.win?"tw":"tl"));const th=el("div","thead");
@@ -674,7 +713,7 @@ async function openMatch(g){
     const tp=m.players.filter(x=>x.team===tm.id),sum=k=>tp.reduce((s,x)=>s+(x[k]||0),0);
     const ob=el("div","obj num");[["Kills",`${sum("k")}/${sum("d")}/${sum("a")}`],["Gold",(sum("gold")/1000).toFixed(1)+"k"],["Towers",tm.obj.tower],["Dragons",tm.obj.dragon],["Barons",tm.obj.baron],["Grubs",tm.obj.grubs]].forEach(([k,v])=>{const s=el("span",null,k+" ");s.append(el("b",null,v));ob.append(s)});
     th.append(ob);box.append(th);
-    const tbl=el("div","sb");const hr=el("div","sbr sbh");["Player","Rating","KDA","Damage","CS","Gold","Items"].forEach(x=>hr.append(el("span",null,x)));tbl.append(hr);
+    const tbl=el("div","sb");const hr=el("div","sbr sbh");["Player","Rating","KDA","@15","Damage","CS","Gold","Items"].forEach(x=>hr.append(el("span",null,x)));tbl.append(hr);
     tp.forEach(x=>{const r=el("div","sbr"+(x.tracked?" mine":""));
       const pl=el("div","sbp");const ci=el("div","sbc");const im=el("img");im.src=icon(x.champ);im.alt=x.champ;ci.append(im,el("span","lv",x.lvl));pl.append(ci);
       const sp=el("div","sbs");x.spells.forEach(s=>{const a=A.spells[s];const i=el("img");if(a){i.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/spell/${a.img}`;i.title=a.name}i.alt="";sp.append(i)});
@@ -682,6 +721,8 @@ async function openMatch(g){
       const nm=el("div","sbn");nm.append(el("b",null,x.name.split("#")[0]),el("span","muted",`${x.champ}${role(x.role)?" · "+role(x.role):""}`));pl.append(nm);r.append(pl);
       const rt=el("div","num");if(x.rating!=null){const b=el("b",null,x.rating.toFixed(1));b.style.color=ratingCol(x.rating);rt.append(b,el("small","muted",placeTxt(x.place)))}else rt.append("–");r.append(rt);
       const kda=el("div","num");kda.append(el("b",null,`${x.k}/${x.d}/${x.a}`),el("small","muted",x.d?((x.k+x.a)/x.d).toFixed(2)+" KDA":"Perfect"));r.append(kda);
+      const l15=el("div","num"),opp15=m.players.find(y=>y.team!==x.team&&y.role&&y.role===x.role);
+      if(m.tl?.min15&&opp15&&x.g15!=null){const d=x.g15-opp15.g15,c=x.cs15-opp15.cs15;const b=el("b",null,kfmt(d)+"g");b.style.color=d>=0?"var(--win)":"var(--loss)";l15.append(b,el("small","muted",`${c>=0?"+":"−"}${Math.abs(c)} CS`))}else l15.append("–");r.append(l15);
       const dm=el("div","num");dm.append(el("span",null,(x.dmg/1000).toFixed(1)+"k"));const bar=el("div","dbar"),f=el("span");f.style.width=x.dmg/maxDmg*100+"%";bar.append(f);dm.append(bar);r.append(dm);
       const cs=el("div","num");cs.append(el("span",null,x.cs),el("small","muted",(x.cs/(m.dur/60)).toFixed(1)+"/min"));r.append(cs);
       r.append(el("div","num",(x.gold/1000).toFixed(1)+"k"));
@@ -790,6 +831,22 @@ function renderRecords(){
   g=top(all,x=>x.dmg);if(g?.dmg)item("Most damage in a game",short(g.riotId),`${(g.dmg/1000).toFixed(1)}k on ${g.champ}`);
   g=top(all,x=>x.multi);if(g?.multi>=3)item("Biggest multikill",short(g.riotId),`${["","","Double","Triple","Quadra","Penta"][g.multi]||"Multi"} kill on ${g.champ}`);
   g=top(all,x=>x.dur?x.cs/x.dur:null);if(g?.cs)item("Best farming",short(g.riotId),`${(g.cs/(g.dur/60)).toFixed(1)} CS/min on ${g.champ}`);
+  // Luck meter
+  const lk=document.getElementById("luck");lk.innerHTML="";
+  players.map(p=>({p,s:pstats(p)})).sort((a,b)=>(b.s.robbed.length-b.s.carried.length)-(a.s.robbed.length-a.s.carried.length)).forEach(({p,s})=>{
+    const c=el("div","scard"),h=el("div","shead"),net=s.robbed.length-s.carried.length;h.append(dot(p.color),el("b",null,short(p.riotId)));
+    h.append(el("span","streak "+(net>0?"down":net<0?"up":""),net>0?"Unlucky":net<0?"Lucky":"Fair"));c.append(h);
+    const bar=el("div","luckbar");const a=el("span","lr"),b=el("span","lc"),tot=Math.max(1,s.robbed.length+s.carried.length);a.style.width=s.robbed.length/tot*100+"%";b.style.width=s.carried.length/tot*100+"%";bar.append(a,b);
+    const dl=el("dl"),add=(k,v)=>dl.append(el("dt",null,k),el("dd","num",v));add("Robbed",s.robbed.length);add("Carried",s.carried.length);
+    const worst=[...s.robbed].sort((x,y)=>y.rating-x.rating)[0];add("Most robbed",worst?`${worst.rating.toFixed(1)} on ${worst.champ}, lost`:"–");
+    c.append(dl,bar);if(worst){c.style.cursor="pointer";c.title="Open that game";c.onclick=()=>openMatch(worst)}lk.append(c)});
+  // Laning table
+  const ln=document.getElementById("laning");ln.innerHTML="";const hd=el("div","lrow lhd");["Player","Gold @15","CS @15","Lane won","Games"].forEach(x=>hd.append(el("span",null,x)));ln.append(hd);
+  const LS=players.map(p=>({p,s:pstats(p)})).sort((a,b)=>(b.s.gd15??-1e9)-(a.s.gd15??-1e9));
+  LS.forEach(({p,s})=>{const r=el("div","lrow"),nm=el("div","pair");nm.append(dot(p.color),short(p.riotId));r.append(nm);
+    const g=el("b","num",s.gd15!=null?kfmt(s.gd15):"…");if(s.gd15!=null)g.style.color=s.gd15>=0?"var(--win)":"var(--loss)";r.append(g);
+    r.append(el("span","num",s.csd15!=null?(s.csd15>=0?"+":"−")+Math.abs(s.csd15).toFixed(1):"…"),el("span","num",s.laned?`${Math.round(s.laneWins/s.laned*100)}%`:"…"),el("span","num muted",s.laned||"…"));ln.append(r)});
+  if(!LS.some(x=>x.s.laned))ln.append(el("div","empty","Laning stats are being filled in for past games, a few per minute."));
   const sh=document.getElementById("shame");sh.innerHTML="";
   const shame=(t,who,v)=>{const c=el("div","award");c.append(el("div","t",t),el("div","n",who),el("div","v num",v));sh.append(c)};
   const L=all.filter(x=>!x.win),mins=x=>Math.round((x.dur||0)/60);
