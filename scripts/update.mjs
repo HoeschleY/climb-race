@@ -170,7 +170,7 @@ for (const p of cfg.players) {
   for (const id of ids) {
     const file = `matches/${id}.json`;
     let sb; try { sb = JSON.parse(await readFile(file, "utf8")); } catch { continue; }
-    if (!sb.tl) {
+    if (!sb.tl || sb.tlv !== 2) {
       if (fetched >= 12) continue;
       fetched++;
       try {
@@ -185,6 +185,10 @@ for (const p of cfg.players) {
           goldDiff: fr.map(f => sb.players.reduce((s, _, i) => s + (blue[i] ? 1 : -1) * (pf(f, i).totalGold || 0), 0)),
         };
         sb.players.forEach((x, i) => { const p = pf(at, i); x.g15 = p.totalGold ?? null; x.cs15 = (p.minionsKilled || 0) + (p.jungleMinionsKilled || 0); x.xp15 = p.xp ?? null; });
+        // Every champion kill with map position: [victim, killer, seconds, x, y] (indexes into players; killer -1 = tower/minion)
+        sb.kills = fr.flatMap(f => (f.events || []).filter(e => e.type === "CHAMPION_KILL" && e.position)
+          .map(e => [e.victimId - 1, (e.killerId || 0) - 1, Math.round(e.timestamp / 1000), e.position.x, e.position.y]));
+        sb.tlv = 2;
         await writeFile(file, JSON.stringify(sb));
       } catch (e) { console.error(`timeline failed for ${id}: ${e.message}`); continue; }
     }
@@ -196,6 +200,14 @@ for (const p of cfg.players) {
       m.teamR = avg(sb.players.filter(y => y.team === x.team && y !== x));
       m.enemyR = avg(sb.players.filter(y => y.team !== x.team));
     }
+    // Death and kill positions on each tracked player's game
+    if (sb.kills) sb.players.forEach((x, i) => {
+      const m = x.tracked && out.players[x.tracked]?.matches?.[id];
+      if (!m || m.dpos !== undefined) return;
+      m.side = x.team;
+      m.dpos = sb.kills.filter(k => k[0] === i).map(k => [k[3], k[4], k[2]]);
+      m.kpos = sb.kills.filter(k => k[1] === i).map(k => [k[3], k[4], k[2]]);
+    });
     // Store lane diffs at 15 on each tracked player's game
     for (const x of sb.players) {
       const m = x.tracked && out.players[x.tracked]?.matches?.[id];
