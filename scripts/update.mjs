@@ -151,6 +151,45 @@ for (const p of cfg.players) {
   }
 }
 
+// Laning: per-minute timeline for each game (gold/CS at 15, team gold lead).
+// Backfills at most 12 games per round to stay well within Riot's rate limit.
+{
+  const ids = [...new Set(Object.values(out.players).flatMap(pl => Object.keys(pl.matches || {})))];
+  let fetched = 0;
+  for (const id of ids) {
+    const file = `matches/${id}.json`;
+    let sb; try { sb = JSON.parse(await readFile(file, "utf8")); } catch { continue; }
+    if (!sb.tl) {
+      if (fetched >= 12) continue;
+      fetched++;
+      try {
+        const t = await riot(cfg.region, `/lol/match/v5/matches/${id}/timeline`);
+        const fr = t?.info?.frames || [];
+        if (!fr.length) continue;
+        const pf = (f, i) => f.participantFrames?.[i + 1] || {};
+        const at = fr[Math.min(15, fr.length - 1)], blue = sb.players.map(x => x.team === 100);
+        sb.tl = {
+          min15: fr.length > 15,
+          // Blue team gold minus red team gold, one value per minute
+          goldDiff: fr.map(f => sb.players.reduce((s, _, i) => s + (blue[i] ? 1 : -1) * (pf(f, i).totalGold || 0), 0)),
+        };
+        sb.players.forEach((x, i) => { const p = pf(at, i); x.g15 = p.totalGold ?? null; x.cs15 = (p.minionsKilled || 0) + (p.jungleMinionsKilled || 0); x.xp15 = p.xp ?? null; });
+        await writeFile(file, JSON.stringify(sb));
+      } catch (e) { console.error(`timeline failed for ${id}: ${e.message}`); continue; }
+    }
+    // Store lane diffs at 15 on each tracked player's game
+    for (const x of sb.players) {
+      const m = x.tracked && out.players[x.tracked]?.matches?.[id];
+      if (!m || m.gd15 !== undefined) continue;
+      const opp = sb.players.find(y => y.team !== x.team && y.role && y.role === x.role);
+      Object.assign(m, sb.tl.min15 && opp && x.g15 != null
+        ? { g15: x.g15, cs15: x.cs15, gd15: x.g15 - opp.g15, csd15: x.cs15 - opp.cs15, xpd15: (x.xp15 ?? 0) - (opp.xp15 ?? 0) }
+        : { gd15: null });
+    }
+  }
+  if (fetched) console.log(`timelines fetched: ${fetched}`);
+}
+
 // Allies/enemies per game, from the saved scoreboards (no API calls)
 for (const pl of Object.values(out.players)) {
   for (const [id, m] of Object.entries(pl.matches || {})) {
