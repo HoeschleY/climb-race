@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T13:54:59.731Z",
+ "updatedAt": "2026-10-06T13:56:59.941Z",
  "build": "202610061341",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -1233,7 +1233,7 @@
    "liveErr": null,
    "icon": 7143,
    "level": 422,
-   "iconAt": 1791294005542
+   "iconAt": 1791295025649
   },
   "Ymine#000": {
    "riotId": "Ymine#000",
@@ -3159,7 +3159,7 @@
    "liveErr": null,
    "icon": 6864,
    "level": 717,
-   "iconAt": 1791294012139
+   "iconAt": 1791295032127
   },
   "wilhump#NAEU": {
    "riotId": "wilhump#NAEU",
@@ -5056,7 +5056,7 @@
    "liveErr": null,
    "icon": 5119,
    "level": 513,
-   "iconAt": 1791294015778
+   "iconAt": 1791295035698
   },
   "Near#974p": {
    "riotId": "Near#974p",
@@ -5069,8 +5069,8 @@
    "current": {
     "tier": "PLATINUM",
     "division": "IV",
-    "lp": 2,
-    "wins": 310,
+    "lp": 23,
+    "wins": 311,
     "losses": 315
    },
    "history": [
@@ -5139,6 +5139,12 @@
      "tier": "PLATINUM",
      "division": "IV",
      "lp": 2
+    },
+    {
+     "t": 1791295039299,
+     "tier": "PLATINUM",
+     "division": "IV",
+     "lp": 23
     }
    ],
    "matches": {
@@ -6610,18 +6616,65 @@
      "rv": 1,
      "teamR": 4,
      "enemyR": 6.1
+    },
+    "EUW1_8005421085": {
+     "win": true,
+     "champ": "Jinx",
+     "role": "BOTTOM",
+     "k": 17,
+     "d": 4,
+     "a": 12,
+     "cs": 246,
+     "dmg": 43686,
+     "vis": 4,
+     "gold": 19345,
+     "kp": 67,
+     "mates": [],
+     "multi": 4,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 26396,
+     "v": 4,
+     "dur": 1612,
+     "at": 1791295022627,
+     "g15": 7509,
+     "cs15": 112,
+     "gd15": 431,
+     "csd15": 5,
+     "xpd15": 512,
+     "vs": [
+      "Mordekaiser",
+      "Naafiri",
+      "Yasuo",
+      "Ezreal",
+      "Seraphine"
+     ],
+     "with": [
+      "Urgot",
+      "Qiyana",
+      "Xerath",
+      "Alistar"
+     ],
+     "rating": 9,
+     "place": 1,
+     "good": [
+      "36% of team damage",
+      "29% of team gold",
+      "7.3 KDA"
+     ],
+     "bad": [
+      "4 vision score"
+     ],
+     "laneGold": 8101,
+     "rv": 1
     }
    },
-   "live": {
-    "champId": 222,
-    "queue": 420,
-    "start": 1791293379847,
-    "mates": []
-   },
+   "live": null,
    "liveErr": null,
    "icon": 3151,
    "level": 745,
-   "iconAt": 1791294019400
+   "iconAt": 1791295040183
   },
   "Lésion carieuse#Dents": {
    "riotId": "Lésion carieuse#Dents",
@@ -7586,7 +7639,7 @@
    "liveErr": null,
    "icon": 7139,
    "level": 588,
-   "iconAt": 1791294024144
+   "iconAt": 1791295044848
   }
  }
 }
