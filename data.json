@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T21:23:16.979Z",
+ "updatedAt": "2026-10-06T21:24:16.832Z",
  "build": "202610061738",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -13,9 +13,9 @@
    },
    "current": {
     "tier": "GOLD",
-    "division": "IV",
-    "lp": 90,
-    "wins": 17,
+    "division": "III",
+    "lp": 16,
+    "wins": 18,
     "losses": 18
    },
    "history": [
@@ -78,6 +78,12 @@
      "tier": "GOLD",
      "division": "IV",
      "lp": 90
+    },
+    {
+     "t": 1791321862651,
+     "tier": "GOLD",
+     "division": "III",
+     "lp": 16
     }
    ],
    "matches": {
@@ -1356,19 +1362,68 @@
      "rv": 1,
      "teamR": 3.4,
      "enemyR": 6
+    },
+    "EUW1_8005908917": {
+     "win": true,
+     "champ": "DrMundo",
+     "role": "TOP",
+     "k": 6,
+     "d": 1,
+     "a": 7,
+     "cs": 300,
+     "dmg": 36447,
+     "vis": 23,
+     "gold": 15159,
+     "kp": 33,
+     "mates": [
+      {
+       "id": "Near#974p",
+       "same": true
+      }
+     ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 2,
+     "taken": 57912,
+     "v": 4,
+     "dur": 1955,
+     "at": 1791321851230,
+     "g15": 5449,
+     "cs15": 120,
+     "gd15": -138,
+     "csd15": -14,
+     "xpd15": 1402,
+     "vs": [
+      "Sion",
+      "Jax",
+      "Yasuo",
+      "Jinx",
+      "Nami"
+     ],
+     "with": [
+      "Naafiri",
+      "Vex",
+      "Yunara",
+      "Janna"
+     ],
+     "rating": 8,
+     "place": 1,
+     "good": [
+      "41% of team damage taken",
+      "13.0 KDA",
+      "1 death"
+     ],
+     "bad": [
+      "33% kill participation"
+     ],
+     "laneGold": 3860,
+     "rv": 1,
+     "teamR": 6.2,
+     "enemyR": 3.7
     }
    },
-   "live": {
-    "champId": 36,
-    "queue": 420,
-    "start": 1791319865727,
-    "mates": [
-     {
-      "id": "Near#974p",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 7143,
    "level": 422,
@@ -5539,8 +5594,8 @@
    "current": {
     "tier": "PLATINUM",
     "division": "IV",
-    "lp": 0,
-    "wins": 311,
+    "lp": 19,
+    "wins": 312,
     "losses": 318
    },
    "history": [
@@ -5627,6 +5682,12 @@
      "tier": "PLATINUM",
      "division": "IV",
      "lp": 0
+    },
+    {
+     "t": 1791321874885,
+     "tier": "PLATINUM",
+     "division": "IV",
+     "lp": 19
     }
    ],
    "matches": {
@@ -7333,19 +7394,69 @@
      "rv": 1,
      "teamR": 3.4,
      "enemyR": 6
+    },
+    "EUW1_8005908917": {
+     "win": true,
+     "champ": "Yunara",
+     "role": "BOTTOM",
+     "k": 5,
+     "d": 3,
+     "a": 5,
+     "cs": 229,
+     "dmg": 21231,
+     "vis": 8,
+     "gold": 14690,
+     "kp": 26,
+     "mates": [
+      {
+       "id": "Kohmira#44160",
+       "same": true
+      }
+     ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 1,
+     "taken": 19308,
+     "v": 4,
+     "dur": 1955,
+     "at": 1791321851230,
+     "g15": 4195,
+     "cs15": 62,
+     "gd15": -2906,
+     "csd15": -65,
+     "xpd15": -1069,
+     "vs": [
+      "Sion",
+      "Jax",
+      "Yasuo",
+      "Jinx",
+      "Nami"
+     ],
+     "with": [
+      "DrMundo",
+      "Naafiri",
+      "Vex",
+      "Janna"
+     ],
+     "rating": 4.3,
+     "place": 7,
+     "good": [
+      "3 deaths",
+      "21% of team gold"
+     ],
+     "bad": [
+      "26% kill participation",
+      "14% of team damage",
+      "−1.1k gold vs lane opponent"
+     ],
+     "laneGold": -1135,
+     "rv": 1,
+     "teamR": 7.1,
+     "enemyR": 3.7
     }
    },
-   "live": {
-    "champId": 804,
-    "queue": 420,
-    "start": 1791319865727,
-    "mates": [
-     {
-      "id": "Kohmira#44160",
-      "same": true
-     }
-    ]
-   },
+   "live": null,
    "liveErr": null,
    "icon": 3151,
    "level": 746,
@@ -8577,12 +8688,12 @@
   }
  },
  "diag": {
-  "at": "2026-10-06T21:23:37.228Z",
-  "secs": 20,
-  "calls": 22,
+  "at": "2026-10-06T21:24:41.182Z",
+  "secs": 24,
+  "calls": 25,
   "status": {
-   "200": 21,
-   "404": 1
+   "200": 22,
+   "404": 3
   },
   "slow": 0,
   "timeouts": 0,
