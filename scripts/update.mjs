@@ -177,6 +177,14 @@ for (const p of cfg.players) {
         await writeFile(file, JSON.stringify(sb));
       } catch (e) { console.error(`timeline failed for ${id}: ${e.message}`); continue; }
     }
+    // Average rating of teammates and enemies (ratings are added to the scoreboard by the rating step)
+    if (sb.players.every(x => x.rating != null)) for (const x of sb.players) {
+      const m = x.tracked && out.players[x.tracked]?.matches?.[id];
+      if (!m || m.teamR !== undefined) continue;
+      const avg = a => Math.round(a.reduce((s, y) => s + y.rating, 0) / a.length * 10) / 10;
+      m.teamR = avg(sb.players.filter(y => y.team === x.team && y !== x));
+      m.enemyR = avg(sb.players.filter(y => y.team !== x.team));
+    }
     // Store lane diffs at 15 on each tracked player's game
     for (const x of sb.players) {
       const m = x.tracked && out.players[x.tracked]?.matches?.[id];
