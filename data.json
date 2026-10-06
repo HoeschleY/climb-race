@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T17:34:59.978Z",
+ "updatedAt": "2026-10-06T17:35:59.665Z",
  "build": "202610061341",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -3153,6 +3153,67 @@
      "rv": 1,
      "teamR": 3.9,
      "enemyR": 6.1
+    },
+    "EUW1_8005618656": {
+     "win": false,
+     "champ": "Teemo",
+     "role": "TOP",
+     "k": 8,
+     "d": 10,
+     "a": 5,
+     "cs": 264,
+     "dmg": 40550,
+     "vis": 23,
+     "gold": 14773,
+     "kp": 41,
+     "mates": [
+      {
+       "id": "Near#974p",
+       "same": true
+      }
+     ],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 7,
+     "taken": 33894,
+     "v": 4,
+     "dur": 1763,
+     "at": 1791308108504,
+     "teamR": 3.1,
+     "enemyR": 6.3,
+     "g15": 6236,
+     "cs15": 135,
+     "gd15": 1571,
+     "csd15": 49,
+     "xpd15": -176,
+     "vs": [
+      "Chogath",
+      "Briar",
+      "Ahri",
+      "Quinn",
+      "Seraphine"
+     ],
+     "with": [
+      "DrMundo",
+      "Xerath",
+      "Jinx",
+      "Soraka"
+     ],
+     "rating": 5.4,
+     "place": 4,
+     "good": [
+      "9.0 CS/min",
+      "32% of team damage",
+      "+3.2k gold vs lane opponent"
+     ],
+     "bad": [
+      "1.3 KDA",
+      "10 deaths",
+      "41% kill participation"
+     ],
+     "laneGold": 3159,
+     "rv": 1
     }
    },
    "live": null,
@@ -5069,9 +5130,9 @@
    "current": {
     "tier": "PLATINUM",
     "division": "IV",
-    "lp": 23,
+    "lp": 4,
     "wins": 311,
-    "losses": 315
+    "losses": 316
    },
    "history": [
     {
@@ -5145,6 +5206,12 @@
      "tier": "PLATINUM",
      "division": "IV",
      "lp": 23
+    },
+    {
+     "t": 1791308176553,
+     "tier": "PLATINUM",
+     "division": "IV",
+     "lp": 4
     }
    ],
    "matches": {
@@ -6728,7 +6795,9 @@
       "1.5 KDA"
      ],
      "laneGold": -4343,
-     "rv": 1
+     "rv": 1,
+     "teamR": 3.7,
+     "enemyR": 6.3
     }
    },
    "live": null,
