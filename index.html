@@ -266,6 +266,16 @@ main{padding-block:18px 56px}
 .luckbar{display:flex;height:6px;border-radius:3px;overflow:hidden;background:var(--line);margin-top:10px}.luckbar .lr{background:var(--loss)}.luckbar .lc{background:var(--win)}
 .lrow{display:grid;grid-template-columns:minmax(140px,1.4fr) repeat(4,1fr);gap:12px;align-items:center;padding:10px 16px;border-top:1px solid var(--line);font-size:.9rem}
 .lrow:first-child{border-top:0}.lhd{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding-block:7px}
+.phdr{display:grid;grid-template-columns:minmax(240px,300px) 1fr;gap:24px;align-items:center;padding:18px 20px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,var(--panel2),var(--panel) 60%)}
+.pid{display:flex;align-items:center;gap:14px;min-width:0}.pid>div:last-child{min-width:0;display:grid;gap:3px}
+.pname2{font-weight:700;font-size:1.25rem;overflow-wrap:anywhere}.pname2 small{color:var(--muted);font-weight:400;font-size:.85rem}
+.prank2{display:flex;align-items:center;gap:6px;font-weight:600;font-size:.9rem;color:#d6d0c0}
+.pgain2{font-weight:700;font-size:.95rem}
+.pstats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px 18px}
+.pstats div{display:grid;gap:2px;border-left:2px solid var(--line);padding-left:12px}
+.pstats span{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.pstats b{font-size:1.15rem;font-weight:700}
+@media (max-width:900px){.phdr{grid-template-columns:1fr}.pstats{grid-template-columns:repeat(2,1fr)}}
 footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
 
 @media (max-width:760px){
@@ -409,7 +419,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610061049";
+const BUILD="202610061149";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
@@ -585,10 +595,25 @@ function renderMatches(){
   players.forEach(p=>{const b=el("button");b.append(dot(p.color),short(p.riotId));b.setAttribute("aria-pressed",p.riotId===selected);b.onclick=()=>{selected=p.riotId;renderMatches()};chips.append(b)});
   const p=players.find(p=>p.riotId===selected),list=document.getElementById("mlist");list.innerHTML="";
   if(!p.games.length){list.append(el("div","empty","No ranked Solo/Duo games since the race started."));return}
-  const n=p.games.length,sum=k=>p.games.reduce((s,g)=>s+(g[k]||0),0),mins=sum("dur")/60,sm=el("div","msum");
-  [["Record",`${p.w}W ${p.l}L`],["Win rate",Math.round(p.w/n*100)+"%"],["KDA",sum("d")?((sum("k")+sum("a"))/sum("d")).toFixed(2):"Perfect"],["CS/min",mins?(sum("cs")/mins).toFixed(1):"–"],["Damage/min",mins?Math.round(sum("dmg")/mins):"–"],["Avg rating",(x=>x.rating!=null?x.rating.toFixed(1)+(x.mvp?` · ${x.mvp} MVP`:""):"–")(pstats(p))],
-   ["Gold @15 vs lane",(x=>x.gd15!=null?kfmt(x.gd15):"…")(pstats(p))],["CS @15 vs lane",(x=>x.csd15!=null?(x.csd15>=0?"+":"−")+Math.abs(x.csd15).toFixed(1):"…")(pstats(p))],["LP",p.gain==null?"–":sgn(p.gain)]]
-    .forEach(([k,v])=>{const d=el("div");d.append(el("b","num",v),el("span",null,k));sm.append(d)});list.append(sm);
+  const n=p.games.length,sum=k=>p.games.reduce((s,g)=>s+(g[k]||0),0),mins=sum("dur")/60,ps=pstats(p);
+  const hdr=el("div","phdr");
+  // identity
+  const id=el("div","pid");id.append(avatar(p,64));const it=el("div");
+  const nm=el("div","pname2",short(p.riotId)+" ");nm.append(el("small",null,"#"+p.riotId.split("#")[1]));it.append(nm);
+  const rk=el("div","prank2");rk.append(emblem(p.current?.tier,24),fmt(p.current));it.append(rk);
+  it.append(el("div","pgain2 num "+(p.gain>0?"up":p.gain<0?"down":""),p.gain==null?"–":sgn(p.gain)+" LP since the start"));
+  id.append(it);hdr.append(id);
+  // 8 stats, two even rows
+  const kda=sum("d")?((sum("k")+sum("a"))/sum("d")).toFixed(2):"Perfect";
+  const tone=(v,good)=>v==null?"":good?"up":"down";
+  const stats=[
+    ["Record",`${p.w}W ${p.l}L`,""],["Win rate",Math.round(p.w/n*100)+"%",tone(1,p.w/n>=.5)],
+    ["KDA",kda,""],["Avg rating",ps.rating!=null?ps.rating.toFixed(1):"–",ps.rating==null?"":ps.rating>=5.5?"up":ps.rating<4.5?"down":""],
+    ["CS/min",mins?(sum("cs")/mins).toFixed(1):"–",""],["Damage/min",mins?Math.round(sum("dmg")/mins):"–",""],
+    ["Gold @15",ps.gd15!=null?kfmt(ps.gd15):"…",tone(ps.gd15,ps.gd15>=0)],["CS @15",ps.csd15!=null?(ps.csd15>=0?"+":"−")+Math.abs(ps.csd15).toFixed(1):"…",tone(ps.csd15,ps.csd15>=0)]];
+  const grid=el("div","pstats");stats.forEach(([k,v,t])=>{const d=el("div");d.append(el("span",null,k),el("b","num "+t,v));grid.append(d)});
+  if(ps.mvp)grid.title=`${ps.mvp} MVP game${ps.mvp>1?"s":""}`;
+  hdr.append(grid);list.append(hdr);
   list.append(profileOf(p));
   const best=Math.max(...p.games.map(perf));
   p.games.forEach(g=>list.append(gameRow(g,n>2?best:null)));
