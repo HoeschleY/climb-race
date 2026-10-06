@@ -227,6 +227,9 @@ for (const pl of Object.values(out.players)) {
       }
       const mine = r[sb.players.indexOf(me)];
       Object.assign(m, { rating: mine.rating, place: mine.place, good: mine.good, bad: mine.bad, laneGold: mine.laneGold, rv: RATING_VERSION });
+      const avgR = a => Math.round(a.reduce((t, i) => t + r[i].rating, 0) / a.length * 10) / 10, idx = sb.players.map((_, i) => i);
+      m.teamR = avgR(idx.filter(i => sb.players[i].team === me.team && sb.players[i] !== me));
+      m.enemyR = avgR(idx.filter(i => sb.players[i].team !== me.team));
     } catch (e) { console.error(`rating failed for ${id}: ${e.message}`); }
   }
 }
