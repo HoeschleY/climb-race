@@ -291,6 +291,15 @@ main{padding-block:18px 56px}
 .dmstats span{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}.dmstats b{font-size:1.2rem}
 .rlegend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:.8rem;color:var(--muted)}.rlegend span{display:flex;align-items:center;gap:6px}.rlegend i{width:10px;height:10px;border-radius:50%}
 .mmap .dmrow{margin-top:8px}.mcap{display:grid;gap:6px;justify-items:start}.mmap .note{flex:1;min-width:180px;align-self:center}
+.dmbottom{padding:18px 20px;border-top:1px solid var(--line)}
+#mbody .sbr:not(.sbh){cursor:pointer}#mbody .sbr:not(.sbh):hover{background-color:#ffffff08}
+#mbody .sbr.sel{box-shadow:inset 3px 0 0 var(--gold2);background-color:#c8aa6e14}
+.ppanel{margin-top:14px}
+.pphead{display:flex;align-items:center;gap:12px;margin-bottom:12px}.pphead img{width:40px;height:40px;border-radius:8px;background:var(--line)}.pphead b{font-size:1.05rem}
+.pprow{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+.ppgold{flex:1;min-width:320px}.ppgold h3,.ppmap h3{font:600 .72rem var(--body);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.ppsvg{width:100%;height:auto;display:block}.ppsvg text{font-size:11px}
+.ppmap{display:grid;gap:8px;justify-items:start}
 footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
 
 @media (max-width:760px){
@@ -437,7 +446,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610062232";
+const BUILD="202610062252";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
@@ -637,6 +646,7 @@ function renderMatches(){
   list.append(profileOf(p));
   const best=Math.max(...p.games.map(perf));
   p.games.forEach(g=>list.append(gameRow(g,n>2?best:null)));
+  const dmb=deathMapBlock(p);dmb.classList.add("dmbottom");list.append(dmb);
 }
 
 /* Death map. Summoner's Rift coordinates run from about -120 to 14,900; blue base bottom-left.
@@ -721,7 +731,6 @@ function profileOf(p){
   SL.forEach(([n,r],i)=>{const c=el("div","todc"),x=tb[i];c.append(el("div","t",`${n} · ${r}`));
     const b=el("b","num",x.n?Math.round(x.w/x.n*100)+"%":"–");if(x.n)b.style.color=wrCol(x.w/x.n);c.append(b,el("span","num",x.n?`${x.w}W ${x.n-x.w}L${i===bestI?" · best":""}`:"no games"));grid.append(c)});
   tc.append(grid);box.append(tc);
-  box.append(deathMapBlock(p));
   return box;
 }
 
@@ -797,12 +806,6 @@ async function openMatch(g){
     const peak=gd.reduce((a,v,i)=>v>a.v?{v,i}:a,{v:-1e9,i:0}),low=gd.reduce((a,v,i)=>v<a.v?{v,i}:a,{v:1e9,i:0});
     box.append(el("div","muted gnote num",`Biggest lead ${kfmt(peak.v)} at ${peak.i}' · biggest deficit ${kfmt(low.v)} at ${low.i}' · at 15': ${gd[15]!=null?kfmt(gd[15]):"–"}`));
     mbody.append(box)}
-  if(m.kills?.length){const me3=m.players.find(x=>x.tracked===g.riotId),side=me3?.team||100,box=el("div","gwrap mmap");box.append(el("div","eyebrow","Deaths this game"));
-    const KT=[[0,1e9,"#e5555f","Your team died"],[0,1e9,"#43c286","Enemies died"]];
-    const pts=m.kills.map(([v,k,t,x,y])=>({x,y,t,side,mine:m.players[v]?.team===side,label:`${m.players[v]?.champ||"?"} killed by ${k>=0?m.players[k]?.champ:"a tower or minions"} · `}));
-    const row=el("div","dmrow");const mine=riftMap(pts.filter(q=>q.mine),220,[KT[0]]),theirs=riftMap(pts.filter(q=>!q.mine),220,[KT[1]]);
-    const c1=el("div","mcap");c1.append(mine,el("small","muted",`Your team: ${pts.filter(q=>q.mine).length} deaths`));const c2=el("div","mcap");c2.append(theirs,el("small","muted",`Enemies: ${pts.filter(q=>!q.mine).length} deaths`));
-    row.append(c1,c2,el("p","note","Shown from your side: your base is bottom left. Hover a dot for who died, to whom, and when."));box.append(row);mbody.append(box)}
   const maxDmg=Math.max(...m.players.map(x=>x.dmg)),itemImg=id=>{const i=el("img","it");if(id){i.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/item/${id}.png`;i.alt=""}else i.classList.add("emptyit");return i};
   [...m.teams].sort((a,b)=>(b.id===myTeam)-(a.id===myTeam)).forEach(tm=>{
     const box=el("div","team "+(tm.win?"tw":"tl"));const th=el("div","thead");
@@ -811,7 +814,8 @@ async function openMatch(g){
     const ob=el("div","obj num");[["Kills",`${sum("k")}/${sum("d")}/${sum("a")}`],["Gold",(sum("gold")/1000).toFixed(1)+"k"],["Towers",tm.obj.tower],["Dragons",tm.obj.dragon],["Barons",tm.obj.baron],["Grubs",tm.obj.grubs]].forEach(([k,v])=>{const s=el("span",null,k+" ");s.append(el("b",null,v));ob.append(s)});
     th.append(ob);box.append(th);
     const tbl=el("div","sb");const hr=el("div","sbr sbh");["Player","Rating","KDA","@15","Damage","CS","Gold","Items"].forEach(x=>hr.append(el("span",null,x)));tbl.append(hr);
-    tp.forEach(x=>{const r=el("div","sbr"+(x.tracked?" mine":""));
+    tp.forEach(x=>{const r=el("div","sbr"+(x.tracked?" mine":""));const pi=m.players.indexOf(x);r.dataset.pi=pi;r.tabIndex=0;r.title="Show this player's gold and kills/deaths below";
+      r.onclick=()=>selectSbPlayer(m,pi,g);r.onkeydown=e=>{if(e.key==="Enter")selectSbPlayer(m,pi,g)};
       const pl=el("div","sbp");const ci=el("div","sbc");const im=el("img");im.src=icon(x.champ);im.alt=x.champ;ci.append(im,el("span","lv",x.lvl));pl.append(ci);
       const sp=el("div","sbs");x.spells.forEach(s=>{const a=A.spells[s];const i=el("img");if(a){i.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/spell/${a.img}`;i.title=a.name}i.alt="";sp.append(i)});
       [x.rune,x.sub].forEach(id=>{const a=A.runes[id];const i=el("img","rn");if(a){i.src=`https://ddragon.leagueoflegends.com/cdn/img/${a.icon}`;i.title=a.name}i.alt="";sp.append(i)});pl.append(sp);
@@ -826,6 +830,47 @@ async function openMatch(g){
       const it=el("div","items");x.items.slice(0,6).forEach(i=>it.append(itemImg(i)));const tr=itemImg(x.items[6]);tr.classList.add("trinket");it.append(tr);r.append(it);
       tbl.append(r)});
     box.append(tbl);mbody.append(box)});
+  const panel=el("div","gwrap ppanel");panel.id="ppanel";mbody.append(panel);
+  const start=m.players.findIndex(x=>x.tracked===g.riotId);selectSbPlayer(m,start>=0?start:0,g,true);
+}
+// Bottom panel of the scoreboard: the selected player's gold vs lane opponent, and their kills/deaths on the map
+function selectSbPlayer(m,pi,g,initial){
+  document.querySelectorAll("#mbody .sbr.sel").forEach(r=>r.classList.remove("sel"));
+  document.querySelector(`#mbody .sbr[data-pi="${pi}"]`)?.classList.add("sel");
+  const x=m.players[pi],panel=document.getElementById("ppanel");if(!x||!panel)return;panel.innerHTML="";
+  const opp=m.players.find(y=>y.team!==x.team&&y.role&&y.role===x.role),me=m.players.find(y=>y.tracked===g.riotId),side=me?.team||100;
+  const head=el("div","pphead");const im=el("img");im.src=icon(x.champ);im.alt="";
+  const t=el("div");t.append(el("div","eyebrow","Selected player · click any row above to switch"),el("b",null,`${x.name.split("#")[0]} · ${x.champ}`));
+  head.append(im,t);panel.append(head);
+  const row=el("div","pprow");
+  // gold over time vs lane opponent
+  const gbox=el("div","ppgold");gbox.append(el("h3",null,opp?`Gold vs ${opp.champ} (lane opponent)`:"Gold over time"));
+  const pg=m.tl?.pg;
+  if(pg&&pg[pi]){const a=pg[pi],b=opp?pg[m.players.indexOf(opp)]:null,n=a.length-1,W=520,H=190,P=40,max=Math.max(...a,...(b||[]),1000);
+    const X=i=>P+i/Math.max(1,n)*(W-P-10),Y=v=>H-22-v/max*(H-34),line=arr=>arr.map((v,i)=>`${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
+    let svg=`<svg viewBox="0 0 ${W} ${H}" class="ppsvg" role="img" aria-label="Gold over time">`;
+    for(let v=0;v<=max;v+=5000)svg+=`<line x1="${P}" x2="${W-10}" y1="${Y(v)}" y2="${Y(v)}" stroke="#1b2536"/><text x="${P-6}" y="${Y(v)+4}" text-anchor="end">${v/1000}k</text>`;
+    for(let i=5;i<=n;i+=5)svg+=`<text x="${X(i)}" y="${H-6}" text-anchor="middle">${i}'</text>`;
+    if(b)svg+=`<polyline points="${line(b)}" fill="none" stroke="#e5555f" stroke-width="2" opacity=".85"/>`;
+    svg+=`<polyline points="${line(a)}" fill="none" stroke="#f0d79a" stroke-width="2.4"/></svg>`;
+    gbox.insertAdjacentHTML("beforeend",svg);
+    const lg=el("div","rlegend");const s1=el("span");const i1=el("i");i1.style.background="#f0d79a";s1.append(i1,x.champ);lg.append(s1);
+    if(b){const s2=el("span");const i2=el("i");i2.style.background="#e5555f";s2.append(i2,opp.champ);lg.append(s2);
+      const d15=a[15]!=null&&b[15]!=null?a[15]-b[15]:null,dEnd=a[n]-b[n];lg.append(el("span","num",`${d15!=null?`at 15': ${kfmt(d15)} · `:""}end: ${kfmt(dEnd)}`))}
+    gbox.append(lg)}
+  else gbox.append(el("p","note","Gold by minute for this game is being added, a dozen games per minute."));
+  row.append(gbox);
+  // kills and deaths on the map, shown from the viewer's side
+  const mbox=el("div","ppmap");mbox.append(el("h3",null,"Kills and deaths"));
+  if(m.kills?.length){const K=[[0,1e9,"#43c286","Kill"],[0,1e9,"#e5555f","Death"]];
+    const kills=m.kills.filter(k=>k[1]===pi).map(([v,k,t,x2,y2])=>({x:x2,y:y2,t,side,label:`Killed ${m.players[v]?.champ} · `}));
+    const deaths=m.kills.filter(k=>k[0]===pi).map(([v,k,t,x2,y2])=>({x:x2,y:y2,t,side,label:`Killed by ${k>=0?m.players[k]?.champ:"a tower or minions"} · `}));
+    const map=riftMap(kills,240,[K[0]]);const extra=riftMap(deaths,240,[K[1]]).querySelector(".riftdots");map.append(extra);
+    mbox.append(map);const lg=el("div","rlegend");K.forEach(f=>{const sp=el("span");const i=el("i");i.style.background=f[2];sp.append(i,`${f[3]}s: ${f[3]==="Kill"?kills.length:deaths.length}`);lg.append(sp)});
+    mbox.append(lg,el("p","note","Your base is bottom left. Hover a dot for details."))}
+  else mbox.append(el("p","note","Map positions for this game are being added."));
+  row.append(mbox);panel.append(row);
+  if(!initial)panel.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
 
 /* Champions tab: global pool + totals + matchups */
