@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-10-06T16:30:59.755Z",
+ "updatedAt": "2026-10-06T16:31:59.433Z",
  "build": "202610061341",
  "raceStart": "2026-10-01T14:06:00+02:00",
  "players": {
@@ -1233,7 +1233,7 @@
    "liveErr": null,
    "icon": 7143,
    "level": 422,
-   "iconAt": 1791303365811
+   "iconAt": 1791304325627
   },
   "Ymine#000": {
    "riotId": "Ymine#000",
@@ -3159,7 +3159,7 @@
    "liveErr": null,
    "icon": 6864,
    "level": 717,
-   "iconAt": 1791303372461
+   "iconAt": 1791304332105
   },
   "wilhump#NAEU": {
    "riotId": "wilhump#NAEU",
@@ -5056,7 +5056,7 @@
    "liveErr": null,
    "icon": 5119,
    "level": 513,
-   "iconAt": 1791303376025
+   "iconAt": 1791304335711
   },
   "Near#974p": {
    "riotId": "Near#974p",
@@ -6676,7 +6676,7 @@
    "liveErr": null,
    "icon": 3151,
    "level": 745,
-   "iconAt": 1791303379561
+   "iconAt": 1791304339353
   },
   "Lésion carieuse#Dents": {
    "riotId": "Lésion carieuse#Dents",
@@ -6689,9 +6689,9 @@
    "current": {
     "tier": "GOLD",
     "division": "II",
-    "lp": 34,
+    "lp": 12,
     "wins": 171,
-    "losses": 163
+    "losses": 164
    },
    "history": [
     {
@@ -6735,6 +6735,12 @@
      "tier": "GOLD",
      "division": "II",
      "lp": 34
+    },
+    {
+     "t": 1791304343948,
+     "tier": "GOLD",
+     "division": "II",
+     "lp": 12
     }
    ],
    "matches": {
@@ -7635,18 +7641,65 @@
      "rv": 1,
      "teamR": 3.5,
      "enemyR": 7
+    },
+    "EUW1_8005534380": {
+     "win": false,
+     "champ": "Ashe",
+     "role": "BOTTOM",
+     "k": 8,
+     "d": 8,
+     "a": 9,
+     "cs": 250,
+     "dmg": 21353,
+     "vis": 44,
+     "gold": 15867,
+     "kp": 41,
+     "mates": [],
+     "multi": 1,
+     "penta": 0,
+     "fb": false,
+     "solo": 0,
+     "taken": 22315,
+     "v": 4,
+     "dur": 2150,
+     "at": 1791304312717,
+     "g15": 5467,
+     "cs15": 109,
+     "gd15": -1254,
+     "csd15": -16,
+     "xpd15": -1280,
+     "vs": [
+      "Teemo",
+      "Graves",
+      "Hwei",
+      "Tristana",
+      "Camille"
+     ],
+     "with": [
+      "Yone",
+      "Maokai",
+      "Leblanc",
+      "Leona"
+     ],
+     "rating": 2.9,
+     "place": 9,
+     "good": [
+      "7.0 CS/min"
+     ],
+     "bad": [
+      "−8.5k gold vs lane opponent",
+      "16% of team damage",
+      "13% of team damage taken"
+     ],
+     "laneGold": -8468,
+     "rv": 1
     }
    },
-   "live": {
-    "champId": 22,
-    "queue": 420,
-    "start": 1791302132329,
-    "mates": []
-   },
+   "live": null,
    "liveErr": null,
    "icon": 7139,
    "level": 588,
-   "iconAt": 1791303384016
+   "iconAt": 1791304344844
   }
  }
 }
