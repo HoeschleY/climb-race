@@ -517,7 +517,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610071319";
+const BUILD="202610071339";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/",RAW="https://raw.githubusercontent.com/HoeschleY/climb-race/data/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 // Data lives on the "data" branch. data.json: GitHub API with an ETag (unchanged checks are free), raw file as backup.
@@ -533,6 +533,8 @@ async function fetchData(){
       if(r.ok){etag=r.headers.get("ETag");return await r.json()}
       if(r.status===403||r.status===429)apiOffUntil=Date.now()+6e5}catch{}}
   const r=await fetch(RAW+"data.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw new Error(r.status);return r.json()}
+function cacheData(d){try{localStorage.setItem("cr-data",JSON.stringify(d))}catch{}}
+function cachedData(){try{return JSON.parse(localStorage.getItem("cr-data")||"null")}catch{return null}}
 async function load(){
   if(!DATA){const c=cachedData();if(c&&c.players){applyData(c,true)}}
   let d;try{d=await fetchData();lastCheck=Date.now()}catch{if(!DATA)document.getElementById("sub").textContent="Standings aren't available yet.";tickLive(true);return}
