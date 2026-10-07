@@ -2,7 +2,9 @@
 // and writes data.json for the website. Runs in GitHub Actions.
 import { readFile, writeFile, mkdir, access } from "node:fs/promises";
 import { rateGame, RATING_VERSION } from "./rating.mjs";
-await mkdir("matches", { recursive: true });
+// Data lives in its own folder (the "data" branch), separate from the website code
+const D = process.env.DATA_DIR || ".";
+await mkdir(`${D}/matches`, { recursive: true });
 const exists = f => access(f).then(() => true, () => false);
 
 const KEY = process.env.RIOT_API_KEY;
@@ -10,7 +12,7 @@ if (!KEY) { console.error("Missing RIOT_API_KEY secret"); process.exit(1); }
 
 const cfg = JSON.parse(await readFile("players.json", "utf8"));
 let old = { players: {} };
-try { old = JSON.parse(await readFile("data.json", "utf8")); } catch {}
+try { old = JSON.parse(await readFile(`${D}/data.json`, "utf8")); } catch {}
 
 const startSec = Math.floor(new Date(cfg.raceStart).getTime() / 1000);
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -67,8 +69,8 @@ async function loadRoleData() {
   roleTable = {};
   try {
     const { readdir } = await import("node:fs/promises");
-    for (const f of await readdir("matches")) {
-      try { for (const x of JSON.parse(await readFile(`matches/${f}`, "utf8")).players) if (ROLES.includes(x.role)) {
+    for (const f of await readdir(`${D}/matches`)) {
+      try { for (const x of JSON.parse(await readFile(`${D}/matches/${f}`, "utf8")).players) if (ROLES.includes(x.role)) {
         const t = roleTable[x.champ] = roleTable[x.champ] || {}; t[x.role] = (t[x.role] || 0) + 1; } } catch {}
     }
   } catch {}
@@ -132,11 +134,11 @@ for (const p of cfg.players) {
       const ids = await riot(cfg.region,
         `/lol/match/v5/matches/by-puuid/${puuid}/ids?queue=420&startTime=${startSec}&start=${start}&count=100`) || [];
       for (const id of ids) {
-        if (matches[id]?.v === 4 && await exists(`matches/${id}.json`)) continue; // already stored with full detail
+        if (matches[id]?.v === 4 && await exists(`${D}/matches/${id}.json`)) continue; // already stored with full detail
         const m = await riot(cfg.region, `/lol/match/v5/matches/${id}`);
         const me = m?.info?.participants?.find(x => x.puuid === puuid);
         if (!me || m.info.gameDuration < 300) continue; // skip remakes
-        if (!(await exists(`matches/${id}.json`))) await writeFile(`matches/${id}.json`, JSON.stringify(scoreboard(m)));
+        if (!(await exists(`${D}/matches/${id}.json`))) await writeFile(`${D}/matches/${id}.json`, JSON.stringify(scoreboard(m)));
         const teamKills = m.info.participants.filter(x => x.teamId === me.teamId).reduce((s, x) => s + x.kills, 0);
         matches[id] = {
           win: me.win, champ: me.championName, role: me.teamPosition || "",
@@ -239,7 +241,7 @@ for (const p of cfg.players) {
   const ids = [...new Set(Object.values(out.players).flatMap(pl => Object.keys(pl.matches || {})))];
   let fetched = 0;
   for (const id of ids) {
-    const file = `matches/${id}.json`;
+    const file = `${D}/matches/${id}.json`;
     let sb; try { sb = JSON.parse(await readFile(file, "utf8")); } catch { continue; }
     if (!sb.tl || sb.tlv !== 3) {
       if (fetched >= 12) continue;
@@ -299,7 +301,7 @@ for (const pl of Object.values(out.players)) {
   for (const [id, m] of Object.entries(pl.matches || {})) {
     if (m.vs && m.rv === RATING_VERSION) continue;
     try {
-      const file = `matches/${id}.json`, sb = JSON.parse(await readFile(file, "utf8"));
+      const file = `${D}/matches/${id}.json`, sb = JSON.parse(await readFile(file, "utf8"));
       const me = sb.players.find(x => x.tracked === pl.riotId) || sb.players.find(x => x.champ === m.champ && x.k === m.k && x.d === m.d);
       if (!me) continue;
       m.vs = sb.players.filter(x => x.team !== me.team).map(x => x.champ);
@@ -331,5 +333,5 @@ console.log("round health:", JSON.stringify(out.diag));
 const strip = d => JSON.stringify({ ...d, updatedAt: 0, diag: 0, players: Object.fromEntries(Object.entries(d.players || {}).map(([k, v]) => [k, { ...v, iconAt: 0, checkedAt: 0 }])) });
 const changed = strip(out) !== strip(old), heartbeat = !old.updatedAt || Date.now() - Date.parse(old.updatedAt) > 5 * 60e3;
 const trouble = diag.budgetHit || diag.timeouts > 2 || Object.keys(diag.status).some(k => k !== "200" && k !== "404");
-if (changed || heartbeat || trouble) await writeFile("data.json", JSON.stringify(out));
+if (changed || heartbeat || trouble) await writeFile(`${D}/data.json`, JSON.stringify(out));
 console.log(changed ? "data changed" : heartbeat ? "heartbeat" : "no change");

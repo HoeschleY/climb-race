@@ -3,6 +3,9 @@ name: Update standings
 # Runs as a long-lived loop: updates every minute for ~5.5 hours,
 # then starts a fresh run of itself. The hourly schedule is only a backup
 # in case the chain ever breaks (GitHub's scheduler is unreliable).
+#
+# Code lives on "main"; the data (data.json, matches/) lives on the "data" branch.
+# Saving data therefore never triggers a GitHub Pages rebuild of the website.
 on:
   schedule:
     - cron: "17 * * * *"
@@ -23,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -32,24 +35,27 @@ jobs:
           RIOT_API_KEY: ${{ secrets.RIOT_API_KEY }}
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
           SITE_URL: https://hoeschley.github.io/climb-race/
+          DATA_DIR: datawt
         run: |
           set +e   # never let one failed command end the loop
-          git config user.name "climb-race-bot"
-          git config user.email "actions@users.noreply.github.com"
+          git config --global user.name "climb-race-bot"
+          git config --global user.email "actions@users.noreply.github.com"
+          git fetch -q origin data
+          git worktree add -q -B data datawt origin/data
           end=$((SECONDS + 330*60))
           while [ $SECONDS -lt $end ]; do
             round=$SECONDS
-            timeout 30 git pull -q --rebase origin main || git rebase --abort || true
+            timeout 30 git pull -q --ff-only origin main || true                       # latest code
+            (cd datawt && (timeout 30 git pull -q --rebase origin data || git rebase --abort || true))
             timeout 150 node scripts/update.mjs || echo "round failed or timed out, trying again next minute"
-            git add data.json matches
-            if ! git diff --cached --quiet; then
-              git commit -q -m "Update standings"
-              timeout 30 git push -q origin HEAD:main || (timeout 30 git pull -q --rebase origin main && timeout 30 git push -q origin HEAD:main) || true
-            fi
+            (cd datawt && git add data.json matches && if ! git diff --cached --quiet; then
+               git commit -q -m "Update standings"
+               timeout 30 git push -q origin data || (timeout 30 git pull -q --rebase origin data && timeout 30 git push -q origin data) || true
+             fi)
             wait=$((60 - (SECONDS - round))); [ $wait -gt 0 ] && sleep $wait
           done
       - name: Start the next run
-        if: always()
+        if: ${{ !cancelled() }}   # a manual cancel stops the chain; a normal end or a crash restarts it
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run update.yml --repo ${{ github.repository }} --ref main
