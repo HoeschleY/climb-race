@@ -361,6 +361,8 @@ main section>h2::after{content:"";flex:1;height:1px;background:linear-gradient(9
 .srow div{display:grid}.srow span{font-size:.82rem;color:var(--muted)}
 .sfoot{grid-column:1/-1;background:var(--panel);margin:0;padding:8px 16px}
 @media (max-width:900px){.scout{grid-template-columns:1fr}}
+.ghold{position:relative}.ghold svg{cursor:crosshair}
+.gdiff{border-top:1px solid var(--line);margin-top:4px;padding-top:4px;font-weight:600}
 footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
 
 @media (max-width:760px){
@@ -515,7 +517,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610071313";
+const BUILD="202610071316";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
@@ -892,6 +894,10 @@ async function openMatch(g){
     svg+=`<path d="${area}" fill="#43c28655" clip-path="url(#up)"/><path d="${area}" fill="#e5555f55" clip-path="url(#dn)"/><polyline points="${pts}" fill="none" stroke="#ece6d6" stroke-width="1.6"/>`;
     const fin=gd[n];svg+=`<circle cx="${X(n)}" cy="${Y(fin)}" r="3.5" fill="${fin>=0?"#43c286":"#e5555f"}"/></svg>`;
     box.insertAdjacentHTML("beforeend",svg);
+    {const sr=[{name:"your team's gold lead",color:"#ece6d6",values:gd,y:Y,fmt:v=>(v>=0?"+":"−")+Math.abs(Math.round(v)).toLocaleString("en")}];
+     const pg2=m.tl?.pg,me4=m.players.find(x=>x.tracked===g.riotId);
+     if(pg2){sr.extra=i=>{const ours=m.players.reduce((t,x,k)=>t+(x.team===me4?.team?(pg2[k][i]||0):0),0),theirs=m.players.reduce((t,x,k)=>t+(x.team!==me4?.team?(pg2[k][i]||0):0),0);return ours&&theirs?`${(ours/1000).toFixed(1)}k vs ${(theirs/1000).toFixed(1)}k total gold`:""}}
+     goldHover(box,W,H,P,8,n,sr)}
     const peak=gd.reduce((a,v,i)=>v>a.v?{v,i}:a,{v:-1e9,i:0}),low=gd.reduce((a,v,i)=>v<a.v?{v,i}:a,{v:1e9,i:0});
     box.append(el("div","muted gnote num",`Biggest lead ${kfmt(peak.v)} at ${peak.i}' · biggest deficit ${kfmt(low.v)} at ${low.i}' · at 15': ${gd[15]!=null?kfmt(gd[15]):"–"}`));
     mbody.append(box)}
@@ -923,6 +929,22 @@ async function openMatch(g){
   const panel=el("div","gwrap ppanel");panel.id="ppanel";mbody.append(panel);
   const start=m.players.findIndex(x=>x.tracked===g.riotId);selectSbPlayer(m,start>=0?start:0,g,true);
 }
+function goldHover(holder,W,H,P,R,n,series){
+  const svg=holder.querySelector("svg");if(!svg)return;holder.classList.add("ghold");
+  const NS="http://www.w3.org/2000/svg",X=i=>P+i/Math.max(1,n)*(W-P-R);
+  const line=document.createElementNS(NS,"line");line.setAttribute("y1",4);line.setAttribute("y2",H-18);line.setAttribute("stroke","#8d96a8");line.setAttribute("stroke-dasharray","3 3");line.style.display="none";svg.append(line);
+  const dots=series.map(s=>{const c=document.createElementNS(NS,"circle");c.setAttribute("r",4);c.setAttribute("fill",s.color);c.setAttribute("stroke","#0a0e15");c.setAttribute("stroke-width",2);c.style.display="none";svg.append(c);return c});
+  const tip=el("div","tip");tip.hidden=true;holder.append(tip);
+  const move=e=>{const b=svg.getBoundingClientRect(),sx=(e.clientX-b.left)/b.width*W,i=Math.max(0,Math.min(n,Math.round((sx-P)/(W-P-R)*n)));
+    line.setAttribute("x1",X(i));line.setAttribute("x2",X(i));line.style.display="";
+    tip.innerHTML="";tip.append(el("div","muted",i+"'"));
+    series.forEach((s,k)=>{const v=s.values[i];if(v==null){dots[k].style.display="none";return}dots[k].setAttribute("cx",X(i));dots[k].setAttribute("cy",s.y(v));dots[k].style.display="";
+      const r=el("div");const d=el("i");d.style.background=s.color;r.append(d,el("b","num",s.fmt(v)),el("span","muted",s.name));tip.append(r)});
+    if(series.extra){const x=series.extra(i);if(x)tip.append(el("div","num gdiff",x))}
+    tip.hidden=false;const hb=holder.getBoundingClientRect(),px=X(i)/W*b.width+(b.left-hb.left);
+    tip.style.left=Math.min(px+12,hb.width-tip.offsetWidth-6)+"px";tip.style.top=(b.top-hb.top+6)+"px"};
+  svg.addEventListener("mousemove",move);svg.addEventListener("mouseleave",()=>{tip.hidden=true;line.style.display="none";dots.forEach(d=>d.style.display="none")});
+}
 // Bottom panel of the scoreboard: the selected player's gold vs lane opponent, and their kills/deaths on the map
 function selectSbPlayer(m,pi,g,initial){
   document.querySelectorAll("#mbody .sbr.sel").forEach(r=>r.classList.remove("sel"));
@@ -944,6 +966,9 @@ function selectSbPlayer(m,pi,g,initial){
     if(b)svg+=`<polyline points="${line(b)}" fill="none" stroke="#e5555f" stroke-width="2" opacity=".85"/>`;
     svg+=`<polyline points="${line(a)}" fill="none" stroke="#f0d79a" stroke-width="2.4"/></svg>`;
     gbox.insertAdjacentHTML("beforeend",svg);
+    {const sr=[{name:x.champ,color:"#f0d79a",values:a,y:Y,fmt:v=>Math.round(v).toLocaleString("en")+" g"}];
+     if(b){sr.push({name:opp.champ,color:"#e5555f",values:b,y:Y,fmt:v=>Math.round(v).toLocaleString("en")+" g"});sr.extra=i=>{const d=a[i]-b[i];return`${d>=0?"+":"−"}${Math.abs(Math.round(d)).toLocaleString("en")} g ${d>=0?"ahead":"behind"}`}}
+     goldHover(gbox,W,H,P,10,n,sr)}
     const lg=el("div","rlegend");const s1=el("span");const i1=el("i");i1.style.background="#f0d79a";s1.append(i1,x.champ);lg.append(s1);
     if(b){const s2=el("span");const i2=el("i");i2.style.background="#e5555f";s2.append(i2,opp.champ);lg.append(s2);
       const d15=a[15]!=null&&b[15]!=null?a[15]-b[15]:null,dEnd=a[n]-b[n];lg.append(el("span","num",`${d15!=null?`at 15': ${kfmt(d15)} · `:""}end: ${kfmt(dEnd)}`))}
