@@ -412,7 +412,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
 
 <section id="live" hidden>
   <div id="livegames"></div>
-  <p class="note">Ranks are each player's current Solo/Duo rank. "Against these enemy champions" counts your friend's race games where that champion was on the other team.</p>
+  <p class="note">Ranks are each player's current Solo/Duo rank. Roles are estimated (Riot doesn't share them during a game) from summoner spells and how often each champion is played in each role; the estimate is right for about 95% of players. "Against these enemy champions" counts your friend's race games where that champion was on the other team.</p>
 </section>
 
 <section id="standings" hidden>
@@ -490,6 +490,7 @@ const short=id=>id.split("#")[0];
 const el=(tag,cls,text)=>{const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e};
 const dot=c=>{const i=el("i");i.style.background=c;return i};
 const role=r=>({UTILITY:"Support",BOTTOM:"ADC",JUNGLE:"Jungle",MIDDLE:"Mid",TOP:"Top"})[r]||"";
+const ROLE_ORDER={TOP:0,JUNGLE:1,MIDDLE:2,BOTTOM:3,UTILITY:4},byRole=(a,b)=>(ROLE_ORDER[a.role]??9)-(ROLE_ORDER[b.role]??9);
 const dayKey=t=>{const d=new Date(t);d.setHours(0,0,0,0);return+d};
 const dayName=t=>{const k=dayKey(t),today=dayKey(Date.now());return k===today?"Today":k===dayKey(today-36e5)?"Yesterday":new Date(k).toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"short"})};
 
@@ -514,7 +515,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610071114";
+const BUILD="202610071313";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
@@ -898,7 +899,7 @@ async function openMatch(g){
   [...m.teams].sort((a,b)=>(b.id===myTeam)-(a.id===myTeam)).forEach(tm=>{
     const box=el("div","team "+(tm.win?"tw":"tl"));const th=el("div","thead");
     th.append(el("b",null,`${tm.win?"Victory":"Defeat"} · ${tm.id===myTeam?"Your team":"Enemy team"}`));
-    const tp=m.players.filter(x=>x.team===tm.id),sum=k=>tp.reduce((s,x)=>s+(x[k]||0),0);
+    const tp=m.players.filter(x=>x.team===tm.id).sort(byRole),sum=k=>tp.reduce((s,x)=>s+(x[k]||0),0);
     const ob=el("div","obj num");[["Kills",`${sum("k")}/${sum("d")}/${sum("a")}`],["Gold",(sum("gold")/1000).toFixed(1)+"k"],["Towers",tm.obj.tower],["Dragons",tm.obj.dragon],["Barons",tm.obj.baron],["Grubs",tm.obj.grubs]].forEach(([k,v])=>{const s=el("span",null,k+" ");s.append(el("b",null,v));ob.append(s)});
     th.append(ob);box.append(th);
     const tbl=el("div","sb");const hr=el("div","sbr sbh");["Player","Rating","KDA","@15","Damage","CS","Gold","Items"].forEach(x=>hr.append(el("span",null,x)));tbl.append(hr);
@@ -985,12 +986,12 @@ function renderLive(){
     const cols=el("div","lteams");
     teams.forEach(team=>{const col=el("div","lteam "+(team===myTeam?"ours":"theirs"));const a=avgRank(team);
       const th=el("div","lthead");th.append(el("b",null,team===myTeam?"Your team":"Enemy team"),el("span","muted num",a!=null?`avg ${label(Math.round(a))} · ${Math.round(a)%100} LP`:""));col.append(th);
-      live.players.filter(x=>x.team===team).forEach(x=>{const r=el("div","lrow2"+(x.tracked?" mine":""));
+      [...live.players.filter(x=>x.team===team)].sort(byRole).forEach(x=>{const r=el("div","lrow2"+(x.tracked?" mine":""));
         const ci=el("img","lchamp");ci.src=icon(champKey(x.champId));ci.alt=champName(x.champId);r.append(ci);
         const sp=el("div","sbs");x.spells.forEach(s=>{const a2=ASSETS?.spells[s];const i=el("img");if(a2){i.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/spell/${a2.img}`;i.title=a2.name}i.alt="";sp.append(i)});
         [x.rune,x.sub].forEach(id=>{const a2=ASSETS?.runes[id];const i=el("img","rn");if(a2){i.src=`https://ddragon.leagueoflegends.com/cdn/img/${a2.icon}`;i.title=a2.name}i.alt="";sp.append(i)});r.append(sp);
         const nm=el("div","lname");nm.append(el("b",null,(x.name||"Player").split("#")[0]));
-        const sub=el("div","ltags");sub.append(el("span","muted",champName(x.champId)));
+        const sub=el("div","ltags");sub.append(el("span","muted",champName(x.champId)+(x.role?" · "+role(x.role):"")));
         if(x.party){const t=el("span","ltag duo p"+((x.party-1)%3),"Duo");t.title="Queued together: "+live.players.filter(y=>y.party===x.party&&y!==x).map(y=>(y.name||"").split("#")[0]).join(", ");sub.append(t)}
         if(x.rank?.hot)sub.append(el("span","ltag hot","Win streak"));
         if(x.mastery){if(x.mastery.pts>=150000){const t=el("span","ltag otp",`${Math.round(x.mastery.pts/1000)}k mastery`);t.title="Champion mastery points on "+champName(x.champId);sub.append(t)}
