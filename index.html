@@ -330,6 +330,26 @@ main section>h2::after{content:"";flex:1;height:1px;background:linear-gradient(9
 .gsvg{height:120px}
 #goldbox{margin:6px 0 10px}
 .alert{border:1px solid #e5555f66;background:#e5555f14;color:#ffb3b3;border-radius:10px;padding:10px 14px;font-size:.9rem}
+/* Live tab */
+.livecount{display:inline-grid;place-items:center;min-width:17px;height:17px;padding:0 4px;border-radius:99px;background:var(--loss);color:#fff;font-size:.7rem;font-weight:700;vertical-align:1px}
+.liveempty{padding:22px 24px;display:grid;gap:6px}.liveempty p{margin:0 0 8px;max-width:70ch}
+.lastlist{display:grid;border-top:1px solid var(--line);margin-top:6px}.lastlist .mini{padding:8px 0}
+.livecard{margin-bottom:16px}
+.lhead{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line);background:linear-gradient(90deg,#e5555f1a,transparent 60%)}
+.lhead b{font-size:1.1rem}.ltimer{font-size:1.6rem;font-weight:700;color:#ff8a8a}
+.lteams{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line)}
+.lteam{background:var(--panel)}
+.lthead{display:flex;justify-content:space-between;align-items:baseline;padding:9px 16px;border-bottom:1px solid var(--line)}
+.ours .lthead b{color:#7fb2ff}.theirs .lthead b{color:#ff8a8a}
+.lrow2{display:grid;grid-template-columns:40px 34px minmax(0,1fr) minmax(150px,auto);gap:10px;align-items:center;padding:7px 16px;border-top:1px solid var(--line)}
+.lrow2:nth-child(2){border-top:0}.lrow2.mine{background:linear-gradient(90deg,#c8aa6e22,transparent 70%)}.lrow2.mine .lname b{color:var(--gold2)}
+.lchamp{width:40px;height:40px;border-radius:8px;background:var(--line)}
+.lname{display:grid;min-width:0}.lname b,.lname span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lname span{font-size:.78rem}
+.lrank{display:flex;align-items:center;gap:8px;justify-self:end}.lrank div{display:grid;text-align:right}.lrank b{font-size:.86rem}.lrank span{font-size:.74rem}
+.linsights{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.linsight{background:var(--panel2);padding:12px 16px;display:grid;gap:4px}.linsight p{margin:0}
+.lvs{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.86rem;font-weight:600}
+@media (max-width:900px){.lteams{grid-template-columns:1fr}}
 footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
 
 @media (max-width:760px){
@@ -345,6 +365,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
     <div class="brand"><h1>Climb Race</h1><span class="daypill num" id="daypill">Day –</span></div>
     <nav class="tabs" role="tablist">
       <button role="tab" data-tab="home" aria-selected="true">Home</button>
+      <button role="tab" data-tab="live" aria-selected="false">Live</button>
       <button role="tab" data-tab="standings" aria-selected="false">Standings</button>
       <button role="tab" data-tab="graph" aria-selected="false">LP graph</button>
       <button role="tab" data-tab="matches" aria-selected="false">Match history</button>
@@ -371,11 +392,16 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
       <div class="panel" style="margin-top:18px"><div class="shd"><span class="eyebrow">Latest games</span><span class="muted" style="font-size:.8rem">Click a game for the full scoreboard</span></div><div id="feed"></div></div>
     </div>
     <aside class="homeside">
-      <div class="panel side"><div class="shd"><span class="eyebrow">Live now</span></div><div id="livenow"></div></div>
+      <div class="panel side"><div class="shd"><span class="eyebrow">Live now</span><button class="lnk" onclick="show('live')">Live games ›</button></div><div id="livenow"></div></div>
       <div class="panel side"><div class="shd"><span class="eyebrow">Standings</span><button class="lnk" onclick="show('standings')">Full standings ›</button></div><div id="ministand"></div></div>
     </aside>
   </div>
 
+</section>
+
+<section id="live" hidden>
+  <div id="livegames"></div>
+  <p class="note">Ranks are each player's current Solo/Duo rank. "Against these enemy champions" counts your friend's race games where that champion was on the other team.</p>
 </section>
 
 <section id="standings" hidden>
@@ -468,7 +494,7 @@ const splash=c=>`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${c
 function perf(g){if(g.rating!=null)return g.rating*10+(g.win?.01:0);const m=Math.max(g.dur||1800,300)/60,kda=(g.k+g.a)/Math.max(1,g.d);
   return 2*Math.min(kda,10)+(g.kp||0)/12+(g.dmg||0)/m/180+(g.cs||0)/m*0.4+(g.vis||0)/m*1.2+(g.win?3:-1)+(g.multi>=3?2:0)+(g.penta||0)*6+(g.solo||0)*0.4-(g.d>=10?g.d-9:0)}
 
-const TABS=["home","standings","graph","matches","champions","h2h","records"];
+const TABS=["home","live","standings","graph","matches","champions","h2h","records"];
 function show(tab){document.querySelectorAll("[role=tab]").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
   TABS.forEach(id=>document.getElementById(id).hidden=id!==tab);window.scrollTo({top:0});history.replaceState(null,"","#"+tab);if(tab==="graph")renderGraph()}
 document.querySelectorAll("[role=tab]").forEach(b=>b.onclick=()=>show(b.dataset.tab));
@@ -477,7 +503,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610062350";
+const BUILD="202610070009";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
@@ -528,7 +554,7 @@ function renderAll(){
   const t0=Date.parse(DATA.raceStart),day=Math.round((dayKey(Date.now())-dayKey(t0))/864e5)+1;
   document.getElementById("daypill").textContent=`Day ${day}`;
   document.getElementById("sub").textContent=`Since ${new Date(t0).toLocaleDateString("en-GB",{day:"numeric",month:"long"})} · ${players.reduce((s,p)=>s+p.games.length,0)} games played · updated ${ago(Date.parse(DATA.updatedAt))} · ${Date.now()-Date.parse(DATA.updatedAt)>20*6e4?"updates are delayed":"updates every minute"}`;
-  for(const f of [renderHome,renderSpotlight,renderStandings,renderGraph,renderMatches,renderH2H,renderRecords,renderChamps,fitAll]){try{f()}catch(e){console.error(f.name,e)}}
+  for(const f of [renderLive,renderHome,renderSpotlight,renderStandings,renderGraph,renderMatches,renderH2H,renderRecords,renderChamps,fitAll]){try{f()}catch(e){console.error(f.name,e)}}
 }
 
 /* LP series, shared by graph, today and records */
@@ -924,6 +950,55 @@ function selectSbPlayer(m,pi,g,initial){
   row.append(mbox);panel.append(row);
   if(!initial)panel.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
+
+/* Live tab: every game a friend is in right now */
+const QUEUES={420:"Ranked Solo/Duo",440:"Ranked Flex",400:"Normal Draft",430:"Normal Blind",490:"Quickplay",450:"ARAM",1700:"Arena",1900:"URF"};
+const champName=id=>CHAMP[id]?.name||"?",champKey=id=>CHAMP[id]?.id||"";
+function liveGames(){const seen={},out=[];players.forEach(p=>{if(!liveBadge(p)||!p.live.players)return;const k=p.live.gameId||p.live.start;if(seen[k]){seen[k].friends.push(p);return}
+  seen[k]={live:p.live,friends:[p]};out.push(seen[k])});return out}
+function renderLive(){
+  const box=document.getElementById("livegames");if(!box||!DATA)return;
+  const games=liveGames(),btn=document.querySelector('[data-tab=live]');
+  if(btn){btn.textContent="Live";if(games.length){const d=el("span","livecount",games.length);btn.append(" ",d)}}
+  if(!ASSETS){assets().then(()=>renderLive());}
+  box.innerHTML="";
+  if(!games.length){const e=el("div","panel liveempty");e.append(el("b",null,"Nobody is in a game right now."),el("p","muted","When one of you starts a game, it shows up here within a minute: all 10 players, their ranks, and how your friend does against those champions."));
+    const last=el("div","lastlist");players.map(p=>({p,g:p.games[0]})).filter(x=>x.g).sort((a,b)=>b.g.at-a.g.at).forEach(({p,g})=>{const r=el("div","mini");r.append(avatar(p,28));const t=el("div");t.append(el("b",null,short(p.riotId)),el("span","muted",` last played ${ago(g.at)} · ${g.champ} · ${g.win?"Win":"Loss"}`));r.append(t);last.append(r)});
+    e.append(last);box.append(e);return}
+  games.forEach(({live,friends})=>{
+    const card=el("article","panel livecard"),myTeam=friends[0].live.team;
+    const head=el("div","lhead"),t=el("div");t.append(el("div","eyebrow",QUEUES[live.queue]||"Game"),el("b",null,friends.map(f=>short(f.riotId)).join(" & ")+" in game"));
+    const tm=el("div","ltimer num");tm.dataset.start=live.start;tm.textContent="–";head.append(t,tm);card.append(head);
+    // teams, friend's team first
+    const teams=[myTeam,myTeam===100?200:100],avgRank=team=>{const r=live.players.filter(x=>x.team===team&&x.rank).map(x=>score(x.rank));return r.length?r.reduce((a,b)=>a+b,0)/r.length:null};
+    const cols=el("div","lteams");
+    teams.forEach(team=>{const col=el("div","lteam "+(team===myTeam?"ours":"theirs"));const a=avgRank(team);
+      const th=el("div","lthead");th.append(el("b",null,team===myTeam?"Your team":"Enemy team"),el("span","muted num",a!=null?`avg ${label(Math.round(a))} · ${Math.round(a)%100} LP`:""));col.append(th);
+      live.players.filter(x=>x.team===team).forEach(x=>{const r=el("div","lrow2"+(x.tracked?" mine":""));
+        const ci=el("img","lchamp");ci.src=icon(champKey(x.champId));ci.alt=champName(x.champId);r.append(ci);
+        const sp=el("div","sbs");x.spells.forEach(s=>{const a2=ASSETS?.spells[s];const i=el("img");if(a2){i.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/spell/${a2.img}`;i.title=a2.name}i.alt="";sp.append(i)});
+        [x.rune,x.sub].forEach(id=>{const a2=ASSETS?.runes[id];const i=el("img","rn");if(a2){i.src=`https://ddragon.leagueoflegends.com/cdn/img/${a2.icon}`;i.title=a2.name}i.alt="";sp.append(i)});r.append(sp);
+        const nm=el("div","lname");nm.append(el("b",null,(x.name||"Player").split("#")[0]),el("span","muted",champName(x.champId)));r.append(nm);
+        const fr=x.tracked&&players.find(q=>q.riotId===x.tracked);if(fr?.current)x={...x,rank:fr.current};
+        const rk=el("div","lrank num");if(x.rank){rk.append(emblem(x.rank.tier,20));const tx=el("div");const gms=x.rank.wins+x.rank.losses;tx.append(el("b",null,fmt(x.rank)),el("span","muted",`${Math.round(x.rank.wins/Math.max(1,gms)*100)}% · ${gms} games`));rk.append(tx)}
+        else rk.append(el("span","muted",x.rank===null?"Unranked":"…"));r.append(rk);col.append(r)});
+      cols.append(col)});
+    card.append(cols);
+    // what the race data says, for each friend in this game
+    const ins=el("div","linsights");
+    friends.forEach(f=>{const me=live.players.find(x=>x.tracked===f.riotId);if(!me)return;const mine=champName(me.champId),c=el("div","linsight");
+      c.append(el("div","eyebrow",short(f.riotId)+" on "+mine));
+      const on=f.games.filter(g=>g.champ===champKey(me.champId)),rt=on.filter(g=>g.rating!=null);
+      c.append(el("p",null,on.length?`${on.length} race game${on.length>1?"s":""} on ${mine}: ${on.filter(g=>g.win).length}W ${on.filter(g=>!g.win).length}L${rt.length?`, ${(rt.reduce((s,g)=>s+g.rating,0)/rt.length).toFixed(1)} avg rating`:""}.`:`First race game on ${mine}.`));
+      const enemies=live.players.filter(x=>x.team!==me.team),vs=enemies.map(x=>{const k=champKey(x.champId),gs=f.games.filter(g=>(g.vs||[]).includes(k));return{name:champName(x.champId),n:gs.length,w:gs.filter(g=>g.win).length}}).filter(v=>v.n);
+      if(vs.length){const l=el("div","lvs");vs.sort((a,b)=>b.n-a.n).forEach(v=>{const s2=el("span","num",`${v.name} ${v.w}W ${v.n-v.w}L`);s2.style.color=wrCol(v.w/v.n);l.append(s2)});c.append(el("small","muted","Against these enemy champions this race:"),l)}
+      else c.append(el("small","muted","Hasn't faced any of these enemy champions during the race."));
+      ins.append(c)});
+    card.append(ins);box.append(card)});
+  tickTimers();
+}
+function tickTimers(){document.querySelectorAll(".ltimer").forEach(e=>{const s=Math.max(0,Math.floor((Date.now()-(+e.dataset.start))/1000));e.textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`})}
+setInterval(tickTimers,1000);
 
 /* Champions tab: global pool + totals + matchups */
 let cFilter="all",cSort={k:"n",dir:-1},cOpen=null;
