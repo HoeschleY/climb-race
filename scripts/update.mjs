@@ -152,14 +152,31 @@ for (const p of cfg.players) {
         live.players = [];
         for (const x of g.participants) {
           const k = known.find(y => y.name === (x.riotId || "") && y.champId === x.championId);
-          let rank = k?.rank;
-          if (rank === undefined && !x.bot && x.puuid) {
-            try { const e = (await riot(cfg.platform, `/lol/league/v4/entries/by-puuid/${x.puuid}`) || []).find(z => z.queueType === "RANKED_SOLO_5x5");
-              rank = e ? { tier: e.tier, division: e.rank, lp: e.leaguePoints, wins: e.wins, losses: e.losses } : null; } catch { rank = undefined; }
+          let rank = k?.rank, mastery = k?.mastery, recent = undefined;
+          if (!x.bot && x.puuid) {
+            if (rank === undefined) try { const e = (await riot(cfg.platform, `/lol/league/v4/entries/by-puuid/${x.puuid}`) || []).find(z => z.queueType === "RANKED_SOLO_5x5");
+              rank = e ? { tier: e.tier, division: e.rank, lp: e.leaguePoints, wins: e.wins, losses: e.losses, hot: !!e.hotStreak } : null; } catch { rank = undefined; }
+            // Mastery on the champion they're playing (one-trick or first time?)
+            if (mastery === undefined) try { const mm = await riot(cfg.platform, `/lol/champion-mastery/v4/champion-masteries/by-puuid/${x.puuid}/by-champion/${x.championId}`);
+              mastery = mm ? { pts: mm.championPoints, lvl: mm.championLevel } : { pts: 0, lvl: 0 }; } catch { mastery = undefined; }
+            // Recent match ids, only used below to spot premades (not saved)
+            if (k?.party === undefined) try { recent = await riot(cfg.region, `/lol/match/v5/matches/by-puuid/${x.puuid}/ids?count=20`) || []; } catch { recent = undefined; }
           }
           live.players.push({ name: x.riotId || "", champId: x.championId, team: x.teamId, spells: [x.spell1Id, x.spell2Id],
-            rune: x.perks?.perkIds?.[0] ?? null, sub: x.perks?.perkSubStyle ?? null, tracked: tracked[x.puuid] || null, rank });
+            rune: x.perks?.perkIds?.[0] ?? null, sub: x.perks?.perkSubStyle ?? null, tracked: tracked[x.puuid] || null, rank, mastery,
+            party: k?.party, _recent: recent });
         }
+        if (live.players.some(x => x.party === undefined)) {
+          const P = live.players, parent = P.map((_, i) => i), find = i => parent[i] === i ? i : (parent[i] = find(parent[i]));
+          for (let i = 0; i < P.length; i++) for (let j = i + 1; j < P.length; j++) {
+            if (P[i].team !== P[j].team || !P[i]._recent || !P[j]._recent) continue;
+            const shared = P[i]._recent.filter(id => P[j]._recent.includes(id)).length;
+            if (shared >= 2) parent[find(i)] = find(j);
+          }
+          const groups = {}; P.forEach((x, i) => { (groups[find(i)] = groups[find(i)] || []).push(i); });
+          let n = 0; Object.values(groups).forEach(g => { const id = g.length > 1 ? ++n : null; g.forEach(i => { if (P[i]._recent !== undefined) P[i].party = id; }); });
+        }
+        live.players.forEach(x => delete x._recent);
       }
     } catch (e) { liveErr = e.message; console.error(`live check failed for ${p.riotId}: ${e.message}`); }
 
