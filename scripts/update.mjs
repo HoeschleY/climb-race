@@ -143,8 +143,24 @@ for (const p of cfg.players) {
     try {
       const g = await riot(cfg.platform, `/lol/spectator/v5/active-games/by-summoner/${puuid}`);
       const me = g?.participants?.find(x => x.puuid === puuid);
-      if (g && me) live = { champId: me.championId, queue: g.gameQueueConfigId, start: g.gameStartTime || Date.now(),
-        mates: g.participants.filter(x => x.puuid !== puuid && tracked[x.puuid]).map(x => ({ id: tracked[x.puuid], same: x.teamId === me.teamId })) };
+      if (g && me) {
+        live = { gameId: g.gameId, champId: me.championId, team: me.teamId, queue: g.gameQueueConfigId, start: g.gameStartTime || Date.now(),
+          mates: g.participants.filter(x => x.puuid !== puuid && tracked[x.puuid]).map(x => ({ id: tracked[x.puuid], same: x.teamId === me.teamId })),
+          bans: (g.bannedChampions || []).filter(b => b.championId > 0).map(b => [b.championId, b.teamId]) };
+        // All 10 players. Ranks are looked up once per game (reused while the game lasts) and shared between friends in the same game.
+        const known = prev.live?.gameId === g.gameId ? prev.live.players || [] : (Object.values(out.players).find(o => o.live?.gameId === g.gameId)?.live?.players || []);
+        live.players = [];
+        for (const x of g.participants) {
+          const k = known.find(y => y.name === (x.riotId || "") && y.champId === x.championId);
+          let rank = k?.rank;
+          if (rank === undefined && !x.bot && x.puuid) {
+            try { const e = (await riot(cfg.platform, `/lol/league/v4/entries/by-puuid/${x.puuid}`) || []).find(z => z.queueType === "RANKED_SOLO_5x5");
+              rank = e ? { tier: e.tier, division: e.rank, lp: e.leaguePoints, wins: e.wins, losses: e.losses } : null; } catch { rank = undefined; }
+          }
+          live.players.push({ name: x.riotId || "", champId: x.championId, team: x.teamId, spells: [x.spell1Id, x.spell2Id],
+            rune: x.perks?.perkIds?.[0] ?? null, sub: x.perks?.perkSubStyle ?? null, tracked: tracked[x.puuid] || null, rank });
+        }
+      }
     } catch (e) { liveErr = e.message; console.error(`live check failed for ${p.riotId}: ${e.message}`); }
 
     // Ghost games: Riot's live service sometimes keeps reporting a finished game.
