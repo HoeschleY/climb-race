@@ -350,6 +350,17 @@ main section>h2::after{content:"";flex:1;height:1px;background:linear-gradient(9
 .linsight{background:var(--panel2);padding:12px 16px;display:grid;gap:4px}.linsight p{margin:0}
 .lvs{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:.86rem;font-weight:600}
 @media (max-width:900px){.lteams{grid-template-columns:1fr}}
+.ltags{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;font-size:.78rem}
+.ltag{font:600 .62rem var(--body);letter-spacing:.06em;text-transform:uppercase;padding:1px 6px;border-radius:4px;white-space:nowrap}
+.ltag.duo.p0{background:#7593e633;color:#b3c6ff}.ltag.duo.p1{background:#a85ddb33;color:#dbb3ff}.ltag.duo.p2{background:#2eaa6c33;color:#9be7c4}
+.ltag.hot{background:#ef7a3c33;color:#ffb38a}.ltag.otp{background:#f2c65a26;color:#f2c65a}.ltag.new{background:#ffffff14;color:var(--muted)}
+.scout{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border-top:1px solid var(--line)}
+.scol{background:var(--panel);padding:12px 16px;display:grid;gap:8px;align-content:start}.scol.danger .eyebrow{color:#ff8a8a}.scol.weak .eyebrow{color:var(--win)}
+.scol p{margin:0}
+.srow{display:grid;grid-template-columns:32px 1fr;gap:10px;align-items:center}.srow img{width:32px;height:32px;border-radius:6px;background:var(--line)}
+.srow div{display:grid}.srow span{font-size:.82rem;color:var(--muted)}
+.sfoot{grid-column:1/-1;background:var(--panel);margin:0;padding:8px 16px}
+@media (max-width:900px){.scout{grid-template-columns:1fr}}
 footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
 
 @media (max-width:760px){
@@ -503,7 +514,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610070009";
+const BUILD="202610071114";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 async function getFile(path){
@@ -978,12 +989,19 @@ function renderLive(){
         const ci=el("img","lchamp");ci.src=icon(champKey(x.champId));ci.alt=champName(x.champId);r.append(ci);
         const sp=el("div","sbs");x.spells.forEach(s=>{const a2=ASSETS?.spells[s];const i=el("img");if(a2){i.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/spell/${a2.img}`;i.title=a2.name}i.alt="";sp.append(i)});
         [x.rune,x.sub].forEach(id=>{const a2=ASSETS?.runes[id];const i=el("img","rn");if(a2){i.src=`https://ddragon.leagueoflegends.com/cdn/img/${a2.icon}`;i.title=a2.name}i.alt="";sp.append(i)});r.append(sp);
-        const nm=el("div","lname");nm.append(el("b",null,(x.name||"Player").split("#")[0]),el("span","muted",champName(x.champId)));r.append(nm);
-        const fr=x.tracked&&players.find(q=>q.riotId===x.tracked);if(fr?.current)x={...x,rank:fr.current};
+        const nm=el("div","lname");nm.append(el("b",null,(x.name||"Player").split("#")[0]));
+        const sub=el("div","ltags");sub.append(el("span","muted",champName(x.champId)));
+        if(x.party){const t=el("span","ltag duo p"+((x.party-1)%3),"Duo");t.title="Queued together: "+live.players.filter(y=>y.party===x.party&&y!==x).map(y=>(y.name||"").split("#")[0]).join(", ");sub.append(t)}
+        if(x.rank?.hot)sub.append(el("span","ltag hot","Win streak"));
+        if(x.mastery){if(x.mastery.pts>=150000){const t=el("span","ltag otp",`${Math.round(x.mastery.pts/1000)}k mastery`);t.title="Champion mastery points on "+champName(x.champId);sub.append(t)}
+          else if(x.mastery.pts<10000){const t=el("span","ltag new","New on champ");t.title=`Only ${x.mastery.pts.toLocaleString("en")} mastery points on ${champName(x.champId)}`;sub.append(t)}}
+        nm.append(sub);r.append(nm);
+        const fr=x.tracked&&players.find(q=>q.riotId===x.tracked);if(fr?.current)x={...x,rank:{...fr.current,hot:x.rank?.hot}};
         const rk=el("div","lrank num");if(x.rank){rk.append(emblem(x.rank.tier,20));const tx=el("div");const gms=x.rank.wins+x.rank.losses;tx.append(el("b",null,fmt(x.rank)),el("span","muted",`${Math.round(x.rank.wins/Math.max(1,gms)*100)}% · ${gms} games`));rk.append(tx)}
         else rk.append(el("span","muted",x.rank===null?"Unranked":"…"));r.append(rk);col.append(r)});
       cols.append(col)});
     card.append(cols);
+    card.append(scoutPanel(live,myTeam));
     // what the race data says, for each friend in this game
     const ins=el("div","linsights");
     friends.forEach(f=>{const me=live.players.find(x=>x.tracked===f.riotId);if(!me)return;const mine=champName(me.champId),c=el("div","linsight");
@@ -997,6 +1015,29 @@ function renderLive(){
     card.append(ins);box.append(card)});
   tickTimers();
 }
+// Scouting: who on the enemy team is dangerous, and where they're weak. Each reason comes from Riot data.
+function scoutPanel(live,myTeam){
+  const P=live.players.map(x=>{const fr=x.tracked&&players.find(q=>q.riotId===x.tracked);return fr?.current?{...x,rank:{...fr.current,hot:x.rank?.hot}}:x});
+  const ranked=P.filter(x=>x.rank).map(x=>score(x.rank)),avg=ranked.length?ranked.reduce((a,b)=>a+b,0)/ranked.length:null;
+  const enemies=P.filter(x=>x.team!==myTeam).map(x=>{const why=[],weak=[];let t=0;const nm=(x.name||"Player").split("#")[0],ch=champName(x.champId);
+    if(x.rank?.hot){t+=2;why.push("on a win streak")}
+    if(x.mastery?.pts>=200000){t+=2;why.push(`one-trick (${Math.round(x.mastery.pts/1000)}k mastery on ${ch})`)}else if(x.mastery?.pts>=75000){t+=1;why.push(`experienced on ${ch} (${Math.round(x.mastery.pts/1000)}k mastery)`)}
+    if(x.rank&&avg!=null){const d=score(x.rank)-avg;if(d>=100){t+=Math.min(3,Math.floor(d/100));why.push(`${fmt(x.rank)}, above the lobby average`)}else if(d<=-150)weak.push(`${fmt(x.rank)}, below the lobby average`)}
+    const gms=x.rank?x.rank.wins+x.rank.losses:0,wr=gms?x.rank.wins/gms:0;
+    if(gms>=40&&wr>=.56){t+=1;why.push(`${Math.round(wr*100)}% win rate over ${gms} games`)}else if(gms>=40&&wr<=.45)weak.push(`${Math.round(wr*100)}% win rate over ${gms} games`);
+    if(x.party){t+=1;why.push("playing as a duo with "+P.filter(y=>y.party===x.party&&y!==x).map(y=>(y.name||"").split("#")[0]).join(", "))}
+    if(x.mastery&&x.mastery.pts<10000)weak.push(`only ${x.mastery.pts.toLocaleString("en")} mastery points on ${ch}, probably new on it`);
+    if(x.rank===null)weak.push("unranked in Solo/Duo");
+    return{x,nm,ch,t,why,weak}});
+  const box=el("div","scout");
+  const threats=enemies.filter(e=>e.t>=2).sort((a,b)=>b.t-a.t),weakest=enemies.filter(e=>e.weak.length).sort((a,b)=>b.weak.length-a.weak.length);
+  const col=(title,cls,list,key,empty)=>{const c=el("div","scol "+cls);c.append(el("div","eyebrow",title));
+    if(!list.length)c.append(el("p","muted",empty));
+    list.slice(0,3).forEach(e=>{const r=el("div","srow");const im=el("img");im.src=icon(champKey(e.x.champId));im.alt="";r.append(im);const t=el("div");t.append(el("b",null,`${e.nm} · ${e.ch}`),el("span",null,e[key].join(" · ")));r.append(t);c.append(r)});return c};
+  box.append(col("Watch out for","danger",threats,"why","No standout threat on the enemy team."),col("Where they're weak","weak",weakest,"weak","No obvious weak spot on the enemy team."));
+  const ourDuos=new Set(P.filter(x=>x.team===myTeam&&x.party).map(x=>x.party)).size,theirDuos=new Set(P.filter(x=>x.team!==myTeam&&x.party).map(x=>x.party)).size;
+  box.append(el("p","note sfoot",`Premades: ${ourDuos?ourDuos+" on your team":"none on your team"}, ${theirDuos?theirDuos+" on the enemy team":"none on the enemy team"}. Duos are spotted from shared recent games, so a pair that rarely plays together can be missed.`));
+  return box}
 function tickTimers(){document.querySelectorAll(".ltimer").forEach(e=>{const s=Math.max(0,Math.floor((Date.now()-(+e.dataset.start))/1000));e.textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`})}
 setInterval(tickTimers,1000);
 
