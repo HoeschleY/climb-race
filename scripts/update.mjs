@@ -59,6 +59,43 @@ function scoreboard(m) {
   };
 }
 
+// ---- Live-game role guessing: Riot doesn't give roles during a game ----
+const ROLES = ["TOP", "JUNGLE", "MIDDLE", "BOTTOM", "UTILITY"];
+let roleTable = null, champNames = null;
+async function loadRoleData() {
+  if (roleTable) return;
+  roleTable = {};
+  try {
+    const { readdir } = await import("node:fs/promises");
+    for (const f of await readdir("matches")) {
+      try { for (const x of JSON.parse(await readFile(`matches/${f}`, "utf8")).players) if (ROLES.includes(x.role)) {
+        const t = roleTable[x.champ] = roleTable[x.champ] || {}; t[x.role] = (t[x.role] || 0) + 1; } } catch {}
+    }
+  } catch {}
+  try {
+    const v = (await (await fetch("https://ddragon.leagueoflegends.com/api/versions.json", { signal: AbortSignal.timeout(8000) })).json())[0];
+    const c = await (await fetch(`https://ddragon.leagueoflegends.com/cdn/${v}/data/en_US/champion.json`, { signal: AbortSignal.timeout(8000) })).json();
+    champNames = Object.fromEntries(Object.values(c.data).map(x => [x.key, x.id]));
+  } catch { champNames = {}; }
+}
+// Summoner spells nudge the guess: Smite = jungle, Teleport = top/mid, Heal = ADC, Exhaust = support...
+const SPELL_HINT = { 11: { JUNGLE: 40, TOP: .03, MIDDLE: .03, BOTTOM: .03, UTILITY: .03 }, 12: { TOP: 3, MIDDLE: 1.5 }, 7: { BOTTOM: 3 },
+  3: { UTILITY: 2.5 }, 14: { UTILITY: 1.6, MIDDLE: 1.4, TOP: 1.2 }, 21: { MIDDLE: 1.5, BOTTOM: 1.5 }, 1: { BOTTOM: 1.5, MIDDLE: 1.2 } };
+function guessRoles(team) {
+  const like = team.map(x => {
+    const t = roleTable[champNames[x.champId]] || {}, n = Object.values(t).reduce((a, b) => a + b, 0);
+    return ROLES.map(r => { let p = ((t[r] || 0) + 0.4) / (n + 2); for (const s of x.spells || []) p *= SPELL_HINT[s]?.[r] ?? 1; return Math.log(p); });
+  });
+  // best assignment of the 5 roles (5! = 120 options)
+  let best = null, bestScore = -Infinity;
+  const perm = (left, chosen) => {
+    if (!left.length) { const sc = chosen.reduce((a, r, i) => a + like[i][r], 0); if (sc > bestScore) { bestScore = sc; best = chosen; } return; }
+    left.forEach((r, k) => perm(left.filter((_, j) => j !== k), [...chosen, r]));
+  };
+  if (team.length === 5) perm([0, 1, 2, 3, 4], []);
+  team.forEach((x, i) => { x.role = best ? ROLES[best[i]] : null; });
+}
+
 const rankOf = r => ({ tier: r.tier, division: r.division, lp: r.lp });
 
 const tracked = {}; // puuid -> riotId, for head-to-head
@@ -164,7 +201,7 @@ for (const p of cfg.players) {
           }
           live.players.push({ name: x.riotId || "", champId: x.championId, team: x.teamId, spells: [x.spell1Id, x.spell2Id],
             rune: x.perks?.perkIds?.[0] ?? null, sub: x.perks?.perkSubStyle ?? null, tracked: tracked[x.puuid] || null, rank, mastery,
-            party: k?.party, _recent: recent });
+            party: k?.party, role: k?.role, _recent: recent });
         }
         if (live.players.some(x => x.party === undefined)) {
           const P = live.players, parent = P.map((_, i) => i), find = i => parent[i] === i ? i : (parent[i] = find(parent[i]));
@@ -177,6 +214,7 @@ for (const p of cfg.players) {
           let n = 0; Object.values(groups).forEach(g => { const id = g.length > 1 ? ++n : null; g.forEach(i => { if (P[i]._recent !== undefined) P[i].party = id; }); });
         }
         live.players.forEach(x => delete x._recent);
+        if (live.players.some(x => !x.role)) { await loadRoleData(); [100, 200].forEach(t => guessRoles(live.players.filter(x => x.team === t))); }
       }
     } catch (e) { liveErr = e.message; console.error(`live check failed for ${p.riotId}: ${e.message}`); }
 
