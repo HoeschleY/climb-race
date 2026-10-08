@@ -363,6 +363,8 @@ main section>h2::after{content:"";flex:1;height:1px;background:linear-gradient(9
 @media (max-width:900px){.scout{grid-template-columns:1fr}}
 .ghold{position:relative}.ghold svg{cursor:crosshair}
 .gdiff{border-top:1px solid var(--line);margin-top:4px;padding-top:4px;font-weight:600}
+.rchips{margin-top:-4px}.rchips button{padding:4px 12px;font-size:.8rem}.rchips small{margin-left:6px;opacity:.65}
+.rnote{font-size:.8rem}
 footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padding-top:14px}
 
 @media (max-width:760px){
@@ -431,6 +433,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
 
 <section id="matches" hidden>
   <div class="chips" id="pchips"></div>
+  <div class="chips rchips" id="rchips"></div>
   <div class="panel" id="mlist"></div>
 </section>
 
@@ -496,7 +499,7 @@ const ROLE_ORDER={TOP:0,JUNGLE:1,MIDDLE:2,BOTTOM:3,UTILITY:4},byRole=(a,b)=>(ROL
 const dayKey=t=>{const d=new Date(t);d.setHours(0,0,0,0);return+d};
 const dayName=t=>{const k=dayKey(t),today=dayKey(Date.now());return k===today?"Today":k===dayKey(today-36e5)?"Yesterday":new Date(k).toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"short"})};
 
-let DATA=null,players=[],ddv="15.1.1",selected=null,gmode="time";
+let roleSel="all",DATA=null,players=[],ddv="15.1.1",selected=null,gmode="time";
 let CHAMP={};
 fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(r=>r.json()).then(v=>{ddv=v[0];
   return fetch(`https://ddragon.leagueoflegends.com/cdn/${ddv}/data/en_US/champion.json`).then(r=>r.json()).then(c=>{for(const x of Object.values(c.data))CHAMP[x.key]={id:x.id,name:x.name}})})
@@ -517,7 +520,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610071339";
+const BUILD="202610081828";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/",RAW="https://raw.githubusercontent.com/HoeschleY/climb-race/data/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 // Data lives on the "data" branch. data.json: GitHub API with an ETag (unchanged checks are free), raw file as backup.
@@ -708,7 +711,13 @@ function renderMatches(){
   if(!players.length)return;if(!players.find(p=>p.riotId===selected))selected=players[0].riotId;
   const chips=document.getElementById("pchips");chips.innerHTML="";
   players.forEach(p=>{const b=el("button");b.append(dot(p.color),short(p.riotId));b.setAttribute("aria-pressed",p.riotId===selected);b.onclick=()=>{selected=p.riotId;renderMatches()};chips.append(b)});
-  const p=players.find(p=>p.riotId===selected),list=document.getElementById("mlist");list.innerHTML="";
+  const full=players.find(p=>p.riotId===selected),list=document.getElementById("mlist");list.innerHTML="";
+  // role filter: only roles this player has played, in lane order
+  const played=Object.keys(ROLE_ORDER).filter(r=>full.games.some(g=>g.role===r));if(roleSel!=="all"&&!played.includes(roleSel))roleSel="all";
+  const rc=document.getElementById("rchips");rc.innerHTML="";
+  [["all","All roles"],...played.map(r=>[r,role(r)])].forEach(([k,l])=>{const b=el("button",null,l);const c=k==="all"?full.games.length:full.games.filter(g=>g.role===k).length;b.append(el("small","num",c));
+    b.setAttribute("aria-pressed",roleSel===k);b.onclick=()=>{roleSel=k;renderMatches()};rc.append(b)});
+  let p=full;if(roleSel!=="all"){const gs=full.games.filter(g=>g.role===roleSel),w=gs.filter(g=>g.win).length;p={...full,games:gs,w,l:gs.length-w}}
   if(!p.games.length){list.append(el("div","empty","No ranked Solo/Duo games since the race started."));return}
   const n=p.games.length,sum=k=>p.games.reduce((s,g)=>s+(g[k]||0),0),mins=sum("dur")/60,ps=pstats(p);
   const hdr=el("div","phdr");
@@ -717,6 +726,7 @@ function renderMatches(){
   const nm=el("div","pname2",short(p.riotId)+" ");nm.append(el("small",null,"#"+p.riotId.split("#")[1]));it.append(nm);
   const rk=el("div","prank2");rk.append(emblem(p.current?.tier,24),fmt(p.current));it.append(rk);
   it.append(el("div","pgain2 num "+(p.gain>0?"up":p.gain<0?"down":""),p.gain==null?"–":sgn(p.gain)+" LP since the start"));
+  if(roleSel!=="all")it.append(el("div","muted rnote",`${role(roleSel)} only · ${p.games.length} of ${full.games.length} games`));
   id.append(it);hdr.append(id);
   // 8 stats, two even rows
   const kda=sum("d")?((sum("k")+sum("a"))/sum("d")).toFixed(2):"Perfect";
