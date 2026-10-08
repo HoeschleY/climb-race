@@ -63,7 +63,7 @@ function scoreboard(m) {
 
 // ---- Live-game role guessing: Riot doesn't give roles during a game ----
 const ROLES = ["TOP", "JUNGLE", "MIDDLE", "BOTTOM", "UTILITY"];
-let roleTable = null, champNames = null;
+let roleTable = null, champNames = null, champTags = {};
 async function loadRoleData() {
   if (roleTable) return;
   roleTable = {};
@@ -78,15 +78,25 @@ async function loadRoleData() {
     const v = (await (await fetch("https://ddragon.leagueoflegends.com/api/versions.json", { signal: AbortSignal.timeout(8000) })).json())[0];
     const c = await (await fetch(`https://ddragon.leagueoflegends.com/cdn/${v}/data/en_US/champion.json`, { signal: AbortSignal.timeout(8000) })).json();
     champNames = Object.fromEntries(Object.values(c.data).map(x => [x.key, x.id]));
+    champTags = Object.fromEntries(Object.values(c.data).map(x => [x.id, x.tags || []]));
   } catch { champNames = {}; }
 }
 // Summoner spells nudge the guess: Smite = jungle, Teleport = top/mid, Heal = ADC, Exhaust = support...
 const SPELL_HINT = { 11: { JUNGLE: 40, TOP: .03, MIDDLE: .03, BOTTOM: .03, UTILITY: .03 }, 12: { TOP: 3, MIDDLE: 1.5 }, 7: { BOTTOM: 3 },
   3: { UTILITY: 2.5 }, 14: { UTILITY: 1.6, MIDDLE: 1.4, TOP: 1.2 }, 21: { MIDDLE: 1.5, BOTTOM: 1.5 }, 1: { BOTTOM: 1.5, MIDDLE: 1.2 } };
+const TAG_HINT = { Marksman: { BOTTOM: 4 }, Support: { UTILITY: 4 }, Mage: { MIDDLE: 2, UTILITY: 1.3 }, Assassin: { MIDDLE: 2.5, JUNGLE: 1.3 },
+  Fighter: { TOP: 2, JUNGLE: 1.6 }, Tank: { TOP: 1.8, UTILITY: 1.4, JUNGLE: 1.4 } };
 function guessRoles(team) {
   const like = team.map(x => {
     const t = roleTable[champNames[x.champId]] || {}, n = Object.values(t).reduce((a, b) => a + b, 0);
-    return ROLES.map(r => { let p = ((t[r] || 0) + 0.4) / (n + 2); for (const s of x.spells || []) p *= SPELL_HINT[s]?.[r] ?? 1; return Math.log(p); });
+    const champ = champNames[x.champId], tags = champTags[champ] || [];
+    return ROLES.map(r => {
+      let p = ((t[r] || 0) + 0.4) / (n + 2);
+      if (n < 3) for (const tg of tags.slice(0, 1)) p *= TAG_HINT[tg]?.[r] ?? 1;          // champion rarely seen: use its class
+      for (const s of x.spells || []) p *= SPELL_HINT[s]?.[r] ?? 1;                        // Smite, Teleport, Heal...
+      if (x.usual) p *= Math.pow(((x.usual[r] || 0) + 0.3) / (x.usual._n + 1.5), 1.5) * 5;  // the role this player usually plays
+      return Math.log(p);
+    });
   });
   // best assignment of the 5 roles (5! = 120 options)
   let best = null, bestScore = -Infinity;
@@ -199,11 +209,20 @@ for (const p of cfg.players) {
             if (mastery === undefined) try { const mm = await riot(cfg.platform, `/lol/champion-mastery/v4/champion-masteries/by-puuid/${x.puuid}/by-champion/${x.championId}`);
               mastery = mm ? { pts: mm.championPoints, lvl: mm.championLevel } : { pts: 0, lvl: 0 }; } catch { mastery = undefined; }
             // Recent match ids, only used below to spot premades (not saved)
-            if (k?.party === undefined) try { recent = await riot(cfg.region, `/lol/match/v5/matches/by-puuid/${x.puuid}/ids?count=20`) || []; } catch { recent = undefined; }
+            if (k?.party === undefined) try { recent = await riot(cfg.region, `/lol/match/v5/matches/by-puuid/${x.puuid}/ids?type=ranked&count=20`) || []; } catch { recent = undefined; }
           }
           live.players.push({ name: x.riotId || "", champId: x.championId, team: x.teamId, spells: [x.spell1Id, x.spell2Id],
             rune: x.perks?.perkIds?.[0] ?? null, sub: x.perks?.perkSubStyle ?? null, tracked: tracked[x.puuid] || null, rank, mastery,
-            party: k?.party, role: k?.role, _recent: recent });
+            party: k?.party, role: k?.role, usual: k?.usual, _recent: recent });
+          const me2 = live.players[live.players.length - 1];
+          if (me2.usual === undefined && !x.bot) {
+            const fr = tracked[x.puuid] && (out.players[tracked[x.puuid]] || old.players?.[tracked[x.puuid]]);
+            if (fr) { const u = { _n: 0 }; for (const m of Object.values(fr.matches || {})) if (m.role) { u[m.role] = (u[m.role] || 0) + 1; u._n++; } me2.usual = u._n ? u : null; }
+            else if (recent?.length) try {
+              const md = await riot(cfg.region, `/lol/match/v5/matches/${recent[0]}`), pos = md?.info?.participants?.find(y => y.puuid === x.puuid)?.teamPosition;
+              me2.usual = pos ? { [pos]: 1, _n: 1 } : null;
+            } catch { me2.usual = undefined; }
+          }
         }
         if (live.players.some(x => x.party === undefined)) {
           const P = live.players, parent = P.map((_, i) => i), find = i => parent[i] === i ? i : (parent[i] = find(parent[i]));
@@ -216,7 +235,9 @@ for (const p of cfg.players) {
           let n = 0; Object.values(groups).forEach(g => { const id = g.length > 1 ? ++n : null; g.forEach(i => { if (P[i]._recent !== undefined) P[i].party = id; }); });
         }
         live.players.forEach(x => delete x._recent);
-        if (live.players.some(x => !x.role)) { await loadRoleData(); [100, 200].forEach(t => guessRoles(live.players.filter(x => x.team === t))); }
+        {   // roles: recomputed each round (no Riot requests), so new "usual role" info is used as soon as it arrives
+          await loadRoleData(); [100, 200].forEach(t => guessRoles(live.players.filter(x => x.team === t)));
+        }
       }
     } catch (e) { liveErr = e.message; console.error(`live check failed for ${p.riotId}: ${e.message}`); }
 
