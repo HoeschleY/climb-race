@@ -45,13 +45,39 @@ h4 span{color:var(--teal);font-variant-numeric:tabular-nums}
 .form{color:var(--mut);font-size:11px;padding:0 0 2px 28px}
 a.ext{color:var(--teal);text-decoration:none;font-size:11px}
 .hint{color:var(--mut);font-size:10px;padding:4px 8px}
+#live.compact .form,#live.compact .why{display:none}
+#mode{max-width:96px}
+.pv{background:#3a2a10;color:#ffcf8a;font-size:10px;padding:2px 8px;text-align:center}
+.drow{display:flex;align-items:center;gap:6px;padding:2px 0}
+.drow img{width:26px;height:26px;border-radius:3px;background:#1d2430;flex:none}
+.drow img.hv{opacity:.45;outline:1px dashed var(--mut)}
+.drow .n{flex:1;min-width:0}
+.drow .n b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.drow .n small{color:var(--mut);display:block;font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chips{display:flex;flex-wrap:wrap;gap:3px;margin-top:1px}
+.chip{font-size:9.5px;padding:0 4px;border-radius:3px;background:#1d2a33;color:#9fd8d2}
+.chip.bad{background:#3a1d22;color:#ffb3b8}
+.sc{font-variant-numeric:tabular-nums;color:var(--gold);font-weight:700;width:26px;text-align:right}
+.picks{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.picks .col h5{margin:0 0 2px;font-size:9.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
+.mini{display:flex;align-items:center;gap:4px;padding:1px 0;font-size:11px;white-space:nowrap;overflow:hidden}
+.mini img{width:18px;height:18px;border-radius:3px;background:#1d2430}
+.mini.me{color:var(--gold)}
+.turn{color:var(--teal);font-weight:600}
+.banrow img{width:18px;height:18px;border-radius:3px;filter:grayscale(1) brightness(.6)}
 </style>
 </head>
 <body>
 <div id="ov">
-  <header><i class="dotl" id="dot"></i><b>Climb race</b><span class="sp"></span>
+  <header><i class="dotl" id="dot"></i><b>Race</b><span class="sp"></span>
     <select id="me" title="Who are you?"></select>
+    <select id="mode" title="Auto follows your League client. The other choices preview each screen with sample data.">
+      <option value="auto">Auto</option>
+      <optgroup label="Preview"><option value="ChampSelect">Champ select</option><option value="Loading">Loading screen</option><option value="InGame">In game</option><option value="Neutral">Neutral</option></optgroup>
+    </select>
     <button id="min" title="Collapse">–</button></header>
+  <div class="pv" id="pv" hidden></div>
+  <section id="draft" hidden></section>
   <section id="live" hidden></section>
   <section id="sess"></section>
   <section id="stand"></section>
@@ -67,9 +93,10 @@ const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=nu
 const dayKey=t=>{const d=new Date(t);d.setHours(0,0,0,0);return+d};
 const ROLE_ORDER={TOP:0,JUNGLE:1,MIDDLE:2,BOTTOM:3,UTILITY:4},byRole=(a,b)=>(ROLE_ORDER[a.role]??9)-(ROLE_ORDER[b.role]??9);
 const ROLE={TOP:"Top",JUNGLE:"Jgl",MIDDLE:"Mid",BOTTOM:"ADC",UTILITY:"Sup"};
+const KEY={};   // champion id string ("MonkeyKing") → numeric key
 let ddv="15.1.1",CHAMP={},DATA=null,etag=null;
 fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(r=>r.json()).then(v=>{ddv=v[0];return fetch(`https://ddragon.leagueoflegends.com/cdn/${ddv}/data/en_US/champion.json`)})
-  .then(r=>r.json()).then(c=>{for(const x of Object.values(c.data))CHAMP[x.key]={id:x.id,name:x.name};render()}).catch(()=>{});
+  .then(r=>r.json()).then(c=>{for(const x of Object.values(c.data)){CHAMP[x.key]={id:x.id,name:x.name,tags:x.tags||[]};KEY[x.id]=+x.key}render()}).catch(()=>{});
 let ITEMS={},RUNES={},SPELLS={};
 fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(r=>r.json()).then(v=>Promise.all([
   fetch(`https://ddragon.leagueoflegends.com/cdn/${v[0]}/data/en_US/item.json`).then(r=>r.json()).then(j=>{ITEMS=j.data}),
@@ -91,6 +118,16 @@ async function fetchData(){
   const r=await fetch(RAW+"?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;return r.json()}
 async function load(){try{const d=await fetchData();if(d&&d.updatedAt!==DATA?.updatedAt){DATA=d;try{localStorage.setItem("ov-data",JSON.stringify(d))}catch{}render()}}catch{}}
 try{DATA=JSON.parse(localStorage.getItem("ov-data")||"null")}catch{}
+// Champion win rates by role from every ranked game we've saved (for the draft helper)
+let CS=null;const loadCS=()=>fetch("https://raw.githubusercontent.com/HoeschleY/climb-race/data/champstats.json?t="+Math.floor(Date.now()/6e5)).then(r=>r.ok?r.json():null).then(j=>{if(j){CS=j;render()}}).catch(()=>{});
+loadCS();setInterval(loadCS,6e5);
+// League client state, sent by the desktop app (phase, champ select). Without the app: null.
+let CLIENT=null;
+if(window.electronOverlay?.onClient)window.electronOverlay.onClient(st=>{CLIENT=st;
+  if(st.me&&DATA&&DATA.players[st.me]&&ME!==st.me){ME=st.me;try{localStorage.setItem("ov-me",ME)}catch{}}render()});
+let MODE="auto";try{MODE=localStorage.getItem("ov-mode")||"auto"}catch{}
+const modeSel=document.getElementById("mode");modeSel.value=MODE;
+modeSel.onchange=()=>{MODE=modeSel.value;try{localStorage.setItem("ov-mode",MODE)}catch{}render()};
 
 const meSel=document.getElementById("me");
 let ME=null;try{ME=localStorage.getItem("ov-me")}catch{}
@@ -110,13 +147,28 @@ function render(){
   if(!ME||!all.some(p=>p.riotId===ME))ME=all[0].riotId;meSel.value=ME;
   const me=all.find(p=>p.riotId===ME),fresh=Date.now()-Date.parse(DATA.updatedAt)<20*6e4;
   document.getElementById("dot").className="dotl"+(fresh?" on":"");
-  renderLive(me,all);renderSession(me);renderStand(all);
+  // which screen: a preview, the League client's phase (desktop app), or our own live data
+  let view=MODE,preview=MODE!=="auto",live=null,draft=null;
+  if(!preview){
+    const L=liveOf(me,all);
+    if(CLIENT?.phase==="ChampSelect"){view="ChampSelect";draft=CLIENT.draft}
+    else if(CLIENT?.phase==="Loading"||CLIENT?.phase==="InGame"){view=CLIENT.phase;live=L}
+    else if(L){live=L;view=Date.now()-L.start<3*6e4?"Loading":"InGame"}
+    else view="Neutral";
+  }else if(view==="ChampSelect")draft=sampleDraft(me);
+  else if(view!=="Neutral")live=sampleLive(me);
+  const pv=document.getElementById("pv");pv.hidden=!preview;pv.textContent=preview?`Preview: ${modeSel.selectedOptions[0].text} · sample data`:"";
+  const show=(id,on)=>document.getElementById(id).hidden=!on;
+  show("draft",view==="ChampSelect");show("live",view==="Loading"||view==="InGame");show("sess",view==="Neutral");show("stand",view==="Neutral");
+  if(view==="ChampSelect")renderDraft(me,all,draft);
+  if(view==="Loading"||view==="InGame"){document.getElementById("live").classList.toggle("compact",view==="InGame");renderLive(me,all,live,view)}
+  if(view==="Neutral"){renderSession(me);renderStand(all)}
 }
-function renderLive(me,all){const box=document.getElementById("live");box.innerHTML="";
-  const live=liveOf(me,all);if(!live||!live.players){box.hidden=true;return}box.hidden=false;
+function renderLive(me,all,live,view){const box=document.getElementById("live");box.innerHTML="";
+  if(!live||!live.players){box.append(el("h4",null,view==="Loading"?"Loading screen":"In game"),el("div","form","Waiting for the game's data from Riot. It usually shows up within a minute of the loading screen."));return}
   const P=live.players.map(x=>{const fr=x.tracked&&all.find(q=>q.riotId===x.tracked);return fr?.current?{...x,rank:{...fr.current,hot:x.rank?.hot}}:x});
   const my=live.team,rk=P.filter(x=>x.rank).map(x=>score(x.rank)),avg=rk.length?rk.reduce((a,b)=>a+b,0)/rk.length:null;
-  const h=el("h4",null,"Enemy team");const tm=el("span");tm.dataset.start=live.start;h.append(tm);box.append(h);
+  const h=el("h4",null,view==="InGame"?"Enemies":"Enemy team · scouting");const tm=el("span");tm.dataset.start=live.start;h.append(tm);box.append(h);
   const partner=P.filter(x=>x.team===my&&x.party&&x.party===P.find(y=>y.tracked===ME)?.party&&x.tracked!==ME);
   P.filter(x=>x.team!==my).sort(byRole).forEach(x=>{let t=0;const why=[],weak=[];
     if(x.rank?.hot){t+=2;why.push("win streak")}
@@ -157,6 +209,91 @@ function buildBlock(box,x){const r=x.rec,ch=CHAMP[x.champId];
   }
   if(ch){const a=el("a","ext",`Full build and matchup on u.gg ↗`);a.href=`https://u.gg/lol/champions/${ch.id.toLowerCase()}/build`+(x.role?`?role=${{TOP:"top",JUNGLE:"jungle",MIDDLE:"mid",BOTTOM:"adc",UTILITY:"support"}[x.role]}`:"");a.target="_blank";a.rel="noopener";box.append(a)}
 }
+/* ---------- Draft helper (champ select) ---------- */
+const POSN={TOP:"Top",JUNGLE:"Jungle",MIDDLE:"Mid",BOTTOM:"ADC",UTILITY:"Support"};
+const shr=(w,n,k=2)=>(w+k/2)/(n+k);   // win rate pulled toward 50% when there are few games
+// most common role of a champion in our data
+const mainRole=key=>{const r=CS?.roles?.[key];if(!r)return null;let b=null,bn=0;for(const[k,v]of Object.entries(r))if(k!=="?"&&v[0]>bn){b=k;bn=v[0]}return b};
+const dmgType=id=>{const t=CHAMP[id]?.tags||[];return t[0]==="Mage"||(t[0]==="Support"&&t[1]==="Mage")?"AP":t[0]==="Tank"||t[0]==="Support"?"-":"AD"};
+const isFront=id=>{const t=CHAMP[id]?.tags||[];return t[0]==="Tank"||(t[0]==="Fighter"&&t.includes("Tank"))||(t[0]==="Support"&&t.includes("Tank"))};
+function myMainPos(me){const c={};me.games.forEach(g=>{if(g.role)c[g.role]=(c[g.role]||0)+1});return Object.entries(c).sort((a,b)=>b[1]-a[1])[0]?.[0]||"MIDDLE"}
+function draftRecs(me,all,d){
+  const my=d.allies.find(a=>a.cell===d.me)||{},pos=my.pos||myMainPos(me);
+  const taken=new Set([...d.bans,...d.enemies.map(e=>e.champ),...d.allies.filter(a=>a.cell!==d.me).map(a=>a.champ)].filter(Boolean));
+  const allyIds=d.allies.filter(a=>a.cell!==d.me).map(a=>a.champ||a.hover).filter(Boolean),enemyIds=d.enemies.map(e=>e.champ).filter(Boolean);
+  // enemy laner: their assigned position if shown, else a locked champ whose usual role is ours
+  const opp=d.enemies.find(e=>e.champ&&e.pos===pos)||d.enemies.find(e=>e.champ&&!e.pos&&mainRole(CHAMP[e.champ]?.id)===pos);
+  const group=all.flatMap(p=>p.games);
+  const cand=new Set();me.games.forEach(g=>cand.add(g.champ));
+  Object.entries(CS?.roles||{}).forEach(([k,r])=>{if(r[pos]?.[0]>=8)cand.add(k)});
+  const ap=allyIds.filter(i=>dmgType(i)==="AP").length,ad=allyIds.filter(i=>dmgType(i)==="AD").length,front=allyIds.filter(isFront).length;
+  const out=[];
+  for(const k of cand){const id=KEY[k];if(!id||taken.has(id))continue;
+    const mine=me.games.filter(g=>g.champ===k),inRole=mine.filter(g=>g.role===pos),use=inRole.length?inRole:mine;
+    const n=use.length,w=use.filter(g=>g.win).length,rt=use.filter(g=>g.rating!=null),rating=rt.length?rt.reduce((s,g)=>s+g.rating,0)/rt.length:null;
+    const cs=CS?.roles?.[k]?.[pos]||[0,0];if(!inRole.length&&cs[0]<8&&mainRole(k)!==pos)continue;   // never suggest a champ off-role
+    let sc=0;const why=[],bad=[];
+    if(n){sc+=Math.min(2,Math.log2(1+n)/2)+(shr(w,n,3)-.5)*5+(rating!=null?(rating-5)*.35:0);why.push(`you: ${n}g ${pct(w,n)}${rating!=null?` · ${rating.toFixed(1)}`:""}${inRole.length?"":" (other role)"}`)}
+    if(cs[0]){const d0=(shr(cs[1],cs[0],10)-.5)*4;sc+=d0;if(cs[0]>=8)why.push(`our data: ${pct(cs[1],cs[0])} in ${cs[0]}g`)}
+    if(opp){const vs=group.filter(g=>g.champ===k&&(g.vs||[]).includes(CHAMP[opp.champ]?.id)),vw=vs.filter(g=>g.win).length;
+      if(vs.length){sc+=(shr(vw,vs.length)-.5)*3;(vw/vs.length>=.5?why:bad).push(`${vw}W ${vs.length-vw}L vs ${cname(opp.champ)}`)}}
+    const t=dmgType(id);
+    if(allyIds.length>=2&&ap===0&&t==="AP"){sc+=.7;why.push("adds magic damage")}
+    if(allyIds.length>=2&&ad===0&&t==="AD"){sc+=.7;why.push("adds physical damage")}
+    if(allyIds.length>=3&&ap+ad>=3&&(t==="AP"?ap:ad)>=3){sc-=.5;bad.push(`team already ${t}-heavy`)}
+    if(allyIds.length>=2&&front===0&&isFront(id)){sc+=.5;why.push("adds frontline")}
+    out.push({id,k,sc,why,bad,n})}
+  return{pos,opp,list:out.sort((a,b)=>b.sc-a.sc).slice(0,5)};
+}
+function banRecs(me,all,d){
+  const taken=new Set([...d.bans,...d.enemies.map(e=>e.champ),...d.allies.map(a=>a.champ||a.hover)].filter(Boolean)),m={};
+  const add=(g,wt)=>(g.vs||[]).forEach(k=>{const e=m[k]=m[k]||{k,n:0,w:0,mn:0,mw:0};e.n+=wt;e.w+=g.win?wt:0;if(wt===2){e.mn++;e.mw+=g.win?1:0}});
+  all.forEach(p=>p.games.forEach(g=>add(g,p.riotId===me.riotId?2:1)));
+  return Object.values(m).filter(e=>KEY[e.k]&&!taken.has(KEY[e.k])&&e.n>=4).map(e=>({...e,sc:(1-shr(e.w,e.n,4))*Math.log2(1+e.n)})).sort((a,b)=>b.sc-a.sc).slice(0,3);
+}
+function renderDraft(me,all,d){const box=document.getElementById("draft");box.innerHTML="";
+  if(!d){box.append(el("h4",null,"Champ select"),el("div","form","Reading champ select…"));return}
+  const R=draftRecs(me,all,d),my=d.allies.find(a=>a.cell===d.me)||{};
+  const h=el("h4",null,`Champ select · ${POSN[R.pos]||"?"}`);const tm=el("span",d.turn?"turn":"",d.turn?`Your ${d.turn} · ${d.left}s`:d.left?`${d.left}s`:"");h.append(tm);box.append(h);
+  // teams
+  const picks=el("div","picks");
+  const col=(title,list,isAlly)=>{const c=el("div","col");c.append(el("h5",null,title));
+    list.forEach(x=>{const id=x.champ||x.hover,r=el("div","mini"+(isAlly&&x.cell===d.me?" me":""));const im=el("img");if(id)im.src=icon(id);im.alt="";if(!x.champ&&x.hover)im.style.opacity=.45;r.append(im);
+      let t=id?cname(id):"…";if(!x.champ&&x.hover)t+=" (hover)";if(isAlly&&x.pos)t=`${ROLE[x.pos]||""} · ${t}`;
+      if(!isAlly&&x.champ){const k=CHAMP[x.champ]?.id,gs=all.flatMap(p=>p.games).filter(g=>(g.vs||[]).includes(k)),w=gs.filter(g=>g.win).length;if(gs.length)t+=` · us ${w}-${gs.length-w}`}
+      r.append(el("span",null,t));c.append(r)});return c};
+  picks.append(col("Your team",d.allies,true),col("Enemy team",d.enemies,false));box.append(picks);
+  if(d.bans.length){const b=el("div","icons banrow");b.append(el("span","lbl","Bans"));d.bans.forEach(id=>{const im=el("img");im.src=icon(id);im.title=cname(id);im.alt="";b.append(im)});box.append(b)}
+  // pick suggestions
+  box.append(el("h4",null,R.opp?`Picks · vs ${cname(R.opp.champ)}`:"Picks for you"));
+  if(!R.list.length)box.append(el("div","form","Not enough games in our data for this role yet."));
+  R.list.forEach(c=>{const r=el("div","drow");const im=el("img");im.src=icon(c.id);im.alt="";if(my.hover===c.id||my.champ===c.id)im.style.outline="2px solid var(--gold)";r.append(im);
+    const n=el("div","n");n.append(el("b",null,cname(c.id)));const ch=el("div","chips");c.why.forEach(t=>ch.append(el("span","chip",t)));c.bad.forEach(t=>ch.append(el("span","chip bad",t)));n.append(ch);
+    r.append(n,el("span","sc",(c.sc>0?"+":"")+c.sc.toFixed(1)));box.append(r)});
+  // ban suggestions
+  const bans=banRecs(me,all,d).filter(b=>!R.list.slice(0,3).some(c=>c.k===b.k));
+  if(bans.length&&(!d.turn||d.turn==="ban"||d.phase==="BAN_PICK"||d.phase==="PLANNING")){box.append(el("h4",null,"Ban suggestions"));
+    bans.forEach(b=>{const r=el("div","mini");const im=el("img");im.src=icon(KEY[b.k]);im.alt="";r.append(im,el("span",null,`${cname(KEY[b.k])} · group ${b.w}-${b.n-b.w}`+(b.mn?` · you ${b.mw}-${b.mn-b.mw}`:"")));box.append(r)})}
+  box.append(el("div","form",`Scores mix your games on the champ, win rates from ${CS?.games||"our"} saved ranked games, the matchup and your team's damage mix.`));
+}
+/* ---------- Sample data for the preview ---------- */
+function sampleDraft(me){const pos=myMainPos(me),order=["TOP","JUNGLE","MIDDLE","BOTTOM","UTILITY"];
+  const fill={TOP:86,JUNGLE:64,MIDDLE:0,BOTTOM:222,UTILITY:0},enemy=[122,238,0,0,0];
+  return{me:order.indexOf(pos),turn:"pick",phase:"BAN_PICK",left:24,bans:[157,777,555,875,233].filter(x=>CHAMP[x]),
+    allies:order.map((p,i)=>({cell:i,pos:p,champ:p===pos?0:(p==="BOTTOM"?0:fill[p]),hover:p==="BOTTOM"?222:0})),
+    enemies:enemy.map((c,i)=>({cell:5+i,champ:c,pos:""}))}}
+function sampleLive(me){const pos=myMainPos(me),order=["TOP","JUNGLE","MIDDLE","BOTTOM","UTILITY"];
+  const champOf=me.games.find(g=>g.role===pos)?.champ,mine=KEY[champOf]||103;
+  const R=(t,dv,lp,w,l,hot)=>({tier:t,division:dv,lp,wins:w,losses:l,hot});
+  const ours=[86,64,103,222,412],theirs=[122,121,7,51,89].map(c=>c===mine?202:c);
+  const P=[...order.map((r,i)=>r===pos?{team:100,champId:mine,role:r,name:me.riotId,tracked:me.riotId,party:0,rank:me.current,
+      rec:{n:18,w:11,role:r,items:[[3020,15,9],[3089,12,8],[4645,11,7],[3157,9,6],[3135,8,5],[3165,5,3]],keys:[[8112,14,9]],subs:[[8200,14,9]],spells:[["4+14",14,9]],page:["8112,8139,8138,8135,8226,8237",12,8]}}
+      :{team:100,champId:ours[i]===mine?99:ours[i],role:r,name:"Ally"+i+"#EUW",party:0,rank:R("GOLD","II",40,40,36)}),
+    ...order.map((r,i)=>({team:200,champId:theirs[i],role:r,name:"Enemy"+i+"#EUW",party:i===1||i===2?1:0,
+      rank:i===4?null:R(i===0?"PLATINUM":"GOLD",i===0?"IV":"III",20,i===1?70:40,i===1?45:52,i===0),mastery:{pts:[260000,90000,6000,30000,20000][i]},
+      form:{n:5,w:[4,3,1,2,3][i],k:[7.2,6,3.1,5.4,1.2][i],d:[3.1,4,6.8,4.2,5.6][i],a:[4,8.2,5,6,12.4][i],csm:[7.1,5.6,6,7.8,1.2][i],on:[5,2,0,1,3][i],onW:[4,1,0,1,2][i]}}))];
+  return{start:Date.now()-(document.getElementById("mode").value==="Loading"?40e3:8.5*6e4),queue:420,team:100,players:P}}
+
 function renderSession(me){const box=document.getElementById("sess");box.innerHTML="";
   const today=dayKey(Date.now()),g=me.games.filter(x=>dayKey(x.at)===today),w=g.filter(x=>x.win).length;
   const hist=(me.history||[]).filter(x=>x.t<today),base=hist.length?score(hist[hist.length-1]):score(me.history?.[0]),lp=base!=null&&me.current?score(me.current)-base:null;

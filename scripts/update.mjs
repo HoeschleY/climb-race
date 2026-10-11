@@ -417,4 +417,15 @@ const changed = strip(out) !== strip(old), heartbeat = !old.updatedAt || Date.no
 const trouble = diag.budgetHit || diag.timeouts > 2 || Object.keys(diag.status).some(k => k !== "200" && k !== "404");
 if (changed || heartbeat || trouble) await writeFile(`${D}/data.json`, JSON.stringify(out));
 if (buildsDirty) await writeFile(`${D}/builds.json`, JSON.stringify(extraBuilds));
+// Champion win rates by role for the draft helper: refreshed when new builds arrive, at least hourly
+try {
+  let cs = null; try { cs = JSON.parse(await readFile(`${D}/champstats.json`, "utf8")); } catch {}
+  if (!cs || buildsDirty || Date.now() - cs.at > 3600e3) {
+    await loadRoleData(); await loadExtraBuilds();
+    const roles = {}, seen = new Set();
+    for (const b of [...buildRows, ...extraBuilds]) { const key = b.m + b.c; if (seen.has(key) || !b.c) continue; seen.add(key);
+      const r = (roles[b.c] = roles[b.c] || {}), e = (r[b.r || "?"] = r[b.r || "?"] || [0, 0]); e[0]++; e[1] += b.w; }
+    await writeFile(`${D}/champstats.json`, JSON.stringify({ at: Date.now(), games: seen.size, roles }));
+  }
+} catch (e) { console.error("champstats failed: " + e.message); }
 console.log(changed ? "data changed" : heartbeat ? "heartbeat" : "no change");

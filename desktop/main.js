@@ -1,7 +1,7 @@
 // Climb Race overlay: a small always-on-top window over League (play in Borderless mode).
 // Ctrl+Shift+O  show / hide      Ctrl+Shift+L  lock (clicks pass through to the game) / unlock
 const { app, BrowserWindow, globalShortcut, ipcMain, screen, Tray, Menu, nativeImage, shell } = require("electron");
-const fs = require("fs"), path = require("path");
+const fs = require("fs"), path = require("path"), client = require("./client");
 const URL = "https://hoeschley.github.io/climb-race/overlay.html?bare";
 const cfgFile = () => path.join(app.getPath("userData"), "window.json");
 let win, locked = false, tray;
@@ -48,6 +48,13 @@ app.whenReady().then(() => {
   let lastH = 0;
   ipcMain.on("resize", (_e, h) => { h = Math.max(40, Math.min(900, h | 0)); if (Math.abs(h - lastH) < 2) return; lastH = h; const [w] = win.getSize(); win.setSize(w, h); });
   win.webContents.on("did-fail-load", () => setTimeout(() => win.loadURL(URL), 10000));
+
+  // League client state (champ select, loading, in game) → overlay page
+  let lastSent = "";
+  const loop = async () => { try { const st = await client.poll(), j = JSON.stringify(st); if (j !== lastSent && !win.isDestroyed()) { lastSent = j; win.webContents.send("client", st); } } catch {}
+    setTimeout(loop, client.intervalFor()); };
+  win.webContents.on("did-finish-load", () => { lastSent = ""; });
+  loop();
 
   globalShortcut.register("CommandOrControl+Shift+O", () => { win.isVisible() ? win.hide() : win.showInactive(); updateTray(); });
   globalShortcut.register("CommandOrControl+Shift+L", () => setLocked(!locked));
