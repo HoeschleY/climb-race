@@ -4,33 +4,38 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Climb Race Overlay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:rgba(10,14,20,.86);--line:rgba(200,170,110,.35);--gold:#c8aa6e;--txt:#e8e6e1;--mut:#8b929c;--good:#43c286;--bad:#e5555f;--teal:#0ac8b9}
+:root{--bg:linear-gradient(180deg,rgba(17,23,31,.95),rgba(7,10,15,.95));--frame:#463714;--cond:'Barlow Condensed',system-ui,sans-serif;--line:rgba(200,170,110,.35);--gold:#c8aa6e;--txt:#e8e6e1;--mut:#8b929c;--good:#43c286;--bad:#e5555f;--teal:#0ac8b9}
 *{box-sizing:border-box}
 html,body{margin:0;background:transparent;color:var(--txt);font:12px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;user-select:none;overflow:hidden}
 body.page{background:#05080c}
-#ov{width:320px;background:var(--bg);border:1px solid var(--line);border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.5)}
+#ov{position:relative;width:320px;background:var(--bg);border:1px solid var(--frame);border-radius:3px;box-shadow:0 8px 28px rgba(0,0,0,.55),inset 0 0 0 1px rgba(200,170,110,.06)}
+#ov::before,#ov::after{content:"";position:absolute;width:10px;height:10px;border:2px solid var(--gold);pointer-events:none}
+#ov::before{top:-2px;left:-2px;border-right:0;border-bottom:0}#ov::after{bottom:-2px;right:-2px;border-left:0;border-top:0}
 header{display:flex;align-items:center;gap:6px;padding:6px 8px;border-bottom:1px solid var(--line);-webkit-app-region:drag;cursor:move}
-header b{color:var(--gold);letter-spacing:.04em;font-size:11px;text-transform:uppercase}
+header b{color:var(--gold);letter-spacing:.08em;font:600 14px var(--cond);text-transform:uppercase}
 header .sp{flex:1}
 header select,header button{-webkit-app-region:no-drag;background:#151b24;color:var(--txt);border:1px solid #2a323d;border-radius:4px;font:inherit;padding:1px 4px;cursor:pointer}
 .dotl{width:7px;height:7px;border-radius:50%;background:var(--mut)}
 .dotl.on{background:var(--teal);box-shadow:0 0 6px var(--teal)}
 section{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.06)}
 section:last-child{border-bottom:0}
-h4{margin:0 0 4px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);display:flex;justify-content:space-between}
-h4 span{color:var(--teal);font-variant-numeric:tabular-nums}
+h4{margin:2px 0 5px;font:600 12px var(--cond);letter-spacing:.09em;text-transform:uppercase;color:#c8aa6e;display:flex;align-items:center;gap:6px}
+h4::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(200,170,110,.35),transparent);order:1}
+h4 span{order:2}
+h4 span{color:var(--teal);font:600 12px var(--cond);letter-spacing:.04em}
 .row{display:flex;align-items:center;gap:6px;padding:2px 0}
-.row img{width:22px;height:22px;border-radius:3px;background:#1d2430;flex:none}
+.row img{width:24px;height:24px;border-radius:2px;background:#1d2430;flex:none;border:1px solid var(--frame)}
 .row .n{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .row .n small{color:var(--mut)}
-.r{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--mut)}
+.r{font:500 13px var(--cond);letter-spacing:.02em;white-space:nowrap;color:#a9b0ba}
 .tag{font-size:9.5px;padding:0 4px;border-radius:3px;margin-left:3px;font-weight:600}
 .t-duo{background:#3b2f63;color:#c9b8ff}.t-thr{background:#5a1f25;color:#ffb3b8}.t-weak{background:#173f2d;color:#9be8c0}.t-hot{background:#5a3b12;color:#ffcf8a}
 .why{color:var(--mut);font-size:11px;padding:0 0 2px 28px}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;text-align:center}
 .stats div{background:rgba(255,255,255,.04);border-radius:4px;padding:3px 0}
-.stats b{display:block;font-size:14px;font-variant-numeric:tabular-nums}
+.stats b{display:block;font:600 18px/1.1 var(--cond)}
 .stats small{color:var(--mut);font-size:9.5px;text-transform:uppercase}
 .st .pos{width:14px;color:var(--gold);font-weight:700;text-align:center}
 .st.me .n{color:var(--gold);font-weight:600}
@@ -38,10 +43,10 @@ h4 span{color:var(--teal);font-variant-numeric:tabular-nums}
 .muted{color:var(--mut)}
 #ov.min section{display:none}
 .icons{display:flex;gap:3px;flex-wrap:wrap;align-items:center;margin:2px 0 4px}
-.icons img{width:24px;height:24px;border-radius:3px;background:#1d2430}
-.icons img.rn{border-radius:50%}
-.icons .lbl{color:var(--mut);font-size:10px;width:44px}
-.icons .k{width:30px;height:30px}
+.icons img{width:26px;height:26px;border-radius:2px;background:#1d2430;border:1px solid var(--frame)}
+.icons img.rn{border-radius:50%;border-color:transparent;background:#0b0f15}
+.icons .lbl{color:var(--mut);font:600 11px var(--cond);letter-spacing:.06em;text-transform:uppercase;width:44px}
+.icons .k{width:32px;height:32px;box-shadow:0 0 0 1px var(--gold)}
 .form{color:var(--mut);font-size:11px;padding:0 0 2px 28px}
 a.ext{color:var(--teal);text-decoration:none;font-size:11px}
 .hint{color:var(--mut);font-size:10px;padding:4px 8px}
@@ -49,7 +54,7 @@ a.ext{color:var(--teal);text-decoration:none;font-size:11px}
 #mode{max-width:96px}
 .pv{background:#3a2a10;color:#ffcf8a;font-size:10px;padding:2px 8px;text-align:center}
 .drow{display:flex;align-items:center;gap:6px;padding:2px 0}
-.drow img{width:26px;height:26px;border-radius:3px;background:#1d2430;flex:none}
+.drow img{width:30px;height:30px;border-radius:2px;background:#1d2430;flex:none;border:1px solid var(--frame)}
 .drow img.hv{opacity:.45;outline:1px dashed var(--mut)}
 .drow .n{flex:1;min-width:0}
 .drow .n b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -57,14 +62,29 @@ a.ext{color:var(--teal);text-decoration:none;font-size:11px}
 .chips{display:flex;flex-wrap:wrap;gap:3px;margin-top:1px}
 .chip{font-size:9.5px;padding:0 4px;border-radius:3px;background:#1d2a33;color:#9fd8d2}
 .chip.bad{background:#3a1d22;color:#ffb3b8}
-.sc{font-variant-numeric:tabular-nums;color:var(--gold);font-weight:700;width:26px;text-align:right}
+.sc{font:700 15px var(--cond);color:var(--gold);width:30px;text-align:right}
 .picks{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .picks .col h5{margin:0 0 2px;font-size:9.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em}
 .mini{display:flex;align-items:center;gap:4px;padding:1px 0;font-size:11px;white-space:nowrap;overflow:hidden}
-.mini img{width:18px;height:18px;border-radius:3px;background:#1d2430}
+.mini img{width:20px;height:20px;border-radius:2px;background:#1d2430;border:1px solid var(--frame)}
 .mini.me{color:var(--gold)}
 .turn{color:var(--teal);font-weight:600}
 .banrow img{width:18px;height:18px;border-radius:3px;filter:grayscale(1) brightness(.6)}
+.card .why{padding-left:0}
+.card{background:rgba(255,255,255,.025);border:1px solid rgba(200,170,110,.14);border-radius:3px;padding:6px;margin-top:2px}
+.vars{display:flex;gap:4px;margin:0 0 6px}
+.vars button{flex:1;-webkit-app-region:no-drag;cursor:pointer;background:#10161e;color:#a9b0ba;border:1px solid #2a323d;border-radius:2px;padding:3px 0;font:600 12px var(--cond);letter-spacing:.06em;text-transform:uppercase}
+.vars button small{display:block;font:500 10px system-ui;letter-spacing:0;text-transform:none;color:var(--mut)}
+.vars button.on{background:linear-gradient(180deg,#1e2a2a,#0f1a1b);color:#f0e6d2;border-color:var(--gold);box-shadow:inset 0 0 8px rgba(10,200,185,.18)}
+.skg{display:grid;grid-template-columns:24px repeat(18,1fr);gap:1px;margin:3px 0 2px}
+.skg .k{display:flex;align-items:center;justify-content:center}
+.skg .k img{width:20px;height:20px;border-radius:2px;border:1px solid var(--frame)}
+.skg .k b{font:700 12px var(--cond);color:#a9b0ba}
+.skg i{height:20px;background:rgba(255,255,255,.04);border-radius:1px;font:600 10px/20px var(--cond);text-align:center;font-style:normal;color:#0b0f15}
+.skg i.Q{background:#0ac8b9}.skg i.W{background:#c8aa6e}.skg i.E{background:#9b7cf0}.skg i.R{background:#e5555f}
+.skline{display:flex;align-items:center;gap:6px;font:600 13px var(--cond);letter-spacing:.04em;color:#f0e6d2;margin-top:2px}
+.skline .ar{color:var(--mut)}
+.skline .lbl{color:var(--mut);font:600 11px var(--cond);letter-spacing:.06em;text-transform:uppercase;width:44px}
 </style>
 </head>
 <body>
@@ -191,21 +211,41 @@ function renderLive(me,all,live,view){const box=document.getElementById("live");
   box.append(el("div","why",`Premades: ${ourD} yours, ${thD} theirs`+(partner.length?` · you're duo with ${short(partner[0].name)}`:"")));
   const mine=P.find(y=>y.tracked===ME);if(mine)buildBlock(box,mine);
   tick()}
-function buildBlock(box,x){const r=x.rec,ch=CHAMP[x.champId];
+// Ability icons, loaded once per champion
+const SKI={};function skillIcons(id){const c=CHAMP[id];if(!c||SKI[id])return SKI[id];SKI[id]="loading";
+  fetch(`https://ddragon.leagueoflegends.com/cdn/${ddv}/data/en_US/champion/${c.id}.json`).then(r=>r.json()).then(j=>{const sp=j.data[c.id].spells;SKI[id]=sp.map(x=>({img:`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/spell/${x.image.full}`,name:x.name}));render()}).catch(()=>{});return SKI[id]}
+const TYPE_NAME={AP:"AP",AD:"AD",Tank:"Tank"};
+function buildBlock(box,x){const R0=x.rec,ch=CHAMP[x.champId];
   const h=el("h4",null,`Build · ${cname(x.champId)}`+(x.role?" "+(ROLE[x.role]||""):""));box.append(h);
-  if(!r||!r.n){box.append(el("div","why","No saved games on this champion yet."))}
+  if(!R0||!R0.n){box.append(el("div","why","No saved games on this champion yet."))}
   else{
-    box.append(el("div","why",`From ${r.n} ranked game${r.n>1?"s":""} in our data${r.role?"":" (all roles)"} · ${pct(r.w,r.n)} wins`+(r.n<15?" · small sample":"")));
+    // AD / AP / Tank builds: pick one (remembered per champion)
+    let r=R0;const vs=R0.variants||[];
+    if(vs.length>1){let pick=null;try{pick=localStorage.getItem("ov-var-"+x.champId)}catch{}
+      r=vs.find(v=>v.type===pick)||vs[0];const bar=el("div","vars");
+      vs.forEach(v=>{const b=el("button",v===r?"on":"");b.append(TYPE_NAME[v.type]||v.type,el("small",null,`${v.n} games · ${pct(v.w,v.n)}`));
+        b.onclick=()=>{try{localStorage.setItem("ov-var-"+x.champId,v.type)}catch{}render()};bar.append(b)});box.append(bar)}
+    const card=el("div","card");box.append(card);
+    card.append(el("div","why",`${r.n} ranked game${r.n>1?"s":""} in our data${r.role?"":" (all roles)"} · ${pct(r.w,r.n)} wins`+(r.n<15?" · small sample":"")));
     // runes: most played full page, else the most played keystone + secondary tree
     const ru=el("div","icons");ru.append(el("span","lbl","Runes"));
     const page=r.page?r.page[0].split(",").map(Number):[r.keys[0]?.[0]].filter(Boolean);
     page.forEach((id,i)=>{const im=el("img","rn"+(i===0?" k":""));im.src=runeIcon(id);im.title=RUNES[id]?.name||"";im.alt="";ru.append(im)});
-    if(!r.page&&r.subs[0]){const im=el("img","rn");im.src=runeIcon(r.subs[0][0]);im.title="Secondary: "+(RUNES[r.subs[0][0]]?.name||"");ru.append(im)}
-    const k=r.keys[0];if(k)ru.append(el("span","why",`${RUNES[k[0]]?.name||""} ${pct(k[2],k[1])}`));box.append(ru);
-    if(r.spells[0]){const sp=el("div","icons");sp.append(el("span","lbl","Spells"));r.spells[0][0].split("+").forEach(id=>{const a=SPELLS[id];const im=el("img");if(a)im.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/spell/${a.img}`;im.title=a?.name||"";im.alt="";sp.append(im)});box.append(sp)}
+    if(!r.page&&r.subs?.[0]){const im=el("img","rn");im.src=runeIcon(r.subs[0][0]);im.title="Secondary: "+(RUNES[r.subs[0][0]]?.name||"");ru.append(im)}
+    const k=r.keys[0];if(k)ru.append(el("span","why",`${RUNES[k[0]]?.name||""} ${pct(k[2],k[1])}`));card.append(ru);
+    if(r.spells?.[0]){const sp=el("div","icons");sp.append(el("span","lbl","Spells"));r.spells[0][0].split("+").forEach(id=>{const a=SPELLS[id];const im=el("img");if(a)im.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/spell/${a.img}`;im.title=a?.name||"";im.alt="";sp.append(im)});card.append(sp)}
     const items=r.items.filter(([id])=>isCore(id)).slice(0,6),boots=r.items.find(([id])=>isBoots(id));
     if(items.length||boots){const it=el("div","icons");it.append(el("span","lbl","Items"));
-      [...(boots?[boots]:[]),...items].forEach(([id,n,w])=>{const im=el("img");im.src=itemIcon(id);im.alt="";im.title=`${ITEMS[id]?.name||id}: built in ${n} of ${r.n} games, ${pct(w,n)} wins`;it.append(im)});box.append(it)}
+      [...(boots?[boots]:[]),...items].forEach(([id,n,w])=>{const im=el("img");im.src=itemIcon(id);im.alt="";im.title=`${ITEMS[id]?.name||id}: built in ${n} of ${r.n} games, ${pct(w,n)} wins`;it.append(im)});card.append(it)}
+    // ability order: max order line + 18-level grid
+    const S=r.skills;
+    if(S){const line=el("div","skline");line.append(el("span","lbl","Skills"));[...S.max].forEach((c,i)=>{if(i)line.append(el("span","ar","›"));line.append(el("span",null,c))});
+      line.append(el("span","why",`start ${S.start} · ${S.n} games`));card.append(line);
+      const ic=skillIcons(x.champId),g=el("div","skg"),lv={Q:0,W:0,E:0,R:0};
+      ["Q","W","E","R"].forEach((key,ri)=>{const kk=el("div","k");const s0=Array.isArray(ic)?ic[ri]:null;if(s0){const im=el("img");im.src=s0.img;im.title=`${key}: ${s0.name}`;im.alt=key;kk.append(im)}else kk.append(el("b",null,key));g.append(kk);
+        [...S.seq].forEach((c,L)=>{const cell=el("i",c===key?key:"");if(c===key)cell.textContent=L+1;g.append(cell)})});
+      card.append(g)}
+    else card.append(el("div","why","Ability order: not enough games with timelines yet."));
   }
   if(ch){const a=el("a","ext",`Full build and matchup on u.gg ↗`);a.href=`https://u.gg/lol/champions/${ch.id.toLowerCase()}/build`+(x.role?`?role=${{TOP:"top",JUNGLE:"jungle",MIDDLE:"mid",BOTTOM:"adc",UTILITY:"support"}[x.role]}`:"");a.target="_blank";a.rel="noopener";box.append(a)}
 }
@@ -277,6 +317,12 @@ function renderDraft(me,all,d){const box=document.getElementById("draft");box.in
   box.append(el("div","form",`Scores mix your games on the champ, win rates from ${CS?.games||"our"} saved ranked games, the matchup and your team's damage mix.`));
 }
 /* ---------- Sample data for the preview ---------- */
+function sampleRec(role){
+  const ap={type:"AP",n:12,w:8,role,items:[[3020,11,7],[3089,10,7],[4645,9,6],[3157,8,5],[3135,6,4],[3165,4,3]],keys:[[8112,10,7]],subs:[[8200,10,7]],spells:[["4+14",10,7]],
+    page:["8112,8139,8138,8135,8226,8237",9,6],skills:{start:"QEW",max:"QEW",seq:"QEWQQRQEQEREEWWRWW",n:11}};
+  const ad={type:"AD",n:7,w:4,role,items:[[3006,7,4],[3031,6,4],[3072,6,3],[6672,5,3],[3036,4,2],[3046,3,2]],keys:[[8008,6,4]],subs:[[8300,5,3]],spells:[["4+7",6,4]],
+    page:["8008,9111,9104,8017,8345,8347",5,3],skills:{start:"QWE",max:"QWE",seq:"QWEQQRQWQWRWWEEREE",n:6}};
+  return{...ap,variants:[ap,ad]}}
 function sampleDraft(me){const pos=myMainPos(me),order=["TOP","JUNGLE","MIDDLE","BOTTOM","UTILITY"];
   const fill={TOP:86,JUNGLE:64,MIDDLE:0,BOTTOM:222,UTILITY:0},enemy=[122,238,0,0,0];
   return{me:order.indexOf(pos),turn:"pick",phase:"BAN_PICK",left:24,bans:[157,777,555,875,233].filter(x=>CHAMP[x]),
@@ -287,7 +333,7 @@ function sampleLive(me){const pos=myMainPos(me),order=["TOP","JUNGLE","MIDDLE","
   const R=(t,dv,lp,w,l,hot)=>({tier:t,division:dv,lp,wins:w,losses:l,hot});
   const ours=[86,64,103,222,412],theirs=[122,121,7,51,89].map(c=>c===mine?202:c);
   const P=[...order.map((r,i)=>r===pos?{team:100,champId:mine,role:r,name:me.riotId,tracked:me.riotId,party:0,rank:me.current,
-      rec:{n:18,w:11,role:r,items:[[3020,15,9],[3089,12,8],[4645,11,7],[3157,9,6],[3135,8,5],[3165,5,3]],keys:[[8112,14,9]],subs:[[8200,14,9]],spells:[["4+14",14,9]],page:["8112,8139,8138,8135,8226,8237",12,8]}}
+      rec:sampleRec(r)}
       :{team:100,champId:ours[i]===mine?99:ours[i],role:r,name:"Ally"+i+"#EUW",party:0,rank:R("GOLD","II",40,40,36)}),
     ...order.map((r,i)=>({team:200,champId:theirs[i],role:r,name:"Enemy"+i+"#EUW",party:i===1||i===2?1:0,
       rank:i===4?null:R(i===0?"PLATINUM":"GOLD",i===0?"IV":"III",20,i===1?70:40,i===1?45:52,i===0),mastery:{pts:[260000,90000,6000,30000,20000][i]},

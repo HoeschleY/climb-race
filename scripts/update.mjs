@@ -57,7 +57,8 @@ function scoreboard(m) {
       k: x.kills, d: x.deaths, a: x.assists, cs: x.totalMinionsKilled + x.neutralMinionsKilled, dmg: x.totalDamageDealtToChampions,
       taken: x.totalDamageTaken, gold: x.goldEarned, vis: x.visionScore, wards: x.wardsPlaced, multi: x.largestMultiKill,
       items: [x.item0, x.item1, x.item2, x.item3, x.item4, x.item5, x.item6], spells: [x.summoner1Id, x.summoner2Id],
-      rune: x.perks?.styles?.[0]?.selections?.[0]?.perk ?? null, sub: x.perks?.styles?.[1]?.style ?? null })),
+      rune: x.perks?.styles?.[0]?.selections?.[0]?.perk ?? null, sub: x.perks?.styles?.[1]?.style ?? null,
+      page: [...(x.perks?.styles?.[0]?.selections || []), ...(x.perks?.styles?.[1]?.selections || [])].map(z => z.perk) })),
   };
 }
 
@@ -83,14 +84,56 @@ function recFor(champ, role) {
   const all = [...buildRows, ...extraBuilds].filter(b => b.c === champ && md5ok(b));
   const byRole = all.filter(b => b.r === role), pool = byRole.length >= 5 ? byRole : all;
   if (!pool.length) return { n: 0 };
+  const main = recOf(pool, pool === byRole ? role : null);
+  // Builds that are really different (AD vs AP vs Tank) are offered separately when each has enough games
+  const groups = {}; pool.forEach(b => { const t = buildType(b); if (t) (groups[t] = groups[t] || []).push(b); });
+  const variants = Object.entries(groups).filter(([, g]) => g.length >= 3 && g.length >= pool.length * .15).sort((a, b) => b[1].length - a[1].length)
+    .map(([t, g]) => ({ type: t, ...recOf(g, main.role) }));
+  return variants.length >= 2 ? { ...main, variants } : { ...main, type: variants[0]?.type || null };
+}
+function recOf(pool, role) {
   const top = (key, k) => { const m = {}; pool.forEach(b => { for (const v of [].concat(key(b))) { if (v == null || v === 0 || v === "") continue; const e = m[v] = m[v] || [v, 0, 0]; e[1]++; e[2] += b.w; } });
     return Object.values(m).sort((a, b) => b[1] - a[1]).slice(0, k); };
   const pages = pool.filter(b => b.p?.length === 6);
-  return { n: pool.length, w: pool.reduce((a, b) => a + b.w, 0), role: pool === byRole ? role : null,
+  return { n: pool.length, w: pool.reduce((a, b) => a + b.w, 0), role, skills: skillsOf(pool),
     items: top(b => b.i, 20), keys: top(b => b.k, 3), subs: top(b => b.s, 2), spells: top(b => [...(b.sp || [])].sort((a, c) => a - c).join("+"), 2),
     page: pages.length ? top(b => b.p?.length === 6 ? b.p.join(",") : null, 1)[0] : null, pages: pages.length };
 }
 const md5ok = b => Array.isArray(b.i);
+// What a build is: AP, AD or Tank, from the stats of its items
+let itemStats = null;
+async function loadItems() {
+  if (itemStats) return; itemStats = {};
+  try { const v = (await (await fetch("https://ddragon.leagueoflegends.com/api/versions.json", { signal: AbortSignal.timeout(8000) })).json())[0];
+    const j = await (await fetch(`https://ddragon.leagueoflegends.com/cdn/${v}/data/en_US/item.json`, { signal: AbortSignal.timeout(8000) })).json();
+    for (const [id, it] of Object.entries(j.data)) { const st = it.stats || {};
+      itemStats[id] = { ap: st.FlatMagicDamageMod || 0, ad: (st.FlatPhysicalDamageMod || 0) + (st.PercentAttackSpeedMod || 0) * 100 + (st.FlatCritChanceMod || 0) * 150 + (st.FlatPhysicalDamageMod ? 0 : 0),
+        tank: (st.FlatHPPoolMod || 0) / 12 + (st.FlatArmorMod || 0) + (st.FlatSpellBlockMod || 0) }; }
+  } catch {}
+}
+function buildType(b) {
+  let ap = 0, ad = 0, tank = 0; for (const id of b.i || []) { const st = itemStats?.[id]; if (!st) continue; ap += st.ap; ad += st.ad; tank += st.tank; }
+  if (ap + ad + tank < 60) return null;            // too few items to tell
+  if (tank * .8 > ap && tank * .8 > ad) return "Tank";
+  return ap > ad ? "AP" : "AD";
+}
+// Skill order: the usual first three points, the max order, and the full 18 levels built from them
+function skillsOf(pool) {
+  const rows = pool.map(b => b.sk).filter(x => x && x.length >= 9);
+  if (!rows.length) return null;
+  const mode = arr => { const m = {}; arr.forEach(x => m[x] = (m[x] || 0) + 1); return Object.entries(m).sort((a, b) => b[1] - a[1])[0]?.[0]; };
+  const start = mode(rows.map(x => x.slice(0, 3)));
+  const max = mode(rows.map(x => { const c = { Q: 0, W: 0, E: 0 }, done = []; for (const ch of x) { if (ch === "R") continue; c[ch]++; if (c[ch] === 5) done.push(ch); }
+    for (const ch of Object.entries(c).sort((a, b) => b[1] - a[1]).map(e => e[0])) if (!done.includes(ch)) done.push(ch); return done.join(""); }));
+  const lv = { Q: 0, W: 0, E: 0, R: 0 }; let seq = "";
+  for (let L = 1; L <= 18; L++) {
+    let pick = L <= 3 ? start[L - 1] : null;
+    if ([6, 11, 16].includes(L)) pick = "R";
+    if (!pick || (pick !== "R" && (lv[pick] >= 5 || lv[pick] + 1 > Math.floor((L + 1) / 2)))) pick = [...max].find(c => lv[c] < 5 && lv[c] + 1 <= Math.floor((L + 1) / 2)) || [...max].find(c => lv[c] < 5);
+    lv[pick]++; seq += pick;
+  }
+  return { start, max, seq, n: rows.length };
+}
 function summarizeForm(got, champId) {
   const g = got.filter(Boolean); if (!g.length) return { n: 0 };
   const avg = i => Math.round(g.reduce((a, x) => a + x[i], 0) / g.length * 10) / 10, on = g.filter(x => x[6] === champId);
@@ -128,7 +171,7 @@ async function loadRoleData() {
         for (const x of sb.players) {
           if (ROLES.includes(x.role)) { const t = roleTable[x.champ] = roleTable[x.champ] || {}; t[x.role] = (t[x.role] || 0) + 1; }
           if (sb.queue === 420 && x.items) buildRows.push({ m: sb.id, c: x.champ, r: x.role, w: sb.teams.find(t => t.id === x.team)?.win ? 1 : 0,
-            i: x.items.slice(0, 6), k: x.rune, s: x.sub, sp: x.spells });
+            i: x.items.slice(0, 6), k: x.rune, s: x.sub, sp: x.spells, sk: x.sk, p: x.page });
         } } catch {}
     }
   } catch {}
@@ -298,6 +341,7 @@ for (const p of cfg.players) {
         }
         await formPass(live, g);
         // Build and rune suggestions for each friend in the game, recomputed each round from the saved games
+        await loadItems();
         for (const x of live.players) if (x.tracked) x.rec = recFor(champNames[x.champId], x.role);
       }
     } catch (e) { liveErr = e.message; console.error(`live check failed for ${p.riotId}: ${e.message}`); }
@@ -325,7 +369,7 @@ for (const p of cfg.players) {
   for (const id of ids) {
     const file = `${D}/matches/${id}.json`;
     let sb; try { sb = JSON.parse(await readFile(file, "utf8")); } catch { continue; }
-    if (!sb.tl || sb.tlv !== 3) {
+    if (!sb.tl || sb.tlv !== 4) {
       if (fetched >= 12) continue;
       fetched++;
       try {
@@ -345,7 +389,12 @@ for (const p of cfg.players) {
           .map(e => [e.victimId - 1, (e.killerId || 0) - 1, Math.round(e.timestamp / 1000), e.position.x, e.position.y]));
         // Each player's total gold, one value per minute
         sb.tl.pg = sb.players.map((_, i) => fr.map(f => pf(f, i).totalGold || 0));
-        sb.tlv = 3;
+        // Skill order: Q/W/E/R for each level-up, per player
+        const sk = sb.players.map(() => "");
+        fr.forEach(f => (f.events || []).forEach(e => { if (e.type === "SKILL_LEVEL_UP" && e.levelUpType === "NORMAL" && e.participantId >= 1 && e.participantId <= 10 && e.skillSlot >= 1 && e.skillSlot <= 4)
+          sk[e.participantId - 1] += "QWER"[e.skillSlot - 1]; }));
+        sb.players.forEach((x, i) => { x.sk = sk[i]; });
+        sb.tlv = 4;
         await writeFile(file, JSON.stringify(sb));
       } catch (e) { console.error(`timeline failed for ${id}: ${e.message}`); continue; }
     }
