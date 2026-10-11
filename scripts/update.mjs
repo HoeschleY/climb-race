@@ -81,6 +81,7 @@ function addBuilds(md) {
   buildsDirty = true;
 }
 function recFor(champ, role) {
+  const m = metaRec(champ, role); if (m) return m;
   const all = [...buildRows, ...extraBuilds].filter(b => b.c === champ && md5ok(b));
   const byRole = all.filter(b => b.r === role), pool = byRole.length >= 5 ? byRole : all;
   if (!pool.length) return { n: 0 };
@@ -108,7 +109,8 @@ async function loadItems() {
     const j = await (await fetch(`https://ddragon.leagueoflegends.com/cdn/${v}/data/en_US/item.json`, { signal: AbortSignal.timeout(8000) })).json();
     for (const [id, it] of Object.entries(j.data)) { const st = it.stats || {};
       itemStats[id] = { ap: st.FlatMagicDamageMod || 0, ad: (st.FlatPhysicalDamageMod || 0) + (st.PercentAttackSpeedMod || 0) * 100 + (st.FlatCritChanceMod || 0) * 150 + (st.FlatPhysicalDamageMod ? 0 : 0),
-        tank: (st.FlatHPPoolMod || 0) / 12 + (st.FlatArmorMod || 0) + (st.FlatSpellBlockMod || 0) }; }
+        tank: (st.FlatHPPoolMod || 0) / 12 + (st.FlatArmorMod || 0) + (st.FlatSpellBlockMod || 0),
+        gold: it.gold?.total || 0, done: !(it.into || []).length, boots: (it.tags || []).includes("Boots"), cons: (it.tags || []).includes("Consumable") || (it.tags || []).includes("Trinket") }; }
   } catch {}
 }
 function buildType(b) {
@@ -161,6 +163,103 @@ async function formPass(live, g) {
     } catch {}
   }
 }
+// ---------- High-elo build data, collected from Riot's API (Emerald I to Master solo queue) ----------
+// A few requests per round: one ladder page, one player's recent games, then up to 3 new games with their timelines.
+// Kept as running totals per champion/role/build type and patch. Saved to meta.json every 30 minutes; in between,
+// new games wait in a local file on the runner (not committed) so the data branch doesn't grow every minute.
+const PENDING = "crawl-pending.json";
+let META = null, pending = [];
+async function loadMeta() {
+  if (META) return;
+  try { META = JSON.parse(await readFile(`${D}/meta.json`, "utf8")); } catch { META = { at: 0, patches: {}, seen: [] }; }
+  try { pending = JSON.parse(await readFile(PENDING, "utf8")); } catch { pending = []; }
+  pending.forEach(addMetaRow);
+}
+function addMetaRow(row) {
+  const P = META.patches[row.v] = META.patches[row.v] || {}, t = buildType(row);
+  for (const key of [`${row.c}|${row.r}|*`, t ? `${row.c}|${row.r}|${t}` : null]) {
+    if (!key) continue;
+    const a = P[key] = P[key] || { n: 0, w: 0, items: {}, keys: {}, subs: {}, pages: {}, spells: {}, skills: {}, orders: {}, starts: {} };
+    a.n++; a.w += row.w;
+    const inc = (m, v) => { if (v == null || v === "" || v === 0) return; const e = m[v] = m[v] || [0, 0]; e[0]++; e[1] += row.w; };
+    row.i.forEach(v => inc(a.items, v)); inc(a.keys, row.k); inc(a.subs, row.s); if (row.p?.length === 6) inc(a.pages, row.p.join(","));
+    inc(a.spells, [...row.sp].sort((x, y) => x - y).join("+")); if (row.sk?.length >= 12) inc(a.skills, row.sk.slice(0, 12));
+    if (row.o?.length >= 2) inc(a.orders, row.o.slice(0, 3).join(",")); if (row.st?.length) inc(a.starts, [...row.st].sort((x, y) => x - y).join(","));
+  }
+}
+function pruneMeta() {
+  const pats = Object.keys(META.patches).sort((a, b) => { const [a1, a2] = a.split(".").map(Number), [b1, b2] = b.split(".").map(Number); return b1 - a1 || b2 - a2; });
+  for (const p of pats.slice(2)) delete META.patches[p];        // keep this patch and the previous one
+  for (const P of Object.values(META.patches)) for (const a of Object.values(P))
+    for (const k of ["items", "keys", "subs", "pages", "spells", "skills", "orders", "starts"]) {
+      const top = Object.entries(a[k]).sort((x, y) => y[1][0] - x[1][0]).slice(0, k === "items" ? 30 : 8); a[k] = Object.fromEntries(top); }
+  if (META.seen.length > 8000) META.seen = META.seen.slice(-8000);
+}
+function rowsFromGame(md, tl) {
+  const v = (md.info.gameVersion || "").split(".").slice(0, 2).join("."), fr = tl?.info?.frames || [], ev = fr.flatMap(f => f.events || []);
+  return md.info.participants.map((x, i) => {
+    const pid = i + 1, st = x.perks?.styles || [];
+    let sk = "", buys = [];
+    for (const e of ev) {
+      if (e.participantId !== pid) continue;
+      if (e.type === "SKILL_LEVEL_UP" && e.levelUpType === "NORMAL" && e.skillSlot >= 1 && e.skillSlot <= 4) sk += "QWER"[e.skillSlot - 1];
+      else if (e.type === "ITEM_PURCHASED") buys.push([e.itemId, e.timestamp]);
+      else if (e.type === "ITEM_UNDO") { const j = buys.map(b => b[0]).lastIndexOf(e.beforeId); if (j >= 0) buys.splice(j, 1); }
+    }
+    const start = [...new Set(buys.filter(b => b[1] <= 90e3).map(b => b[0]))];
+    const order = []; for (const [id] of buys) { const it = itemStats?.[id]; if (it && it.done && !it.boots && !it.cons && it.gold >= 2000 && !order.includes(id)) order.push(id); }
+    return { c: x.championName, r: x.teamPosition || "", w: x.win ? 1 : 0, v, i: [x.item0, x.item1, x.item2, x.item3, x.item4, x.item5],
+      k: st[0]?.selections?.[0]?.perk ?? null, s: st[1]?.style ?? null, p: [...(st[0]?.selections || []), ...(st[1]?.selections || [])].map(z => z.perk),
+      sp: [x.summoner1Id, x.summoner2Id], sk, o: order.slice(0, 4), st: start };
+  }).filter(r => r.r);
+}
+const LADDER = [["EMERALD", "I"], ["DIAMOND", "IV"], ["DIAMOND", "III"], ["DIAMOND", "II"], ["DIAMOND", "I"], ["MASTER", "I"]];
+async function crawl() {
+  if (DEADLINE - Date.now() < 40e3) return;
+  await loadMeta(); await loadItems();
+  try {
+    const [tier, div] = LADDER[Math.floor(Math.random() * LADDER.length)];
+    const page = 1 + Math.floor(Math.random() * (tier === "MASTER" ? 3 : 8));
+    const entries = await riot(cfg.platform, `/lol/league/v4/entries/RANKED_SOLO_5x5/${tier}/${div}?page=${page}`) || [];
+    const who = entries[Math.floor(Math.random() * entries.length)]?.puuid; if (!who) return;
+    const ids = await riot(cfg.region, `/lol/match/v5/matches/by-puuid/${who}/ids?queue=420&count=5`) || [];
+    let got = 0;
+    for (const id of ids) {
+      if (got >= 3 || DEADLINE - Date.now() < 25e3) break;
+      if (META.seen.includes(id)) continue;
+      const md = await riot(cfg.region, `/lol/match/v5/matches/${id}`); META.seen.push(id);
+      if (!md?.info || md.info.gameDuration < 600) continue;
+      const tl = await riot(cfg.region, `/lol/match/v5/matches/${id}/timeline`);
+      const rows = rowsFromGame(md, tl); rows.forEach(addMetaRow); pending.push(...rows); got++;
+    }
+  } catch (e) { console.error("crawl: " + e.message); }
+  if (Date.now() - META.at > 30 * 60e3) {
+    pruneMeta(); META.at = Date.now(); META.games = (META.games || 0) + pending.length / 10;
+    await writeFile(`${D}/meta.json`, JSON.stringify(META)); pending = [];
+  }
+  await writeFile(PENDING, JSON.stringify(pending));
+}
+// Turn the totals into the same shape as our own suggestions; null when there aren't enough high-elo games yet
+function metaRec(champ, role) {
+  if (!META) return null;
+  const pats = Object.keys(META.patches).sort((a, b) => { const [a1, a2] = a.split(".").map(Number), [b1, b2] = b.split(".").map(Number); return b1 - a1 || b2 - a2; });
+  for (const p of pats) {
+    const P = META.patches[p], base = P[`${champ}|${role}|*`]; if (!base || base.n < 15) continue;
+    const conv = (a, type) => {
+      const top = (m, k) => Object.entries(m).sort((x, y) => y[1][0] - x[1][0]).slice(0, k).map(([v, [n, w]]) => [isNaN(v) ? v : +v, n, w]);
+      const sk = Object.keys(a.skills).length;
+      return { type, n: a.n, w: a.w, role, src: "meta", patch: p, items: top(a.items, 20), keys: top(a.keys, 3), subs: top(a.subs, 2), spells: top(a.spells, 2),
+        page: top(a.pages, 1)[0] || null, order: top(a.orders, 1)[0] || null, start: top(a.starts, 1)[0] || null,
+        skills: sk ? { ...skillsOf(top(a.skills, 8).flatMap(([q, n]) => Array(n).fill({ sk: q }))), n: Object.values(a.skills).reduce((x, y) => x + y[0], 0) } : null };
+    };
+    const main = conv(base, null);
+    const variants = ["AD", "AP", "Tank"].map(t => P[`${champ}|${role}|${t}`]).map((a, i) => a && a.n >= 8 && a.n >= base.n * .15 ? conv(a, ["AD", "AP", "Tank"][i]) : null).filter(Boolean)
+      .sort((a, b) => b.n - a.n);
+    return variants.length >= 2 ? { ...main, variants } : main;
+  }
+  return null;
+}
+
 async function loadRoleData() {
   if (roleTable) return;
   roleTable = {};
@@ -341,7 +440,7 @@ for (const p of cfg.players) {
         }
         await formPass(live, g);
         // Build and rune suggestions for each friend in the game, recomputed each round from the saved games
-        await loadItems();
+        await loadItems(); await loadMeta();
         for (const x of live.players) if (x.tracked) x.rec = recFor(champNames[x.champId], x.role);
       }
     } catch (e) { liveErr = e.message; console.error(`live check failed for ${p.riotId}: ${e.message}`); }
@@ -462,6 +561,7 @@ if (alerts.length && process.env.DISCORD_WEBHOOK) {
 out.diag = { at: new Date().toISOString(), secs: Math.round((Date.now() - ROUND_START) / 1000), ...diag };
 console.log("round health:", JSON.stringify(out.diag));
 const strip = d => JSON.stringify({ ...d, updatedAt: 0, diag: 0, players: Object.fromEntries(Object.entries(d.players || {}).map(([k, v]) => [k, { ...v, iconAt: 0, checkedAt: 0 }])) });
+try { await crawl(); } catch (e) { console.error("crawl failed: " + e.message); }
 const changed = strip(out) !== strip(old), heartbeat = !old.updatedAt || Date.now() - Date.parse(old.updatedAt) > 5 * 60e3;
 const trouble = diag.budgetHit || diag.timeouts > 2 || Object.keys(diag.status).some(k => k !== "200" && k !== "404");
 if (changed || heartbeat || trouble) await writeFile(`${D}/data.json`, JSON.stringify(out));
