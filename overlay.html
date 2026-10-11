@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Climb Race Overlay</title>
+<style>
+:root{--bg:rgba(10,14,20,.86);--line:rgba(200,170,110,.35);--gold:#c8aa6e;--txt:#e8e6e1;--mut:#8b929c;--good:#43c286;--bad:#e5555f;--teal:#0ac8b9}
+*{box-sizing:border-box}
+html,body{margin:0;background:transparent;color:var(--txt);font:12px/1.35 system-ui,-apple-system,"Segoe UI",sans-serif;user-select:none;overflow:hidden}
+body.page{background:#05080c}
+#ov{width:320px;background:var(--bg);border:1px solid var(--line);border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.5)}
+header{display:flex;align-items:center;gap:6px;padding:6px 8px;border-bottom:1px solid var(--line);-webkit-app-region:drag;cursor:move}
+header b{color:var(--gold);letter-spacing:.04em;font-size:11px;text-transform:uppercase}
+header .sp{flex:1}
+header select,header button{-webkit-app-region:no-drag;background:#151b24;color:var(--txt);border:1px solid #2a323d;border-radius:4px;font:inherit;padding:1px 4px;cursor:pointer}
+.dotl{width:7px;height:7px;border-radius:50%;background:var(--mut)}
+.dotl.on{background:var(--teal);box-shadow:0 0 6px var(--teal)}
+section{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.06)}
+section:last-child{border-bottom:0}
+h4{margin:0 0 4px;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);display:flex;justify-content:space-between}
+h4 span{color:var(--teal);font-variant-numeric:tabular-nums}
+.row{display:flex;align-items:center;gap:6px;padding:2px 0}
+.row img{width:22px;height:22px;border-radius:3px;background:#1d2430;flex:none}
+.row .n{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .n small{color:var(--mut)}
+.r{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--mut)}
+.tag{font-size:9.5px;padding:0 4px;border-radius:3px;margin-left:3px;font-weight:600}
+.t-duo{background:#3b2f63;color:#c9b8ff}.t-thr{background:#5a1f25;color:#ffb3b8}.t-weak{background:#173f2d;color:#9be8c0}.t-hot{background:#5a3b12;color:#ffcf8a}
+.why{color:var(--mut);font-size:11px;padding:0 0 2px 28px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;text-align:center}
+.stats div{background:rgba(255,255,255,.04);border-radius:4px;padding:3px 0}
+.stats b{display:block;font-size:14px;font-variant-numeric:tabular-nums}
+.stats small{color:var(--mut);font-size:9.5px;text-transform:uppercase}
+.st .pos{width:14px;color:var(--gold);font-weight:700;text-align:center}
+.st.me .n{color:var(--gold);font-weight:600}
+.g{color:var(--good)}.l{color:var(--bad)}
+.muted{color:var(--mut)}
+#ov.min section{display:none}
+.hint{color:var(--mut);font-size:10px;padding:4px 8px}
+</style>
+</head>
+<body>
+<div id="ov">
+  <header><i class="dotl" id="dot"></i><b>Climb race</b><span class="sp"></span>
+    <select id="me" title="Who are you?"></select>
+    <button id="min" title="Collapse">–</button></header>
+  <section id="live" hidden></section>
+  <section id="sess"></section>
+  <section id="stand"></section>
+</div>
+<script>
+const TIERS=["IRON","BRONZE","SILVER","GOLD","PLATINUM","EMERALD","DIAMOND","MASTER","GRANDMASTER","CHALLENGER"],DIV={IV:0,III:1,II:2,I:3};
+const cap=s=>s?s[0]+s.slice(1).toLowerCase():"";
+const score=r=>{if(!r)return null;const i=TIERS.indexOf(r.tier);return i>=7?2800+r.lp:i*400+(DIV[r.division]??0)*100+r.lp};
+const fmtS=r=>!r?"Unranked":TIERS.indexOf(r.tier)>=7?`${cap(r.tier).slice(0,2)} ${r.lp}`:`${cap(r.tier)[0]}${{IV:4,III:3,II:2,I:1}[r.division]} ${r.lp}`;
+const short=id=>(id||"").split("#")[0];
+const sgn=n=>(n>0?"+":"")+n;
+const el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const dayKey=t=>{const d=new Date(t);d.setHours(0,0,0,0);return+d};
+const ROLE_ORDER={TOP:0,JUNGLE:1,MIDDLE:2,BOTTOM:3,UTILITY:4},byRole=(a,b)=>(ROLE_ORDER[a.role]??9)-(ROLE_ORDER[b.role]??9);
+const ROLE={TOP:"Top",JUNGLE:"Jgl",MIDDLE:"Mid",BOTTOM:"ADC",UTILITY:"Sup"};
+let ddv="15.1.1",CHAMP={},DATA=null,etag=null;
+fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(r=>r.json()).then(v=>{ddv=v[0];return fetch(`https://ddragon.leagueoflegends.com/cdn/${ddv}/data/en_US/champion.json`)})
+  .then(r=>r.json()).then(c=>{for(const x of Object.values(c.data))CHAMP[x.key]={id:x.id,name:x.name};render()}).catch(()=>{});
+const icon=id=>CHAMP[id]?`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/champion/${CHAMP[id].id}.png`:"";
+const cname=id=>CHAMP[id]?.name||"?";
+if(!window.electronOverlay&&!/[?&]bare/.test(location.search))document.body.classList.add("page");
+
+const API="https://api.github.com/repos/HoeschleY/climb-race/contents/data.json?ref=data",RAW="https://raw.githubusercontent.com/HoeschleY/climb-race/data/data.json";
+async function fetchData(){
+  try{const h={Accept:"application/vnd.github.raw+json"};if(etag)h["If-None-Match"]=etag;const r=await fetch(API,{headers:h,cache:"no-store"});
+    if(r.status===304)return null;if(r.ok){etag=r.headers.get("ETag");return r.json()}}catch{}
+  const r=await fetch(RAW+"?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;return r.json()}
+async function load(){try{const d=await fetchData();if(d){DATA=d;try{localStorage.setItem("ov-data",JSON.stringify(d))}catch{}}}catch{}render()}
+try{DATA=JSON.parse(localStorage.getItem("ov-data")||"null")}catch{}
+
+const meSel=document.getElementById("me");
+let ME=null;try{ME=localStorage.getItem("ov-me")}catch{}
+meSel.onchange=()=>{ME=meSel.value;try{localStorage.setItem("ov-me",ME)}catch{}render()};
+let MIN=false;try{MIN=localStorage.getItem("ov-min")==="1"}catch{}
+document.getElementById("min").onclick=()=>{MIN=!MIN;try{localStorage.setItem("ov-min",MIN?"1":"0")}catch{}render()};
+
+function players(){return Object.values(DATA.players).map(p=>({...p,games:Object.values(p.matches||{}).sort((a,b)=>b.at-a.at)}))}
+function liveOf(p,all){if(!p.live||Date.now()-Date.parse(DATA.updatedAt)>15*6e4)return null;
+  const done=q=>q&&q.games.some(g=>g.at-(g.dur||0)*1e3>=p.live.start-18e4);
+  if(Date.now()-p.live.start>70*6e4||done(p)||(p.live.mates||[]).some(m=>done(all.find(x=>x.riotId===m.id))))return null;return p.live}
+
+function render(){
+  const ov=document.getElementById("ov");ov.classList.toggle("min",MIN);document.getElementById("min").textContent=MIN?"+":"–";
+  if(!DATA)return;const all=players();
+  if(meSel.options.length!==all.length){meSel.innerHTML="";all.forEach(p=>meSel.append(new Option(short(p.riotId),p.riotId)))}
+  if(!ME||!all.some(p=>p.riotId===ME))ME=all[0].riotId;meSel.value=ME;
+  const me=all.find(p=>p.riotId===ME),fresh=Date.now()-Date.parse(DATA.updatedAt)<20*6e4;
+  document.getElementById("dot").className="dotl"+(fresh?" on":"");
+  renderLive(me,all);renderSession(me);renderStand(all);
+}
+function renderLive(me,all){const box=document.getElementById("live");box.innerHTML="";
+  const live=liveOf(me,all);if(!live||!live.players){box.hidden=true;return}box.hidden=false;
+  const P=live.players.map(x=>{const fr=x.tracked&&all.find(q=>q.riotId===x.tracked);return fr?.current?{...x,rank:{...fr.current,hot:x.rank?.hot}}:x});
+  const my=live.team,rk=P.filter(x=>x.rank).map(x=>score(x.rank)),avg=rk.length?rk.reduce((a,b)=>a+b,0)/rk.length:null;
+  const h=el("h4",null,"Enemy team");const tm=el("span");tm.dataset.start=live.start;h.append(tm);box.append(h);
+  const partner=P.filter(x=>x.team===my&&x.party&&x.party===P.find(y=>y.tracked===ME)?.party&&x.tracked!==ME);
+  P.filter(x=>x.team!==my).sort(byRole).forEach(x=>{let t=0;const why=[],weak=[];
+    if(x.rank?.hot){t+=2;why.push("win streak")}
+    if(x.mastery?.pts>=200000){t+=2;why.push(`OTP ${Math.round(x.mastery.pts/1000)}k`)}else if(x.mastery?.pts>=75000){t+=1;why.push(`${Math.round(x.mastery.pts/1000)}k mastery`)}
+    if(x.rank&&avg!=null){const d=score(x.rank)-avg;if(d>=100){t+=Math.min(3,Math.floor(d/100));why.push("above lobby")}else if(d<=-150)weak.push("below lobby")}
+    const n=x.rank?x.rank.wins+x.rank.losses:0,wr=n?x.rank.wins/n:0;
+    if(n>=40&&wr>=.56){t+=1;why.push(`${Math.round(wr*100)}% WR`)}else if(n>=40&&wr<=.45)weak.push(`${Math.round(wr*100)}% WR`);
+    if(x.party)t+=1;
+    if(x.mastery&&x.mastery.pts<10000)weak.push("new on champ");if(x.rank===null)weak.push("unranked");
+    const r=el("div","row");const im=el("img");im.src=icon(x.champId);im.alt="";r.append(im);
+    const nm=el("div","n");nm.append(el("b",null,cname(x.champId))," ",el("small",null,ROLE[x.role]||""));
+    if(x.party)nm.append(el("span","tag t-duo","DUO"));
+    if(t>=3)nm.append(el("span","tag t-thr","THREAT"));else if(weak.length&&t<2)nm.append(el("span","tag t-weak","WEAK"));
+    r.append(nm,el("span","r",x.rank?fmtS(x.rank):"Unr."));box.append(r);
+    const txt=(t>=2?why:[]).concat(weak).join(" · ");if(txt)box.append(el("div","why",txt))});
+  const ourD=new Set(P.filter(x=>x.team===my&&x.party).map(x=>x.party)).size,thD=new Set(P.filter(x=>x.team!==my&&x.party).map(x=>x.party)).size;
+  box.append(el("div","why",`Premades: ${ourD} yours, ${thD} theirs`+(partner.length?` · you're duo with ${short(partner[0].name)}`:"")));
+  tick()}
+function renderSession(me){const box=document.getElementById("sess");box.innerHTML="";
+  const today=dayKey(Date.now()),g=me.games.filter(x=>dayKey(x.at)===today),w=g.filter(x=>x.win).length;
+  const hist=(me.history||[]).filter(x=>x.t<today),base=hist.length?score(hist[hist.length-1]):score(me.history?.[0]),lp=base!=null&&me.current?score(me.current)-base:null;
+  let st=0;for(const x of me.games){if(!me.games.length)break;if(x.win===me.games[0].win)st++;else break}
+  const rt=g.filter(x=>x.rating!=null),avgR=rt.length?(rt.reduce((s,x)=>s+x.rating,0)/rt.length).toFixed(1):"–";
+  box.append(el("h4",null,`Today · ${short(me.riotId)}`));const s=el("div","stats");
+  [[`${w}-${g.length-w}`,"W-L",""],[lp==null?"–":sgn(lp),"LP",lp>0?"g":lp<0?"l":""],[me.games.length?`${st}${me.games[0].win?"W":"L"}`:"–","Streak",me.games[0]?.win?"g":"l"],[avgR,"Rating",""]]
+    .forEach(([v,k,c])=>{const d=el("div");d.append(el("b",c,v),el("small",null,k));s.append(d)});box.append(s)}
+function renderStand(all){const box=document.getElementById("stand");box.innerHTML="";box.append(el("h4",null,"Race"));
+  all.map(p=>({p,s:score(p.current)??-1,gain:score(p.current)!=null&&score(p.start)!=null?score(p.current)-score(p.start):null})).sort((a,b)=>b.s-a.s).forEach(({p,gain},i)=>{
+    const r=el("div","row st"+(p.riotId===ME?" me":""));r.append(el("span","pos",i+1),el("span","n",short(p.riotId)),el("span","r",fmtS(p.current)),el("span","r "+(gain>0?"g":gain<0?"l":""),gain==null?"":sgn(gain)));box.append(r)})}
+function tick(){document.querySelectorAll("[data-start]").forEach(e=>{const s=Math.max(0,Math.floor((Date.now()-+e.dataset.start)/1e3));e.textContent=`${Math.floor(s/60)}:${String(s%60).padStart(2,"0")}`})}
+setInterval(tick,1000);
+if(window.electronOverlay)new ResizeObserver(()=>window.electronOverlay.resize(Math.ceil(document.getElementById('ov').getBoundingClientRect().height)+2)).observe(document.getElementById('ov'));
+render();load();setInterval(load,30000);
+</script>
+</body>
+</html>
