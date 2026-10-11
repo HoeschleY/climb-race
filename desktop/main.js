@@ -11,8 +11,7 @@ function saveCfg() { try { const [x, y] = win.getPosition(); fs.writeFileSync(cf
 
 function setLocked(v) {
   locked = v;
-  win.setIgnoreMouseEvents(locked, { forward: true });
-  win.setOpacity(locked ? 0.9 : 1);
+  win.setIgnoreMouseEvents(locked);   // no mouse forwarding: it hooks every mouse move and can stutter games
   saveCfg(); updateTray();
 }
 function updateTray() {
@@ -26,6 +25,11 @@ function updateTray() {
   ]));
 }
 
+// The overlay is a few lines of text: keep it off the GPU so it never competes with the game
+app.disableHardwareAcceleration();
+app.commandLine.appendSwitch("disable-gpu-vsync");
+app.commandLine.appendSwitch("disable-smooth-scrolling");
+
 app.whenReady().then(() => {
   const cfg = readCfg(), area = screen.getPrimaryDisplay().workArea;
   win = new BrowserWindow({
@@ -33,7 +37,7 @@ app.whenReady().then(() => {
     x: cfg.x ?? area.x + area.width - 340, y: cfg.y ?? area.y + 120,
     frame: false, transparent: true, resizable: false, skipTaskbar: true, focusable: true,
     alwaysOnTop: true, hasShadow: false, backgroundColor: "#00000000",
-    webPreferences: { preload: path.join(__dirname, "preload.js"), contextIsolation: true, nodeIntegration: false },
+    webPreferences: { preload: path.join(__dirname, "preload.js"), contextIsolation: true, nodeIntegration: false, spellcheck: false },
   });
   win.setAlwaysOnTop(true, "screen-saver");
   win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
@@ -41,9 +45,8 @@ app.whenReady().then(() => {
   // links (u.gg builds…) open in the normal browser
   win.webContents.setWindowOpenHandler(({ url }) => { if (/^https:/.test(url)) shell.openExternal(url); return { action: "deny" }; });
   win.on("moved", saveCfg);
-  ipcMain.on("resize", (_e, h) => { const [w] = win.getSize(); win.setSize(w, Math.max(40, Math.min(900, h | 0))); });
-  // keep it on top when the game grabs focus
-  setInterval(() => { if (win.isVisible()) win.moveTop(); }, 3000);
+  let lastH = 0;
+  ipcMain.on("resize", (_e, h) => { h = Math.max(40, Math.min(900, h | 0)); if (Math.abs(h - lastH) < 2) return; lastH = h; const [w] = win.getSize(); win.setSize(w, h); });
   win.webContents.on("did-fail-load", () => setTimeout(() => win.loadURL(URL), 10000));
 
   globalShortcut.register("CommandOrControl+Shift+O", () => { win.isVisible() ? win.hide() : win.showInactive(); updateTray(); });

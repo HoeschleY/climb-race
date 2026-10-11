@@ -89,7 +89,7 @@ async function fetchData(){
   try{const h={Accept:"application/vnd.github.raw+json"};if(etag)h["If-None-Match"]=etag;const r=await fetch(API,{headers:h,cache:"no-store"});
     if(r.status===304)return null;if(r.ok){etag=r.headers.get("ETag");return r.json()}}catch{}
   const r=await fetch(RAW+"?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw 0;return r.json()}
-async function load(){try{const d=await fetchData();if(d){DATA=d;try{localStorage.setItem("ov-data",JSON.stringify(d))}catch{}}}catch{}render()}
+async function load(){try{const d=await fetchData();if(d&&d.updatedAt!==DATA?.updatedAt){DATA=d;try{localStorage.setItem("ov-data",JSON.stringify(d))}catch{}render()}}catch{}}
 try{DATA=JSON.parse(localStorage.getItem("ov-data")||"null")}catch{}
 
 const meSel=document.getElementById("me");
