@@ -37,6 +37,13 @@ h4 span{color:var(--teal);font-variant-numeric:tabular-nums}
 .g{color:var(--good)}.l{color:var(--bad)}
 .muted{color:var(--mut)}
 #ov.min section{display:none}
+.icons{display:flex;gap:3px;flex-wrap:wrap;align-items:center;margin:2px 0 4px}
+.icons img{width:24px;height:24px;border-radius:3px;background:#1d2430}
+.icons img.rn{border-radius:50%}
+.icons .lbl{color:var(--mut);font-size:10px;width:44px}
+.icons .k{width:30px;height:30px}
+.form{color:var(--mut);font-size:11px;padding:0 0 2px 28px}
+a.ext{color:var(--teal);text-decoration:none;font-size:11px}
 .hint{color:var(--mut);font-size:10px;padding:4px 8px}
 </style>
 </head>
@@ -63,6 +70,16 @@ const ROLE={TOP:"Top",JUNGLE:"Jgl",MIDDLE:"Mid",BOTTOM:"ADC",UTILITY:"Sup"};
 let ddv="15.1.1",CHAMP={},DATA=null,etag=null;
 fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(r=>r.json()).then(v=>{ddv=v[0];return fetch(`https://ddragon.leagueoflegends.com/cdn/${ddv}/data/en_US/champion.json`)})
   .then(r=>r.json()).then(c=>{for(const x of Object.values(c.data))CHAMP[x.key]={id:x.id,name:x.name};render()}).catch(()=>{});
+let ITEMS={},RUNES={},SPELLS={};
+fetch("https://ddragon.leagueoflegends.com/api/versions.json").then(r=>r.json()).then(v=>Promise.all([
+  fetch(`https://ddragon.leagueoflegends.com/cdn/${v[0]}/data/en_US/item.json`).then(r=>r.json()).then(j=>{ITEMS=j.data}),
+  fetch(`https://ddragon.leagueoflegends.com/cdn/${v[0]}/data/en_US/runesReforged.json`).then(r=>r.json()).then(j=>{j.forEach(t=>{RUNES[t.id]={name:t.name,icon:t.icon};t.slots.forEach(s=>s.runes.forEach(r=>RUNES[r.id]={name:r.name,icon:r.icon}))})}),
+  fetch(`https://ddragon.leagueoflegends.com/cdn/${v[0]}/data/en_US/summoner.json`).then(r=>r.json()).then(j=>{Object.values(j.data).forEach(x=>SPELLS[x.key]={name:x.name,img:x.image.full})})])).then(render).catch(()=>{});
+const itemIcon=id=>`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/item/${id}.png`,runeIcon=id=>RUNES[id]?`https://ddragon.leagueoflegends.com/cdn/img/${RUNES[id].icon}`:"";
+// A finished item: costs 2000+ gold and builds into nothing (boots count once they're upgraded)
+const isCore=id=>{const it=ITEMS[id];return it&&!it.into?.length&&it.gold?.total>=2000&&!(it.tags||[]).includes("Consumable")&&!(it.tags||[]).includes("Boots")};
+const isBoots=id=>{const it=ITEMS[id];return it&&(it.tags||[]).includes("Boots")&&it.gold?.total>=900};
+const pct=(w,n)=>n?Math.round(w/n*100)+"%":"–";
 const icon=id=>CHAMP[id]?`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/champion/${CHAMP[id].id}.png`:"";
 const cname=id=>CHAMP[id]?.name||"?";
 if(!window.electronOverlay&&!/[?&]bare/.test(location.search))document.body.classList.add("page");
@@ -114,10 +131,32 @@ function renderLive(me,all){const box=document.getElementById("live");box.innerH
     if(x.party)nm.append(el("span","tag t-duo","DUO"));
     if(t>=3)nm.append(el("span","tag t-thr","THREAT"));else if(weak.length&&t<2)nm.append(el("span","tag t-weak","WEAK"));
     r.append(nm,el("span","r",x.rank?fmtS(x.rank):"Unr."));box.append(r);
+    const f=x.form;if(f&&f.n){const kda=((f.k+f.a)/Math.max(1,f.d)).toFixed(1);
+      const fl=el("div","form",`Last ${f.n}: ${f.w}W ${f.n-f.w}L · ${f.k}/${f.d}/${f.a} · ${f.csm} cs/m`+(f.on?` · ${f.on}× this champ`:""));fl.title=`${kda} KDA. ${f.on?`${f.on} of the last ${f.n} on ${cname(x.champId)} (${f.onW}W)`:`None of the last ${f.n} on ${cname(x.champId)}`}`;box.append(fl)}
+    else if(f)box.append(el("div","form","Loading recent games…"));
     const txt=(t>=2?why:[]).concat(weak).join(" · ");if(txt)box.append(el("div","why",txt))});
   const ourD=new Set(P.filter(x=>x.team===my&&x.party).map(x=>x.party)).size,thD=new Set(P.filter(x=>x.team!==my&&x.party).map(x=>x.party)).size;
   box.append(el("div","why",`Premades: ${ourD} yours, ${thD} theirs`+(partner.length?` · you're duo with ${short(partner[0].name)}`:"")));
+  const mine=P.find(y=>y.tracked===ME);if(mine)buildBlock(box,mine);
   tick()}
+function buildBlock(box,x){const r=x.rec,ch=CHAMP[x.champId];
+  const h=el("h4",null,`Build · ${cname(x.champId)}`+(x.role?" "+(ROLE[x.role]||""):""));box.append(h);
+  if(!r||!r.n){box.append(el("div","why","No saved games on this champion yet."))}
+  else{
+    box.append(el("div","why",`From ${r.n} ranked game${r.n>1?"s":""} in our data${r.role?"":" (all roles)"} · ${pct(r.w,r.n)} wins`+(r.n<15?" · small sample":"")));
+    // runes: most played full page, else the most played keystone + secondary tree
+    const ru=el("div","icons");ru.append(el("span","lbl","Runes"));
+    const page=r.page?r.page[0].split(",").map(Number):[r.keys[0]?.[0]].filter(Boolean);
+    page.forEach((id,i)=>{const im=el("img","rn"+(i===0?" k":""));im.src=runeIcon(id);im.title=RUNES[id]?.name||"";im.alt="";ru.append(im)});
+    if(!r.page&&r.subs[0]){const im=el("img","rn");im.src=runeIcon(r.subs[0][0]);im.title="Secondary: "+(RUNES[r.subs[0][0]]?.name||"");ru.append(im)}
+    const k=r.keys[0];if(k)ru.append(el("span","why",`${RUNES[k[0]]?.name||""} ${pct(k[2],k[1])}`));box.append(ru);
+    if(r.spells[0]){const sp=el("div","icons");sp.append(el("span","lbl","Spells"));r.spells[0][0].split("+").forEach(id=>{const a=SPELLS[id];const im=el("img");if(a)im.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/spell/${a.img}`;im.title=a?.name||"";im.alt="";sp.append(im)});box.append(sp)}
+    const items=r.items.filter(([id])=>isCore(id)).slice(0,6),boots=r.items.find(([id])=>isBoots(id));
+    if(items.length||boots){const it=el("div","icons");it.append(el("span","lbl","Items"));
+      [...(boots?[boots]:[]),...items].forEach(([id,n,w])=>{const im=el("img");im.src=itemIcon(id);im.alt="";im.title=`${ITEMS[id]?.name||id}: built in ${n} of ${r.n} games, ${pct(w,n)} wins`;it.append(im)});box.append(it)}
+  }
+  if(ch){const a=el("a","ext",`Full build and matchup on u.gg ↗`);a.href=`https://u.gg/lol/champions/${ch.id.toLowerCase()}/build`+(x.role?`?role=${{TOP:"top",JUNGLE:"jungle",MIDDLE:"mid",BOTTOM:"adc",UTILITY:"support"}[x.role]}`:"");a.target="_blank";a.rel="noopener";box.append(a)}
+}
 function renderSession(me){const box=document.getElementById("sess");box.innerHTML="";
   const today=dayKey(Date.now()),g=me.games.filter(x=>dayKey(x.at)===today),w=g.filter(x=>x.win).length;
   const hist=(me.history||[]).filter(x=>x.t<today),base=hist.length?score(hist[hist.length-1]):score(me.history?.[0]),lp=base!=null&&me.current?score(me.current)-base:null;

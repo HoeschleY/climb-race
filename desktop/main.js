@@ -1,6 +1,6 @@
 // Climb Race overlay: a small always-on-top window over League (play in Borderless mode).
 // Ctrl+Shift+O  show / hide      Ctrl+Shift+L  lock (clicks pass through to the game) / unlock
-const { app, BrowserWindow, globalShortcut, ipcMain, screen, Tray, Menu, nativeImage } = require("electron");
+const { app, BrowserWindow, globalShortcut, ipcMain, screen, Tray, Menu, nativeImage, shell } = require("electron");
 const fs = require("fs"), path = require("path");
 const URL = "https://hoeschley.github.io/climb-race/overlay.html?bare";
 const cfgFile = () => path.join(app.getPath("userData"), "window.json");
@@ -38,6 +38,8 @@ app.whenReady().then(() => {
   win.setAlwaysOnTop(true, "screen-saver");
   win.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
   win.loadURL(URL);
+  // links (u.gg builds…) open in the normal browser
+  win.webContents.setWindowOpenHandler(({ url }) => { if (/^https:/.test(url)) shell.openExternal(url); return { action: "deny" }; });
   win.on("moved", saveCfg);
   ipcMain.on("resize", (_e, h) => { const [w] = win.getSize(); win.setSize(w, Math.max(40, Math.min(900, h | 0))); });
   // keep it on top when the game grabs focus

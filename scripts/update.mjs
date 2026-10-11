@@ -64,14 +64,72 @@ function scoreboard(m) {
 // ---- Live-game role guessing: Riot doesn't give roles during a game ----
 const ROLES = ["TOP", "JUNGLE", "MIDDLE", "BOTTOM", "UTILITY"];
 let roleTable = null, champNames = null, champTags = {};
+// Build and rune stats: every ranked game we've saved (race scoreboards) plus games fetched while scouting live opponents (builds.json)
+let buildRows = [], extraBuilds = null, buildsDirty = false, formCalls = 0;
+async function loadExtraBuilds() { if (extraBuilds) return; try { extraBuilds = JSON.parse(await readFile(`${D}/builds.json`, "utf8")); } catch { extraBuilds = []; } }
+function addBuilds(md) {
+  const id = md.metadata.matchId; if (extraBuilds.some(b => b.m === id) || buildRows.some(b => b.m === id)) return;
+  const v = (md.info.gameVersion || "").split(".").slice(0, 2).join(".");
+  for (const x of md.info.participants) {
+    const st = x.perks?.styles || [];
+    extraBuilds.push({ m: id, c: x.championName, r: x.teamPosition || "", w: x.win ? 1 : 0, i: [x.item0, x.item1, x.item2, x.item3, x.item4, x.item5],
+      k: st[0]?.selections?.[0]?.perk ?? null, s: st[1]?.style ?? null, p: [...(st[0]?.selections || []), ...(st[1]?.selections || [])].map(z => z.perk),
+      sp: [x.summoner1Id, x.summoner2Id], v });
+  }
+  if (extraBuilds.length > 30000) extraBuilds.splice(0, extraBuilds.length - 30000);
+  buildsDirty = true;
+}
+function recFor(champ, role) {
+  const all = [...buildRows, ...extraBuilds].filter(b => b.c === champ && md5ok(b));
+  const byRole = all.filter(b => b.r === role), pool = byRole.length >= 5 ? byRole : all;
+  if (!pool.length) return { n: 0 };
+  const top = (key, k) => { const m = {}; pool.forEach(b => { for (const v of [].concat(key(b))) { if (v == null || v === 0 || v === "") continue; const e = m[v] = m[v] || [v, 0, 0]; e[1]++; e[2] += b.w; } });
+    return Object.values(m).sort((a, b) => b[1] - a[1]).slice(0, k); };
+  const pages = pool.filter(b => b.p?.length === 6);
+  return { n: pool.length, w: pool.reduce((a, b) => a + b.w, 0), role: pool === byRole ? role : null,
+    items: top(b => b.i, 20), keys: top(b => b.k, 3), subs: top(b => b.s, 2), spells: top(b => [...(b.sp || [])].sort((a, c) => a - c).join("+"), 2),
+    page: pages.length ? top(b => b.p?.length === 6 ? b.p.join(",") : null, 1)[0] : null, pages: pages.length };
+}
+const md5ok = b => Array.isArray(b.i);
+function summarizeForm(got, champId) {
+  const g = got.filter(Boolean); if (!g.length) return { n: 0 };
+  const avg = i => Math.round(g.reduce((a, x) => a + x[i], 0) / g.length * 10) / 10, on = g.filter(x => x[6] === champId);
+  return { n: g.length, w: g.reduce((a, x) => a + x[0], 0), k: avg(1), d: avg(2), a: avg(3),
+    csm: Math.round(g.reduce((a, x) => a + x[4] / Math.max(1, x[5] / 60), 0) / g.length * 10) / 10, on: on.length, onW: on.reduce((a, x) => a + x[0], 0) };
+}
+// Each opponent's last 5 ranked games: fetched once per game, a few requests per round so the regular updates keep their budget
+async function formPass(live, g) {
+  await loadExtraBuilds();
+  const order = [...live.players].sort((a, b) => (a.team === live.team) - (b.team === live.team));
+  for (const x of order) {
+    if (x.tracked || (x.form && x.form.n !== undefined)) continue;
+    const pu = g.participants.find(y => (y.riotId || "") === x.name && y.championId === x.champId && !y.bot)?.puuid; if (!pu) continue;
+    const f = x.form || (x.form = { ids: null, got: [] });
+    const out_ = () => formCalls >= 14 || DEADLINE - Date.now() < 25e3;
+    try {
+      if (!f.ids) { if (out_()) return; formCalls++; f.ids = (await riot(cfg.region, `/lol/match/v5/matches/by-puuid/${pu}/ids?queue=420&count=5`)) || []; }
+      while (f.got.length < f.ids.length) {
+        if (out_()) return; formCalls++;
+        const md = await riot(cfg.region, `/lol/match/v5/matches/${f.ids[f.got.length]}`), y = md?.info?.participants?.find(z => z.puuid === pu);
+        f.got.push(y ? [y.win ? 1 : 0, y.kills, y.deaths, y.assists, y.totalMinionsKilled + y.neutralMinionsKilled, md.info.gameDuration, y.championId] : null);
+        if (md?.info) addBuilds(md);
+      }
+      x.form = summarizeForm(f.got, x.champId);
+    } catch {}
+  }
+}
 async function loadRoleData() {
   if (roleTable) return;
   roleTable = {};
   try {
     const { readdir } = await import("node:fs/promises");
     for (const f of await readdir(`${D}/matches`)) {
-      try { for (const x of JSON.parse(await readFile(`${D}/matches/${f}`, "utf8")).players) if (ROLES.includes(x.role)) {
-        const t = roleTable[x.champ] = roleTable[x.champ] || {}; t[x.role] = (t[x.role] || 0) + 1; } } catch {}
+      try { const sb = JSON.parse(await readFile(`${D}/matches/${f}`, "utf8"));
+        for (const x of sb.players) {
+          if (ROLES.includes(x.role)) { const t = roleTable[x.champ] = roleTable[x.champ] || {}; t[x.role] = (t[x.role] || 0) + 1; }
+          if (sb.queue === 420 && x.items) buildRows.push({ m: sb.id, c: x.champ, r: x.role, w: sb.teams.find(t => t.id === x.team)?.win ? 1 : 0,
+            i: x.items.slice(0, 6), k: x.rune, s: x.sub, sp: x.spells });
+        } } catch {}
     }
   } catch {}
   try {
@@ -213,7 +271,7 @@ for (const p of cfg.players) {
           }
           live.players.push({ name: x.riotId || "", champId: x.championId, team: x.teamId, spells: [x.spell1Id, x.spell2Id],
             rune: x.perks?.perkIds?.[0] ?? null, sub: x.perks?.perkSubStyle ?? null, tracked: tracked[x.puuid] || null, rank, mastery,
-            party: k?.party, role: k?.role, usual: k?.usual, _recent: recent });
+            party: k?.party, role: k?.role, usual: k?.usual, form: k?.form, _recent: recent });
           const me2 = live.players[live.players.length - 1];
           if (me2.usual === undefined && !x.bot) {
             const fr = tracked[x.puuid] && (out.players[tracked[x.puuid]] || old.players?.[tracked[x.puuid]]);
@@ -238,6 +296,9 @@ for (const p of cfg.players) {
         {   // roles: recomputed each round (no Riot requests), so new "usual role" info is used as soon as it arrives
           await loadRoleData(); [100, 200].forEach(t => guessRoles(live.players.filter(x => x.team === t)));
         }
+        await formPass(live, g);
+        // Build and rune suggestions for each friend in the game, recomputed each round from the saved games
+        for (const x of live.players) if (x.tracked) x.rec = recFor(champNames[x.champId], x.role);
       }
     } catch (e) { liveErr = e.message; console.error(`live check failed for ${p.riotId}: ${e.message}`); }
 
@@ -355,4 +416,5 @@ const strip = d => JSON.stringify({ ...d, updatedAt: 0, diag: 0, players: Object
 const changed = strip(out) !== strip(old), heartbeat = !old.updatedAt || Date.now() - Date.parse(old.updatedAt) > 5 * 60e3;
 const trouble = diag.budgetHit || diag.timeouts > 2 || Object.keys(diag.status).some(k => k !== "200" && k !== "404");
 if (changed || heartbeat || trouble) await writeFile(`${D}/data.json`, JSON.stringify(out));
+if (buildsDirty) await writeFile(`${D}/builds.json`, JSON.stringify(extraBuilds));
 console.log(changed ? "data changed" : heartbeat ? "heartbeat" : "no change");
