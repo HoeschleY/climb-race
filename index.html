@@ -520,7 +520,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610111606";
+const BUILD="202610131813";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/",RAW="https://raw.githubusercontent.com/HoeschleY/climb-race/data/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 // Data lives on the "data" branch. data.json: GitHub API with an ETag (unchanged checks are free), raw file as backup.
@@ -962,7 +962,7 @@ function selectSbPlayer(m,pi,g,initial){
   document.querySelectorAll("#mbody .sbr.sel").forEach(r=>r.classList.remove("sel"));
   document.querySelector(`#mbody .sbr[data-pi="${pi}"]`)?.classList.add("sel");
   const x=m.players[pi],panel=document.getElementById("ppanel");if(!x||!panel)return;panel.innerHTML="";
-  const opp=m.players.find(y=>y.team!==x.team&&y.role&&y.role===x.role),me=m.players.find(y=>y.tracked===g.riotId),side=me?.team||100;
+  const opp=m.players.find(y=>y.team!==x.team&&y.role&&y.role===x.role),side=100;   // one game: real map orientation, never mirrored
   const head=el("div","pphead");const im=el("img");im.src=icon(x.champ);im.alt="";
   const t=el("div");t.append(el("div","eyebrow","Selected player · click any row above to switch"),el("b",null,`${x.name.split("#")[0]} · ${x.champ}`));
   head.append(im,t);panel.append(head);
@@ -994,7 +994,7 @@ function selectSbPlayer(m,pi,g,initial){
     const deaths=m.kills.filter(k=>k[0]===pi).map(([v,k,t,x2,y2])=>({x:x2,y:y2,t,side,label:`Killed by ${k>=0?m.players[k]?.champ:"a tower or minions"} · `}));
     const map=riftMap(kills,240,[K[0]]);const extra=riftMap(deaths,240,[K[1]]).querySelector(".riftdots");map.append(extra);
     mbox.append(map);const lg=el("div","rlegend");K.forEach(f=>{const sp=el("span");const i=el("i");i.style.background=f[2];sp.append(i,`${f[3]}s: ${f[3]==="Kill"?kills.length:deaths.length}`);lg.append(sp)});
-    mbox.append(lg,el("p","note","Your base is bottom left. Hover a dot for details."))}
+    mbox.append(lg,el("p","note",`${x.champ} was on the ${x.team===100?"blue side (base bottom left)":"red side (base top right)"}. Hover a dot for details.`))}
   else mbox.append(el("p","note","Map positions for this game are being added."));
   row.append(mbox);panel.append(row);
   if(!initial)panel.scrollIntoView({behavior:"smooth",block:"nearest"});

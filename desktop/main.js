@@ -30,12 +30,14 @@ app.disableHardwareAcceleration();
 app.commandLine.appendSwitch("disable-gpu-vsync");
 app.commandLine.appendSwitch("disable-smooth-scrolling");
 
+app.setAppUserModelId("io.github.hoeschley.climbrace");   // its own taskbar icon
 app.whenReady().then(() => {
   const cfg = readCfg(), area = screen.getPrimaryDisplay().workArea;
   win = new BrowserWindow({
     width: 322, height: 300,
     x: cfg.x ?? area.x + area.width - 340, y: cfg.y ?? area.y + 120,
-    frame: false, transparent: true, resizable: false, skipTaskbar: true, focusable: true,
+    frame: false, transparent: true, resizable: false, skipTaskbar: false, focusable: true, title: "Climb Race",
+    icon: path.join(__dirname, "icon.png"),
     alwaysOnTop: true, hasShadow: false, backgroundColor: "#00000000",
     webPreferences: { preload: path.join(__dirname, "preload.js"), contextIsolation: true, nodeIntegration: false, spellcheck: false },
   });
@@ -45,6 +47,7 @@ app.whenReady().then(() => {
   // links (u.gg builds…) open in the normal browser
   win.webContents.setWindowOpenHandler(({ url }) => { if (/^https:/.test(url)) shell.openExternal(url); return { action: "deny" }; });
   win.on("moved", saveCfg);
+  win.on("restore", () => win.setAlwaysOnTop(true, "screen-saver"));   // back on top after the taskbar brings it back
   let lastH = 0;
   ipcMain.on("resize", (_e, h) => { h = Math.max(40, Math.min(900, h | 0)); if (Math.abs(h - lastH) < 2) return; lastH = h; const [w] = win.getSize(); win.setSize(w, h); });
   win.webContents.on("did-fail-load", () => setTimeout(() => win.loadURL(URL), 10000));
@@ -59,7 +62,7 @@ app.whenReady().then(() => {
   globalShortcut.register("CommandOrControl+Shift+O", () => { win.isVisible() ? win.hide() : win.showInactive(); updateTray(); });
   globalShortcut.register("CommandOrControl+Shift+L", () => setLocked(!locked));
 
-  const img = nativeImage.createFromDataURL("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGklEQVR4nGM4sSrvPyWYYdSAUQNGDRguBgAAHwvfH2uOggcAAAAASUVORK5CYII=");
+  const img = nativeImage.createFromPath(path.join(__dirname, "icon.png")).resize({ width: 16, height: 16 });
   tray = new Tray(img); tray.setToolTip("Climb Race Overlay"); updateTray();
   if (cfg.locked) setLocked(true);
 });

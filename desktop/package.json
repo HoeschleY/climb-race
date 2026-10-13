@@ -1,6 +1,6 @@
 {
   "name": "climb-race-overlay",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Climb race overlay for League of Legends",
   "main": "main.js",
   "author": "HoeschleY",
@@ -9,8 +9,8 @@
   "build": {
     "appId": "io.github.hoeschley.climbrace",
     "productName": "Climb Race Overlay",
-    "files": ["main.js", "preload.js", "client.js"],
-    "win": { "target": "portable" },
+    "files": ["main.js", "preload.js", "client.js", "icon.png"],
+    "win": { "target": "portable", "icon": "icon.ico" },
     "portable": { "artifactName": "ClimbRaceOverlay.exe" }
   }
 }
