@@ -4,6 +4,7 @@
 // as a secret in Cloudflare (RIOT_API_KEY) and never leaves this worker.
 //   GET /player?id=Name%23TAG   rank + last 10 ranked Solo/Duo games (&n=5 for fewer)
 //   GET /match?id=EUW1_123      full scoreboard of one game (same shape as the site's saved games)
+//   GET /live?p=puuid,puuid     who of the race players is in a game right now (cached 20 s, shared by every viewer)
 // Answers are cached (players 10 min, games 7 days), so repeated clicks cost no Riot requests.
 const PLATFORM = "euw1", REGION = "europe";
 const ALLOWED = ["https://hoeschley.github.io"];
@@ -151,6 +152,20 @@ async function player(env, ctx, id, n = GAMES) {
     rank: e ? { tier: e.tier, division: e.rank, lp: e.leaguePoints, wins: e.wins, losses: e.losses, hot: !!e.hotStreak } : null, games };
 }
 
+// Live games of the race players (spectator API), so the site shows a game within seconds instead of waiting for the tracker
+async function live(env, puuids) {
+  const out = {};
+  await Promise.all(puuids.map(async pu => {
+    const g = await riot(env, PLATFORM, `/lol/spectator/v5/active-games/by-summoner/${pu}`).catch(e => { if (e.status === 429) throw e; return undefined; });
+    if (g === undefined) return;                       // unknown (error): the site keeps what it had
+    const me = g?.participants?.find(x => x.puuid === pu);
+    out[pu] = g && me ? { gameId: g.gameId, champId: me.championId, team: me.teamId, queue: g.gameQueueConfigId, start: g.gameStartTime || 0, len: g.gameLength || 0,
+      players: g.participants.map(x => ({ name: x.riotId || "", champId: x.championId, team: x.teamId, spells: [x.spell1Id, x.spell2Id],
+        rune: x.perks?.perkIds?.[0] ?? null, sub: x.perks?.perkSubStyle ?? null, me: x.puuid === pu })) } : null;
+  }));
+  return { at: Date.now(), games: out };
+}
+
 export default {
   async fetch(req, env, ctx) {
     if (req.method === "OPTIONS") return new Response(null, { headers: { ...cors(req), "Access-Control-Allow-Methods": "GET", "Access-Control-Max-Age": "86400" } });
@@ -166,6 +181,15 @@ export default {
         if (out.error) return json(req, out, 404);
         ctx.waitUntil(cache.put(key, new Response(JSON.stringify(out), { headers: { "Cache-Control": "public, max-age=600" } })));
         return json(req, out, 200, 120);
+      }
+      if (url.pathname === "/live") {
+        const ps = (url.searchParams.get("p") || "").split(",").filter(x => /^[\w-]{60,90}$/.test(x)).slice(0, 8).sort();
+        if (!ps.length) return json(req, { error: "No players" }, 400);
+        const key = new Request(`https://cache.climb-race/live/${ps.join(",")}`), cache = caches.default;
+        const hit = await cache.match(key); if (hit) return json(req, await hit.json(), 200);
+        const out = await live(env, ps);
+        ctx.waitUntil(cache.put(key, new Response(JSON.stringify(out), { headers: { "Cache-Control": "public, max-age=20" } })));
+        return json(req, out, 200);
       }
       if (url.pathname === "/match") {
         if (!/^[A-Z0-9]+_\d+$/.test(id)) return json(req, { error: "Bad match id" }, 400);

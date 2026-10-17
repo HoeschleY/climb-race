@@ -67,7 +67,10 @@ const ROLES = ["TOP", "JUNGLE", "MIDDLE", "BOTTOM", "UTILITY"];
 let roleTable = null, champNames = null, champTags = {};
 // Build and rune stats: every ranked game we've saved (race scoreboards) plus games fetched while scouting live opponents (builds.json)
 let buildRows = [], extraBuilds = null, buildsDirty = false, formCalls = 0;
-async function loadExtraBuilds() { if (extraBuilds) return; try { extraBuilds = JSON.parse(await readFile(`${D}/builds.json`, "utf8")); } catch { extraBuilds = []; } }
+// builds.json is saved at most every 30 minutes; new scouting games wait in a local file on the runner in between
+const BPENDING = "builds-pending.json";
+async function loadExtraBuilds() { if (extraBuilds) return; try { extraBuilds = JSON.parse(await readFile(`${D}/builds.json`, "utf8")); } catch { extraBuilds = []; }
+  try { const pend = JSON.parse(await readFile(BPENDING, "utf8")), have = new Set(extraBuilds.map(b => b.m)); for (const b of pend) if (!have.has(b.m)) extraBuilds.push(b); } catch {} }
 function addBuilds(md) {
   const id = md.metadata.matchId; if (extraBuilds.some(b => b.m === id) || buildRows.some(b => b.m === id)) return;
   const v = (md.info.gameVersion || "").split(".").slice(0, 2).join(".");
@@ -222,7 +225,8 @@ async function crawl() {
   try {
     const [tier, div] = LADDER[Math.floor(Math.random() * LADDER.length)];
     const page = 1 + Math.floor(Math.random() * (tier === "MASTER" ? 3 : 8));
-    const entries = await riot(cfg.platform, `/lol/league/v4/entries/RANKED_SOLO_5x5/${tier}/${div}?page=${page}`) || [];
+    const entries = tier === "MASTER" ? ((await riot(cfg.platform, `/lol/league/v4/masterleagues/by-queue/RANKED_SOLO_5x5`))?.entries || [])
+      : await riot(cfg.platform, `/lol/league/v4/entries/RANKED_SOLO_5x5/${tier}/${div}?page=${page}`) || [];
     const who = entries[Math.floor(Math.random() * entries.length)]?.puuid; if (!who) return;
     const ids = await riot(cfg.region, `/lol/match/v5/matches/by-puuid/${who}/ids?queue=420&count=5`) || [];
     let got = 0;
@@ -563,15 +567,26 @@ if (alerts.length && process.env.DISCORD_WEBHOOK) {
 out.diag = { at: new Date().toISOString(), secs: Math.round((Date.now() - ROUND_START) / 1000), ...diag };
 console.log("round health:", JSON.stringify(out.diag));
 const strip = d => JSON.stringify({ ...d, updatedAt: 0, diag: 0, players: Object.fromEntries(Object.entries(d.players || {}).map(([k, v]) => [k, { ...v, iconAt: 0, checkedAt: 0 }])) });
-try { await crawl(); } catch (e) { console.error("crawl failed: " + e.message); }
+{ const before = { ...diag.status };
+  try { await crawl(); } catch (e) { console.error("crawl failed: " + e.message); }
+  // the build-data crawler's requests are reported separately so its errors never mark the round as troubled
+  const extra = {}; for (const k of Object.keys(diag.status)) { const d0 = diag.status[k] - (before[k] || 0); if (d0) extra[k] = d0; if (before[k]) diag.status[k] = before[k]; else delete diag.status[k]; }
+  if (Object.keys(extra).length) out.diag.crawl = extra; }
 const changed = strip(out) !== strip(old), heartbeat = !old.updatedAt || Date.now() - Date.parse(old.updatedAt) > 5 * 60e3;
 const trouble = diag.budgetHit || diag.timeouts > 2 || Object.keys(diag.status).some(k => k !== "200" && k !== "404");
 if (changed || heartbeat || trouble) await writeFile(`${D}/data.json`, JSON.stringify(out));
-if (buildsDirty) await writeFile(`${D}/builds.json`, JSON.stringify(extraBuilds));
+let buildsSaved = false;
+if (buildsDirty) {
+  // time of the last save is kept in a local file on the runner (the data worktree is re-pulled every round)
+  let last = 0; try { last = JSON.parse(await readFile("builds-saved-at.json", "utf8")).t; } catch {}
+  if (Date.now() - last > 30 * 60e3) { await writeFile(`${D}/builds.json`, JSON.stringify(extraBuilds)); await writeFile("builds-saved-at.json", JSON.stringify({ t: Date.now() })); await writeFile(BPENDING, "[]"); buildsSaved = true; }
+  else { let have = new Set(); try { have = new Set(JSON.parse(await readFile(`${D}/builds.json`, "utf8")).map(b => b.m)); } catch {}
+    await writeFile(BPENDING, JSON.stringify(extraBuilds.filter(b => !have.has(b.m)))); }
+}
 // Champion win rates by role for the draft helper: refreshed when new builds arrive, at least hourly
 try {
   let cs = null; try { cs = JSON.parse(await readFile(`${D}/champstats.json`, "utf8")); } catch {}
-  if (!cs || buildsDirty || Date.now() - cs.at > 3600e3) {
+  if (!cs || buildsSaved || Date.now() - cs.at > 3600e3) {
     await loadRoleData(); await loadExtraBuilds();
     const roles = {}, seen = new Set();
     for (const b of [...buildRows, ...extraBuilds]) { const key = b.m + b.c; if (seen.has(key) || !b.c) continue; seen.add(key);

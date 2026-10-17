@@ -585,7 +585,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610170728";
+const BUILD="202610171645";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/",RAW="https://raw.githubusercontent.com/HoeschleY/climb-race/data/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 // Data lives on the "data" branch. data.json: GitHub API with an ETag (unchanged checks are free), raw file as backup.
@@ -621,8 +621,25 @@ function applyData(d,fromCache){
     const w=games.filter(x=>x.win).length,s0=score(p.start),s1=score(p.current);
     return{...p,color:COLORS[i%COLORS.length],games,w,l:games.length-w,gain:s0!=null&&s1!=null?s1-s0:null};
   });
-  TEAMBASE=null;syncSearch();renderAll();window.scrollTo({top:y});tickLive();healthCheck();
+  applyFast();TEAMBASE=null;syncSearch();renderAll();window.scrollTo({top:y});tickLive();healthCheck();
 }
+// Fast live check: the lookup proxy asks Riot's spectator service directly (cached 20 s for everyone),
+// so a game shows up within seconds; ranks and scouting are filled in by the tracker within a minute.
+let FAST=null,fastSig="",fastBusy=false;
+function applyFast(){if(!FAST||Date.now()-FAST.at>9e4)return;
+  players.forEach(p=>{const f=FAST.games[p.puuid];if(f===undefined)return;
+    if(f===null){p.live=null;return}
+    if(p.live?.gameId===f.gameId)return;
+    const friend=n=>players.find(q=>q.riotId.toLowerCase()===String(n).toLowerCase());
+    p.live={gameId:f.gameId,champId:f.champId,team:f.team,queue:f.queue,start:f.start||Date.now()-f.len*1e3,fast:true,
+      mates:f.players.filter(x=>!x.me&&friend(x.name)).map(x=>({id:friend(x.name).riotId,same:x.team===f.team})),
+      players:f.players.map(x=>({name:x.name,champId:x.champId,team:x.team,spells:x.spells,rune:x.rune,sub:x.sub,tracked:friend(x.name)?.riotId||null}))}})}
+async function pollFast(force){
+  if(!PROXY()||!players.length||fastBusy||(document.hidden&&!force))return;fastBusy=true;
+  try{const r=await fetch(`${PROXY()}/live?p=${players.map(p=>p.puuid).filter(Boolean).join(",")}`);if(r.ok){FAST=await r.json();
+    const sig=JSON.stringify(Object.values(FAST.games).map(g=>g&&g.gameId));
+    if(sig!==fastSig){fastSig=sig;players=players.map(p=>({...p,live:DATA.players[p.riotId]?.live||null}));applyFast();renderAll()}}}catch{}
+  fastBusy=false}
 function healthCheck(){const a=document.getElementById("alert");if(!a||!DATA)return;const st=DATA.diag?.status||{},errs=Object.values(DATA.players).filter(p=>p.error);
   let msg="";if(st[401]||st[403])msg="Riot isn't accepting the API key, so standings have stopped updating. The key needs renewing in the repository's settings (Secrets → RIOT_API_KEY).";
   else if(errs.length===Object.keys(DATA.players).length&&errs.length)msg=`No player could be updated in the last round (${errs[0].error}). It usually clears up within a few minutes.`;
@@ -1261,7 +1278,7 @@ function selectSbPlayer(m,pi,g,initial){
 /* Live tab: every game a friend is in right now */
 const QUEUES={420:"Ranked Solo/Duo",440:"Ranked Flex",400:"Normal Draft",430:"Normal Blind",490:"Quickplay",450:"ARAM",1700:"Arena",1900:"URF"};
 const champName=id=>CHAMP[id]?.name||"?",champKey=id=>CHAMP[id]?.id||"";
-function liveGames(){const seen={},out=[];players.forEach(p=>{if(!liveBadge(p)||!p.live.players)return;const k=p.live.gameId||p.live.start;if(seen[k]){seen[k].friends.push(p);return}
+function liveGames(){const seen={},out=[];players.forEach(p=>{if(!liveBadge(p)||!p.live.players?.length)return;const k=p.live.gameId||p.live.start;if(seen[k]){seen[k].friends.push(p);if(seen[k].live.fast&&!p.live.fast)seen[k].live=p.live;return}
   seen[k]={live:p.live,friends:[p]};out.push(seen[k])});return out}
 function renderLive(){
   const box=document.getElementById("livegames");if(!box||!DATA)return;
@@ -1276,6 +1293,7 @@ function renderLive(){
     const card=el("article","panel livecard"),myTeam=friends[0].live.team;
     const head=el("div","lhead"),t=el("div");t.append(el("div","eyebrow",QUEUES[live.queue]||"Game"),el("b",null,friends.map(f=>short(f.riotId)).join(" & ")+" in game"));
     const tm=el("div","ltimer num");tm.dataset.start=live.start;tm.textContent="–";head.append(t,tm);card.append(head);
+    if(live.fast)card.append(el("p","note","Just spotted. Ranks, roles, duos and scouting are added within a minute."));
     // teams, friend's team first
     const teams=[myTeam,myTeam===100?200:100],avgRank=team=>{const r=live.players.filter(x=>x.team===team&&x.rank).map(x=>score(x.rank));return r.length?r.reduce((a,b)=>a+b,0)/r.length:null};
     const cols=el("div","lteams");
@@ -1492,10 +1510,11 @@ function renderRecords(){
 }
 
 const h=location.hash.slice(1);if(TABS.includes(h))show(h);
-document.getElementById("livepill").onclick=async()=>{document.getElementById("livetxt").textContent="Checking…";const before=DATA?.updatedAt;await load();if(DATA?.updatedAt===before)toast("Already up to date · new data every minute")};
-document.addEventListener("visibilitychange",()=>{if(!document.hidden&&Date.now()-lastCheck>15e3)load()});
+document.getElementById("livepill").onclick=async()=>{document.getElementById("livetxt").textContent="Checking…";const before=DATA?.updatedAt;pollFast(true);await load();if(DATA?.updatedAt===before)toast("Already up to date · new data every minute")};
+document.addEventListener("visibilitychange",()=>{if(!document.hidden){pollFast();if(Date.now()-lastCheck>15e3)load()}});
 load();
 setInterval(()=>{if(!document.hidden)load()},30e3);   // check for new data
+setInterval(()=>pollFast(),20e3);setTimeout(()=>pollFast(),1500);   // who is in a game right now (through the proxy)
 setInterval(tickLive,20e3);                            // keep "updated x min ago" current
 </script>
 </body>
