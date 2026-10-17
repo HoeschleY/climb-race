@@ -2,7 +2,7 @@
 // Climb Race lookup proxy (Cloudflare Worker).
 // Lets the website look up any player live without exposing the Riot API key: the key is stored
 // as a secret in Cloudflare (RIOT_API_KEY) and never leaves this worker.
-//   GET /player?id=Name%23TAG   rank + last 10 ranked Solo/Duo games
+//   GET /player?id=Name%23TAG   rank + last 10 ranked Solo/Duo games (&n=5 for fewer)
 //   GET /match?id=EUW1_123      full scoreboard of one game (same shape as the site's saved games)
 // Answers are cached (players 10 min, games 7 days), so repeated clicks cost no Riot requests.
 const PLATFORM = "euw1", REGION = "europe";
@@ -128,14 +128,14 @@ async function getMatch(env, ctx, id) {
   return sb;
 }
 
-async function player(env, ctx, id) {
+async function player(env, ctx, id, n = GAMES) {
   const [name, tag] = id.split("#"); if (!name || !tag) return { error: "Use Name#TAG" };
   const acc = await riot(env, REGION, `/riot/account/v1/accounts/by-riot-id/${encodeURIComponent(name)}/${encodeURIComponent(tag)}`);
   if (!acc) return { error: "Player not found" };
   const [entries, sum, ids] = await Promise.all([
     riot(env, PLATFORM, `/lol/league/v4/entries/by-puuid/${acc.puuid}`),
     riot(env, PLATFORM, `/lol/summoner/v4/summoners/by-puuid/${acc.puuid}`),
-    riot(env, REGION, `/lol/match/v5/matches/by-puuid/${acc.puuid}/ids?queue=420&count=${GAMES}`)]);
+    riot(env, REGION, `/lol/match/v5/matches/by-puuid/${acc.puuid}/ids?queue=420&count=${n}`)]);
   const e = (entries || []).find(z => z.queueType === "RANKED_SOLO_5x5");
   const matches = (await Promise.all((ids || []).map(mid => getMatch(env, ctx, mid).catch(() => null)))).filter(Boolean);
   const riotId = `${acc.gameName}#${acc.tagLine}`;
@@ -158,9 +158,11 @@ export default {
     if (!env.RIOT_API_KEY) return json(req, { error: "RIOT_API_KEY secret is missing in the worker settings" }, 500);
     try {
       if (url.pathname === "/player") {
-        const key = new Request(`https://cache.climb-race/player/${encodeURIComponent(id.toLowerCase())}`), cache = caches.default;
+        // n = number of games (1-10): the overlay asks for 5 per teammate in champ select to save Riot requests
+        const n = Math.min(GAMES, Math.max(1, +url.searchParams.get("n") || GAMES));
+        const key = new Request(`https://cache.climb-race/player/${n}/${encodeURIComponent(id.toLowerCase())}`), cache = caches.default;
         const hit = await cache.match(key); if (hit) return json(req, await hit.json(), 200, 120);
-        const out = await player(env, ctx, id);
+        const out = await player(env, ctx, id, n);
         if (out.error) return json(req, out, 404);
         ctx.waitUntil(cache.put(key, new Response(JSON.stringify(out), { headers: { "Cache-Control": "public, max-age=600" } })));
         return json(req, out, 200, 120);

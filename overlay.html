@@ -256,6 +256,36 @@ function buildBlock(box,x){const R0=x.rec,ch=CHAMP[x.champId];
   }
   if(ch){const a=el("a","ext",`Full build and matchup on u.gg ↗`);a.href=`https://u.gg/lol/champions/${ch.id.toLowerCase()}/build`+(x.role?`?role=${{TOP:"top",JUNGLE:"jungle",MIDDLE:"mid",BOTTOM:"adc",UTILITY:"support"}[x.role]}`:"");a.target="_blank";a.rel="noopener";box.append(a)}
 }
+/* ---------- Teammate lookups in champ select (through the site's lookup proxy) ---------- */
+const LK={};
+function SAMPLE_LOOK(name){const i=SAMPLE_MATES.indexOf(name),R=[["GOLD","II",40],["PLATINUM","IV",12],["GOLD","I",77],["SILVER","I",30],["GOLD","III",5]][i]||["GOLD","II",0];
+  const roles=[["TOP","TOP","TOP","TOP","MIDDLE"],["JUNGLE","JUNGLE","JUNGLE","JUNGLE","JUNGLE"],["MIDDLE","MIDDLE","TOP","MIDDLE","MIDDLE"],["UTILITY","UTILITY","UTILITY","BOTTOM","UTILITY"],["UTILITY","UTILITY","UTILITY","UTILITY","UTILITY"]][i]||[];
+  const champs=[["Garen","Garen","Garen","Darius","Garen"],["LeeSin","Viego","LeeSin","LeeSin","Kayn"],["Ahri","Syndra","Ahri","Orianna","Ahri"],["Thresh","Nautilus","Thresh","Jinx","Leona"],["Lulu","Nami","Lulu","Janna","Lulu"]][i]||[];
+  const wins=[[1,1,0,1,1],[1,0,1,1,0],[0,0,0,1,1],[0,1,0,0,1],[1,1,1,0,1]][i]||[];
+  return{st:"ok",p:{riotId:name,rank:{tier:R[0],division:R[1],lp:R[2],wins:60,losses:55,hot:i===4},games:roles.map((r,k)=>({role:r,champ:champs[k],win:!!wins[k]}))}}}
+function look(name){if(name.startsWith("Sample "))return SAMPLE_LOOK(name);if(!DATA?.proxy||!name||!name.includes("#"))return null;const k=name.toLowerCase();
+  if(!LK[k]){LK[k]={st:"loading"};fetch(`${DATA.proxy}/player?id=${encodeURIComponent(name)}&n=5`).then(r=>r.json().then(j=>{LK[k]=r.ok?{st:"ok",p:j}:{st:"err",msg:j.error||"Lookup failed"}}))
+    .catch(()=>{LK[k]={st:"err",msg:"Lookup unavailable"}}).finally(()=>{if(LK[k].st==="err")setTimeout(()=>delete LK[k],6e4);render()})}
+  return LK[k]}
+function mateBlock(box,d){
+  const mates=d.allies.filter(a=>a.cell!==d.me&&a.name);if(!mates.length||(!DATA?.proxy&&!mates[0].name.startsWith("Sample ")))return;
+  box.append(el("h4",null,"Your teammates"));
+  mates.forEach(a=>{const L=look(a.name),r=el("div","drow"),id=a.champ||a.hover,im=el("img");if(id)im.src=icon(id);im.alt="";if(!a.champ&&a.hover)im.classList.add("hv");r.append(im);
+    const n=el("div","n");n.append(el("b",null,`${short(a.name)}${a.pos?" · "+(ROLE[a.pos]||""):""}`));const ch=el("div","chips");
+    if(!L||L.st==="loading")n.append(el("small",null,"Looking up…"));else if(L.st==="err")n.append(el("small",null,L.msg));
+    else{const p=L.p,G=p.games||[],w=G.filter(g=>g.win).length;
+      n.append(el("small",null,(p.rank?fmtS(p.rank)+` · ${pct(p.rank.wins,p.rank.wins+p.rank.losses)}`:"Unranked")+(G.length?` · last ${G.length}: ${w}W ${G.length-w}L`:"")));
+      const roles={};G.forEach(g=>{if(g.role)roles[g.role]=(roles[g.role]||0)+1});const main=Object.entries(roles).sort((x,y)=>y[1]-x[1])[0];
+      if(a.pos&&main&&main[0]!==a.pos&&main[1]>=3)ch.append(el("span","chip bad",`usually ${ROLE[main[0]]||main[0]}: autofilled?`));
+      if(G.length>=3&&G.slice(0,3).every(g=>!g.win))ch.append(el("span","chip bad",`${G.findIndex(g=>g.win)<0?G.length:G.findIndex(g=>g.win)} losses in a row`));
+      if(G.length>=3&&G.slice(0,3).every(g=>g.win))ch.append(el("span","chip","on a win streak"));
+      if(p.rank?.hot)ch.append(el("span","chip","hot streak"));
+      if(id){const k=CHAMP[id]?.id,on=G.filter(g=>g.champ===k);if(on.length)ch.append(el("span","chip",`${on.length}/${G.length} recent on ${cname(id)} (${on.filter(g=>g.win).length}W)`));else if(G.length>=3)ch.append(el("span","chip bad",`no recent games on ${cname(id)}`))}
+      const champs={};G.forEach(g=>champs[g.champ]=(champs[g.champ]||0)+1);const top=Object.entries(champs).sort((x,y)=>y[1]-x[1])[0];
+      if(top&&top[1]>=3&&(!id||CHAMP[id]?.id!==top[0]))ch.append(el("span","chip",`mains ${top[0]}`));
+      if(ch.childNodes.length)n.append(ch)}
+    r.append(n);box.append(r)});
+}
 /* ---------- Draft helper (champ select) ---------- */
 const POSN={TOP:"Top",JUNGLE:"Jungle",MIDDLE:"Mid",BOTTOM:"ADC",UTILITY:"Support"};
 const shr=(w,n,k=2)=>(w+k/2)/(n+k);   // win rate pulled toward 50% when there are few games
@@ -311,6 +341,7 @@ function renderDraft(me,all,d){const box=document.getElementById("draft");box.in
       r.append(el("span",null,t));c.append(r)});return c};
   picks.append(col("Your team",d.allies,true),col("Enemy team",d.enemies,false));box.append(picks);
   if(d.bans.length){const b=el("div","icons banrow");b.append(el("span","lbl","Bans"));d.bans.forEach(id=>{const im=el("img");im.src=icon(id);im.title=cname(id);im.alt="";b.append(im)});box.append(b)}
+  mateBlock(box,d);
   // pick suggestions
   box.append(el("h4",null,R.opp?`Picks · vs ${cname(R.opp.champ)}`:"Picks for you"));
   if(!R.list.length)box.append(el("div","form","Not enough games in our data for this role yet."));
@@ -330,10 +361,11 @@ function sampleRec(role){
   const ad={type:"AD",n:830,w:415,role,src:"meta",patch:"16.20",order:["3031,3072,3036",300,160],start:["1055,2003",700,350],items:[[3006,7,4],[3031,6,4],[3072,6,3],[6672,5,3],[3036,4,2],[3046,3,2]],keys:[[8008,6,4]],subs:[[8300,5,3]],spells:[["4+7",6,4]],
     page:["8008,9111,9104,8017,8345,8347",5,3],skills:{start:"QWE",max:"QWE",seq:"QWEQQRQWQWRWWEEREE",n:6}};
   return{...ap,variants:[ap,ad]}}
+const SAMPLE_MATES=["Sample Top#EUW","Sample Jungle#EUW","Sample Mid#EUW","Sample ADC#EUW","Sample Support#EUW"];
 function sampleDraft(me){const pos=myMainPos(me),order=["TOP","JUNGLE","MIDDLE","BOTTOM","UTILITY"];
   const fill={TOP:86,JUNGLE:64,MIDDLE:0,BOTTOM:222,UTILITY:0},enemy=[122,238,0,0,0];
   return{me:order.indexOf(pos),turn:"pick",phase:"BAN_PICK",left:24,bans:[157,777,555,875,233].filter(x=>CHAMP[x]),
-    allies:order.map((p,i)=>({cell:i,pos:p,champ:p===pos?0:(p==="BOTTOM"?0:fill[p]),hover:p==="BOTTOM"?222:0})),
+    allies:order.map((p,i)=>({cell:i,pos:p,champ:p===pos?0:(p==="BOTTOM"?0:fill[p]),hover:p==="BOTTOM"?222:0,name:p===pos?me.riotId:SAMPLE_MATES[i]})),
     enemies:enemy.map((c,i)=>({cell:5+i,champ:c,pos:""}))}}
 function sampleLive(me){const pos=myMainPos(me),order=["TOP","JUNGLE","MIDDLE","BOTTOM","UTILITY"];
   const champOf=me.games.find(g=>g.role===pos)?.champ,mine=KEY[champOf]||103;

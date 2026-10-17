@@ -227,6 +227,10 @@ main{padding-block:18px 56px}
 @media (max-width:900px){.ctot{grid-template-columns:1fr 1fr}.mgrid{grid-template-columns:1fr}}
 .livepill{display:inline-flex;align-items:center;gap:8px;flex:none;font:600 .82rem var(--body);color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:6px 14px;cursor:pointer;white-space:nowrap}
 .livepill:hover{border-color:var(--gold)}
+.psearch{display:flex;align-items:center;gap:6px;flex:none;margin-left:auto;margin-right:10px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:5px 12px;color:var(--muted)}
+.psearch:focus-within{border-color:var(--gold);color:var(--fg)}.psearch svg{width:15px;height:15px;flex:none}
+.psearch input{background:none;border:0;outline:0;color:var(--fg);font:500 .85rem var(--body);width:150px}.psearch input::placeholder{color:var(--muted)}
+.psearch[hidden]{display:none}
 .livepill i{width:8px;height:8px;border-radius:50%;background:var(--win);box-shadow:0 0 0 0 #43c28688;animation:beat 2s infinite}
 .livepill.stale i{background:var(--gold);animation:none}.livepill.off i{background:var(--loss);animation:none}
 @keyframes beat{0%{box-shadow:0 0 0 0 #43c28688}70%{box-shadow:0 0 0 7px #43c28600}100%{box-shadow:0 0 0 0 #43c28600}}
@@ -249,7 +253,8 @@ main{padding-block:18px 56px}
   .topbar .barin{flex-wrap:wrap;row-gap:0;padding-top:8px}
   .topbar .tabs{order:3;flex-basis:100%;flex-wrap:wrap;justify-content:flex-start}
   .topbar .tabs button{padding:10px 10px}
-  .topbar .livepill{margin-left:auto}
+  .topbar .livepill{margin-left:0}
+  .topbar .psearch{margin-left:auto}
 }
 .gwrap{border:1px solid var(--line);border-radius:12px;padding:12px 14px 10px;margin-bottom:14px;background:var(--panel)}
 .gsvg{width:100%;height:150px;display:block;margin-top:6px}.gsvg text{font-size:11px}
@@ -420,6 +425,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
       <button role="tab" data-tab="h2h" aria-selected="false">Duos &amp; rivalries</button>
       <button role="tab" data-tab="records" aria-selected="false">Records</button>
     </nav>
+    <form class="psearch" id="psearch" autocomplete="off" title="Look up any EUW player live"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="psq" list="psrecent" placeholder="Look up Name#TAG" aria-label="Look up a player by Riot ID"><datalist id="psrecent"></datalist></form>
     <button class="livepill" id="livepill" type="button" title="Updates automatically. Click to check now."><i></i><span id="livetxt">Connecting…</span></button>
   </div>
 </header>
@@ -553,7 +559,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610170649";
+const BUILD="202610170716";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/",RAW="https://raw.githubusercontent.com/HoeschleY/climb-race/data/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 // Data lives on the "data" branch. data.json: GitHub API with an ETag (unchanged checks are free), raw file as backup.
@@ -589,7 +595,7 @@ function applyData(d,fromCache){
     const w=games.filter(x=>x.win).length,s0=score(p.start),s1=score(p.current);
     return{...p,color:COLORS[i%COLORS.length],games,w,l:games.length-w,gain:s0!=null&&s1!=null?s1-s0:null};
   });
-  TEAMBASE=null;renderAll();window.scrollTo({top:y});tickLive();healthCheck();
+  TEAMBASE=null;syncSearch();renderAll();window.scrollTo({top:y});tickLive();healthCheck();
 }
 function healthCheck(){const a=document.getElementById("alert");if(!a||!DATA)return;const st=DATA.diag?.status||{},errs=Object.values(DATA.players).filter(p=>p.error);
   let msg="";if(st[401]||st[403])msg="Riot isn't accepting the API key, so standings have stopped updating. The key needs renewing in the repository's settings (Secrets → RIOT_API_KEY).";
@@ -961,6 +967,16 @@ async function lookup(riotId){
   const k=riotId.toLowerCase(),c=LOOK[k];if(c&&Date.now()-c.t<5*6e4)return c.p;
   const p=(async()=>{let r;try{r=await fetch(`${PROXY()}/player?id=${encodeURIComponent(riotId)}`)}catch{throw new Error("Live lookup isn't reachable right now.")}const j=await r.json().catch(()=>({error:"Lookup failed"}));if(!r.ok)throw new Error(j.error||("Error "+r.status));return j})();
   LOOK[k]={t:Date.now(),p};p.catch(()=>delete LOOK[k]);return p}
+// Header search: look up any Riot ID (recent searches are remembered on this device)
+{const f=document.getElementById("psearch"),q=document.getElementById("psq"),dl=document.getElementById("psrecent");
+ const recent=()=>{try{return JSON.parse(localStorage.getItem("cr-recent")||"[]")}catch{return[]}};
+ const fill=()=>{dl.innerHTML="";[...players.map(p=>p.riotId),...recent()].forEach(v=>dl.append(new Option(v)))};
+ q.addEventListener("focus",fill);
+ f.onsubmit=e=>{e.preventDefault();const v=q.value.trim().replace(/\s*#\s*/,"#");if(!v)return;
+   if(!v.includes("#")){const fr=players.find(p=>short(p.riotId).toLowerCase()===v.toLowerCase());if(fr){goMatches(fr.riotId);q.value="";q.blur();return}toast("Add the tag, like Name#EUW");return}
+   try{localStorage.setItem("cr-recent",JSON.stringify([v,...recent().filter(x=>x.toLowerCase()!==v.toLowerCase())].slice(0,8)))}catch{}
+   q.value="";q.blur();MSTACK=[];modal.hidden=true;openProfile(v)}}
+function syncSearch(){const f=document.getElementById("psearch");if(f)f.hidden=!PROXY()}
 // Modal history so a profile opened from a game (and a game opened from a profile) can go back
 let MSTACK=[];
 function modalShow(render,push){if(push&&!modal.hidden&&modal._cur)MSTACK.push(modal._cur);if(!push)MSTACK=[];modal._cur=render;modal.hidden=false;document.body.style.overflow="hidden";render();
