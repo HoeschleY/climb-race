@@ -274,6 +274,25 @@ main{padding-block:18px 56px}
 .tteam.avg{color:var(--muted);border-color:var(--line)}
 .dmap{grid-column:1/-1}
 .dmap .chips{margin-bottom:10px}
+.mfilters{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:-4px 0 12px}
+.mfilters label{display:inline-flex;align-items:center;gap:6px;font:600 .8rem var(--body);color:var(--muted)}
+.mfilters select{font:600 .85rem var(--body);padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--text);cursor:pointer;max-width:180px}
+.mfilters select.on{border-color:var(--gold);color:var(--gold2)}
+.mfilters .mcount{margin-left:auto;color:var(--muted);font-size:.85rem}
+.mfilters .clr{font:600 .8rem var(--body);background:none;border:1px solid var(--line);color:var(--muted);border-radius:99px;padding:4px 10px;cursor:pointer}
+.mfilters .clr:hover{color:var(--text);border-color:var(--muted)}
+.tagpills{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 2px}
+.tagpills button{font:600 .8rem var(--body);display:inline-flex;align-items:baseline;gap:5px;padding:4px 10px;border-radius:99px;border:1px solid var(--line);background:var(--panel2,var(--panel));color:var(--muted);cursor:pointer}
+.tagpills button b{font-size:.95rem;color:var(--text)}
+.tagpills button:hover{border-color:var(--gold);color:var(--text)}
+.tagpills button[aria-pressed=true]{border-color:var(--gold);background:var(--gold);color:#16120a}.tagpills button[aria-pressed=true] b{color:#16120a}
+dd button.lnkn{font:inherit;background:none;border:0;padding:0;color:inherit;cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
+dd button.lnkn:hover{color:var(--gold2)}
+.cdet span.go{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}.cdet span.go:hover{color:var(--gold2)}
+.mrow.go{cursor:pointer}.mrow.go:hover b{color:var(--gold2)}
+.pplinks{margin-left:auto;display:flex;gap:8px;align-items:center}
+.pplinks button,.pplinks a{font:600 .8rem var(--body);padding:6px 12px;border-radius:99px;border:1px solid var(--gold);background:none;color:var(--gold2);cursor:pointer;text-decoration:none;white-space:nowrap}
+.pplinks button:hover,.pplinks a:hover{background:var(--gold);color:#16120a}
 .dmrow{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start}
 .rift{position:relative;flex:none;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#0e1a1f}
 .rift svg,.rift img{position:absolute;inset:0;width:100%;height:100%}
@@ -434,6 +453,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
 <section id="matches" hidden>
   <div class="chips" id="pchips"></div>
   <div class="chips rchips" id="rchips"></div>
+  <div class="mfilters" id="mfilters"></div>
   <div class="panel" id="mlist"></div>
 </section>
 
@@ -464,7 +484,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
   <h2>Wall of shame</h2>
   <div class="fame shame" id="shame"></div>
   <h2>Luck meter</h2>
-  <p class="note" style="margin:-6px 0 12px"><b>Robbed:</b> rated 6.5+ but lost. <b>Carried:</b> rated under 4 but won. More robbed than carried means the climb is harder than it should be.</p>
+  <p class="note" style="margin:-6px 0 12px"><b>Robbed:</b> rated 6.5+ but lost. <b>Got carried:</b> rated under 4 but won. <b>Carries:</b> won, rated 7+ and 1.5 above your teammates. More robbed than got carried means the climb is harder than it should be. Click a number to see those games.</p>
   <div class="scards" id="luck" style="margin-bottom:26px"></div>
   <h2>Teammates</h2>
   <p class="note" style="margin:-6px 0 12px">Average lobby rating of your 4 teammates and of the 5 enemies in your games. If your teammates rate lower than the enemies, your games are harder than they look.</p>
@@ -520,7 +540,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610131813";
+const BUILD="202610170322";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/",RAW="https://raw.githubusercontent.com/HoeschleY/climb-race/data/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 // Data lives on the "data" branch. data.json: GitHub API with an ETag (unchanged checks are free), raw file as backup.
@@ -653,7 +673,7 @@ function renderStandings(){
     const rk=el("div","prank");rk.append(emblem(p.current?.tier,r.pos===1?40:32),el("span",null,fmt(p.current)));c.append(rk);
     c.append(el("div","pgain num "+(p.gain>0?"up":p.gain<0?"down":""),p.gain==null?"–":sgn(p.gain)+" LP"));
     const ps=pstats(p);if(ps.rating!=null)c.append(avgBadge(ps.rating));
-    c.append(el("div","psub num",`${p.games.length} games · ${p.games.length?Math.round(p.w/p.games.length*100):0}% · started ${fmt(p.start)}`));
+    c.append(el("div","psub num",`${p.games.length} games · ${p.games.length?Math.round(p.w/p.games.length*100):0}% · ${ps.carries.length} carr${ps.carries.length===1?"y":"ies"} · started ${fmt(p.start)}`));
     c.append(el("div","psub num",todayTxt(r.today)));if(p.error)c.append(el("div","err","Couldn't update: "+p.error));pod.append(c)});
   // Remaining rows
   const b=document.getElementById("stlist");b.innerHTML="";b.hidden=order.length<=3;
@@ -707,6 +727,33 @@ function renderGraph(){
 window.addEventListener("resize",()=>renderGraph());
 
 /* Match history */
+// Game tags, shared by the filters, the clickable counts and the luck meter
+const TAGS={
+  carries:{label:"Carries",tip:"Won, rated 7+ and at least 1.5 above your teammates' average",fn:g=>g.win&&g.rating>=7&&g.teamR!=null&&g.rating-g.teamR>=1.5},
+  mvp:{label:"MVP",tip:"Best rating of all 10 players",fn:g=>g.place===1},
+  robbed:{label:"Robbed",tip:"Rated 6.5+ but lost",fn:g=>!g.win&&g.rating>=6.5},
+  gotcarried:{label:"Got carried",tip:"Rated under 4 but won",fn:g=>g.win&&g.rating!=null&&g.rating<4},
+  goodteam:{label:"Good team",tip:"Teammates rated well above a typical game with the same result",fn:g=>teamKind(g)==="good"},
+  badteam:{label:"Bad team",tip:"Teammates rated well below a typical game with the same result",fn:g=>teamKind(g)==="bad"},
+  lanewon:{label:"Won lane",tip:"Ahead in gold of your lane opponent at 15 minutes",fn:g=>g.gd15!=null&&g.gd15>0},
+  lanelost:{label:"Lost lane",tip:"Behind in gold of your lane opponent at 15 minutes",fn:g=>g.gd15!=null&&g.gd15<0}};
+const MF0={champ:"all",result:"all",tag:"all",vs:"all",with:"all"};let MF={...MF0};
+function filterGames(gs){return gs.filter(g=>(MF.champ==="all"||g.champ===MF.champ)&&(MF.result==="all"||(MF.result==="w")===g.win)&&(MF.tag==="all"||TAGS[MF.tag].fn(g))
+  &&(MF.vs==="all"||(g.vs||[]).includes(MF.vs))&&(MF.with==="all"||(g.with||[]).includes(MF.with)))}
+// Open a player's match history with some filters set (from any clickable count or row on the site)
+function goMatches(riotId,f){selected=riotId;roleSel="all";MF={...MF0,...(f||{})};if(!modal.hidden)closeModal();show("matches");renderMatches()}
+function renderMatchFilters(full){
+  const box=document.getElementById("mfilters");box.innerHTML="";
+  const sel=(label,key,opts)=>{const l=el("label",null,label);const s=el("select");opts.forEach(([v,t])=>s.append(new Option(t,v)));
+    if(!opts.some(o=>o[0]===MF[key]))MF[key]="all";s.value=MF[key];s.classList.toggle("on",MF[key]!=="all");s.onchange=()=>{MF[key]=s.value;renderMatches()};l.append(s);box.append(l)};
+  const count=(key)=>{const m={};full.games.forEach(g=>[].concat(key(g)||[]).forEach(c=>m[c]=(m[c]||0)+1));return Object.entries(m).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0]))};
+  sel("Champion","champ",[["all","All champions"],...count(g=>g.champ).map(([c,n])=>[c,`${c} (${n})`])]);
+  sel("Result","result",[["all","Wins and losses"],["w","Wins"],["l","Losses"]]);
+  sel("Game","tag",[["all","Any game"],...Object.entries(TAGS).map(([k,t])=>[k,`${t.label} (${full.games.filter(t.fn).length})`])]);
+  sel("Against","vs",[["all","Any enemy"],...count(g=>g.vs).map(([c,n])=>[c,`${c} (${n})`])]);
+  sel("With","with",[["all","Any teammate"],...count(g=>g.with).map(([c,n])=>[c,`${c} (${n})`])]);
+  if(Object.keys(MF0).some(k=>MF[k]!=="all")){const c=el("button","clr","Clear filters");c.onclick=()=>{MF={...MF0};renderMatches()};box.append(c)}
+}
 function renderMatches(){
   if(!players.length)return;if(!players.find(p=>p.riotId===selected))selected=players[0].riotId;
   const chips=document.getElementById("pchips");chips.innerHTML="";
@@ -717,8 +764,11 @@ function renderMatches(){
   const rc=document.getElementById("rchips");rc.innerHTML="";
   [["all","All roles"],...played.map(r=>[r,role(r)])].forEach(([k,l])=>{const b=el("button",null,l);const c=k==="all"?full.games.length:full.games.filter(g=>g.role===k).length;b.append(el("small","num",c));
     b.setAttribute("aria-pressed",roleSel===k);b.onclick=()=>{roleSel=k;renderMatches()};rc.append(b)});
-  let p=full;if(roleSel!=="all"){const gs=full.games.filter(g=>g.role===roleSel),w=gs.filter(g=>g.win).length;p={...full,games:gs,w,l:gs.length-w}}
-  if(!p.games.length){list.append(el("div","empty","No ranked Solo/Duo games since the race started."));return}
+  renderMatchFilters(full);
+  const filtered=Object.keys(MF0).some(k=>MF[k]!=="all");
+  let p=full;if(roleSel!=="all"||filtered){const gs=filterGames(full.games.filter(g=>roleSel==="all"||g.role===roleSel)),w=gs.filter(g=>g.win).length;p={...full,games:gs,w,l:gs.length-w}}
+  {const mc=el("span","mcount num",filtered||roleSel!=="all"?`${p.games.length} of ${full.games.length} games`:`${full.games.length} games`);document.getElementById("mfilters").append(mc)}
+  if(!p.games.length){list.append(el("div","empty",full.games.length?"No games match these filters.":"No ranked Solo/Duo games since the race started."));return}
   const n=p.games.length,sum=k=>p.games.reduce((s,g)=>s+(g[k]||0),0),mins=sum("dur")/60,ps=pstats(p);
   const hdr=el("div","phdr");
   // identity
@@ -726,7 +776,9 @@ function renderMatches(){
   const nm=el("div","pname2",short(p.riotId)+" ");nm.append(el("small",null,"#"+p.riotId.split("#")[1]));it.append(nm);
   const rk=el("div","prank2");rk.append(emblem(p.current?.tier,24),fmt(p.current));it.append(rk);
   it.append(el("div","pgain2 num "+(p.gain>0?"up":p.gain<0?"down":""),p.gain==null?"–":sgn(p.gain)+" LP since the start"));
-  if(roleSel!=="all")it.append(el("div","muted rnote",`${role(roleSel)} only · ${p.games.length} of ${full.games.length} games`));
+  if(roleSel!=="all"||filtered){const bits=[roleSel!=="all"?role(roleSel):null,MF.champ!=="all"?MF.champ:null,MF.result!=="all"?(MF.result==="w"?"wins":"losses"):null,
+    MF.tag!=="all"?TAGS[MF.tag].label.toLowerCase():null,MF.vs!=="all"?"vs "+MF.vs:null,MF.with!=="all"?"with "+MF.with:null].filter(Boolean);
+    it.append(el("div","muted rnote",`${bits.join(" · ")} · ${p.games.length} of ${full.games.length} games`))}
   id.append(it);hdr.append(id);
   // 8 stats, two even rows
   const kda=sum("d")?((sum("k")+sum("a"))/sum("d")).toFixed(2):"Perfect";
@@ -741,6 +793,10 @@ function renderMatches(){
   const grid=el("div","pstats");stats.forEach(([k,v,t])=>{const d=el("div");d.append(el("span",null,k),el("b","num "+t,v));grid.append(d)});
   if(ps.mvp)grid.title=`${ps.mvp} MVP game${ps.mvp>1?"s":""}`;
   hdr.append(grid);list.append(hdr);
+  {const base=full.games.filter(g=>roleSel==="all"||g.role===roleSel),pills=el("div","tagpills");
+   ["carries","mvp","robbed","gotcarried","goodteam","badteam"].forEach(k=>{const t=TAGS[k],n=base.filter(t.fn).length;const b=el("button");b.append(el("b","num",n),t.label.toLowerCase());b.title=t.tip+". Click to show these games.";
+     b.setAttribute("aria-pressed",MF.tag===k);b.onclick=()=>{MF.tag=MF.tag===k?"all":k;renderMatches()};pills.append(b)});
+   list.append(pills)}
   list.append(profileOf(p));
   const best=Math.max(...p.games.map(perf));
   p.games.forEach(g=>list.append(gameRow(g,n>2?best:null)));
@@ -787,7 +843,7 @@ function deathMapBlock(p){
 function pstats(p){const r=p.games.filter(g=>g.rating!=null),l=p.games.filter(g=>g.gd15!=null);
   const avg=a=>a.length?a.reduce((s,x)=>s+x,0)/a.length:null;
   return{rating:avg(r.map(g=>g.rating)),rated:r.length,mvp:r.filter(g=>g.place===1).length,
-    robbed:r.filter(g=>!g.win&&g.rating>=6.5),carried:r.filter(g=>g.win&&g.rating<4),
+    robbed:r.filter(g=>TAGS.robbed.fn(g)),carried:r.filter(g=>TAGS.gotcarried.fn(g)),carries:r.filter(g=>TAGS.carries.fn(g)),
     gd15:avg(l.map(g=>g.gd15)),teamR:avg(p.games.filter(g=>g.teamR!=null).map(g=>g.teamR)),enemyR:avg(p.games.filter(g=>g.enemyR!=null).map(g=>g.enemyR)),csd15:avg(l.map(g=>g.csd15)),laned:l.length,laneWins:l.filter(g=>g.gd15>0).length}}
 const kfmt=n=>(n>=0?"+":"−")+(Math.abs(n)>=1000?(Math.abs(n)/1000).toFixed(1)+"k":Math.round(Math.abs(n)));
 function avgBadge(v,label){const b=el("span","rbadge num");if(v==null)return b;b.style.color=ratingCol(v);b.style.borderColor=ratingCol(v);b.append(el("b",null,v.toFixed(1)),el("span",null,label||"avg rating"));b.title="Average lobby rating over the race";return b}
@@ -796,6 +852,7 @@ function avgBadge(v,label){const b=el("span","rbadge num");if(v==null)return b;b
 let TEAMBASE=null;
 function teamBase(){const g=players.flatMap(p=>p.games).filter(x=>x.teamR!=null),st=a=>{const m=a.reduce((s,x)=>s+x,0)/(a.length||1);return{m,sd:Math.sqrt(a.reduce((s,x)=>s+(x-m)**2,0)/(a.length||1))||.6}};
   TEAMBASE={w:st(g.filter(x=>x.win).map(x=>x.teamR)),l:st(g.filter(x=>!x.win).map(x=>x.teamR))}}
+function teamKind(g){if(g.teamR==null)return null;if(!TEAMBASE)teamBase();const b=g.win?TEAMBASE.w:TEAMBASE.l,z=(g.teamR-b.m)/b.sd;return z>=.6?"good":z<=-.6?"bad":"avg"}
 function teamLabel(g){if(g.teamR==null)return null;if(!TEAMBASE)teamBase();const b=g.win?TEAMBASE.w:TEAMBASE.l,z=(g.teamR-b.m)/b.sd;
   const kind=z>=.6?"good":z<=-.6?"bad":"avg",t=el("span","tteam "+kind,kind==="good"?"Good team":kind==="bad"?"Bad team":"Average team");
   t.title=`Teammates averaged ${g.teamR.toFixed(1)}, against ${b.m.toFixed(1)} in a typical ${g.win?"win":"loss"}. Enemies averaged ${g.enemyR.toFixed(1)}.`;return t}
@@ -813,7 +870,8 @@ function profileOf(p){
   agg(g=>g.champ).slice(0,6).forEach(e=>{const r=el("div","prow"),img=el("img");img.src=icon(e.k);img.alt="";img.loading="lazy";
     const mid=el("div");mid.append(el("div","nm",e.k),el("div","sm num",`${e.n} game${e.n>1?"s":""} · ${e.D?((e.K+e.A)/e.D).toFixed(2):"Perfect"} KDA · ${e.min?(e.cs/e.min).toFixed(1):"–"} CS/min`));
     if(e.rn){const rb=avgBadge(e.rs/e.rn,"avg");rb.style.marginLeft="8px";mid.firstChild.append(rb)}
-    const wr=el("div","wr num",Math.round(e.w/e.n*100)+"%");wr.style.color=wrCol(e.w/e.n);r.append(img,mid,wr);pool.append(r)});
+    const wr=el("div","wr num",Math.round(e.w/e.n*100)+"%");wr.style.color=wrCol(e.w/e.n);r.append(img,mid,wr);
+    r.style.cursor="pointer";r.title=`Show only ${e.k} games`;r.onclick=()=>{MF.champ=MF.champ===e.k?"all":e.k;renderMatches()};pool.append(r)});
   pc.append(pool);box.append(pc);
   // Roles
   const rc=el("div");rc.append(el("h3",null,"Roles"));const bars=el("div","bars");
@@ -921,7 +979,7 @@ async function openMatch(g){
     const ob=el("div","obj num");[["Kills",`${sum("k")}/${sum("d")}/${sum("a")}`],["Gold",(sum("gold")/1000).toFixed(1)+"k"],["Towers",tm.obj.tower],["Dragons",tm.obj.dragon],["Barons",tm.obj.baron],["Grubs",tm.obj.grubs]].forEach(([k,v])=>{const s=el("span",null,k+" ");s.append(el("b",null,v));ob.append(s)});
     th.append(ob);box.append(th);
     const tbl=el("div","sb");const hr=el("div","sbr sbh");["Player","Rating","KDA","@15","Damage","CS","Gold","Items"].forEach(x=>hr.append(el("span",null,x)));tbl.append(hr);
-    tp.forEach(x=>{const r=el("div","sbr"+(x.tracked?" mine":""));const pi=m.players.indexOf(x);r.dataset.pi=pi;r.tabIndex=0;r.title="Show this player's gold and kills/deaths below";
+    tp.forEach(x=>{const r=el("div","sbr"+(x.tracked?" mine":""));const pi=m.players.indexOf(x);r.dataset.pi=pi;r.tabIndex=0;r.title="Show this player's gold, kills/deaths and match history link below";
       r.onclick=()=>selectSbPlayer(m,pi,g);r.onkeydown=e=>{if(e.key==="Enter")selectSbPlayer(m,pi,g)};
       const pl=el("div","sbp");const ci=el("div","sbc");const im=el("img");im.src=icon(x.champ);im.alt=x.champ;ci.append(im,el("span","lv",x.lvl));pl.append(ci);
       const sp=el("div","sbs");x.spells.forEach(s=>{const a=A.spells[s];const i=el("img");if(a){i.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/spell/${a.img}`;i.title=a.name}i.alt="";sp.append(i)});
@@ -965,7 +1023,12 @@ function selectSbPlayer(m,pi,g,initial){
   const opp=m.players.find(y=>y.team!==x.team&&y.role&&y.role===x.role),side=100;   // one game: real map orientation, never mirrored
   const head=el("div","pphead");const im=el("img");im.src=icon(x.champ);im.alt="";
   const t=el("div");t.append(el("div","eyebrow","Selected player · click any row above to switch"),el("b",null,`${x.name.split("#")[0]} · ${x.champ}`));
-  head.append(im,t);panel.append(head);
+  head.append(im,t);
+  {const links=el("div","pplinks"),[gn,tg]=x.name.split("#");
+   if(x.tracked&&players.some(q=>q.riotId===x.tracked)){const b=el("button",null,`${short(x.tracked)}'s match history ›`);b.onclick=()=>goMatches(x.tracked);links.append(b)}
+   else if(tg){const a=el("a",null,"Match history on op.gg ↗");a.href=`https://www.op.gg/summoners/euw/${encodeURIComponent(gn)}-${encodeURIComponent(tg)}`;a.target="_blank";a.rel="noopener";links.append(a)}
+   head.append(links)}
+  panel.append(head);
   const row=el("div","pprow");
   // gold over time vs lane opponent
   const gbox=el("div","ppgold");gbox.append(el("h3",null,opp?`Gold vs ${opp.champ} (lane opponent)`:"Gold over time"));
@@ -1117,7 +1180,8 @@ function renderChamps(){
     const who=el("div","cwho");Object.entries(e.by).sort((a,b)=>b[1].n-a[1].n).forEach(([id,b])=>{const p=players.find(x=>x.riotId===id);const s=el("span","cw");s.title=`${short(id)}: ${b.n} games, ${b.w}W`;if(p)s.append(avatar(p,22));s.append(el("small","num",b.n));who.append(s)});r.append(who);
     box.append(r);
     if(cOpen===e.k){const d=el("div","cdet");
-      Object.entries(e.by).sort((a,b)=>b[1].n-a[1].n).forEach(([id,b])=>d.append(el("span","num",`${short(id)}: ${b.n} game${b.n>1?"s":""}, ${Math.round(b.w/b.n*100)}% win rate${b.rn?`, ${(b.rs/b.rn).toFixed(1)} avg rating`:""}`)));
+      Object.entries(e.by).sort((a,b)=>b[1].n-a[1].n).forEach(([id,b])=>{const sp=el("span","num go",`${short(id)}: ${b.n} game${b.n>1?"s":""}, ${Math.round(b.w/b.n*100)}% win rate${b.rn?`, ${(b.rs/b.rn).toFixed(1)} avg rating`:""} ›`);
+        sp.title=`Show ${short(id)}'s games on ${e.k}`;sp.onclick=x=>{x.stopPropagation();goMatches(id,{champ:e.k})};d.append(sp)});
       if(e.best){const bg=el("button","lnk",`Best game: ${short(e.best.riotId)} ${e.best.k}/${e.best.d}/${e.best.a} ›`);bg.onclick=x=>{x.stopPropagation();openMatch(e.best)};d.append(bg)}
       box.append(d)}});
   // matchups
@@ -1125,7 +1189,8 @@ function renderChamps(){
     const list=Object.values(m).filter(e=>e.n>=2).sort((a,b)=>worst?(a.w/a.n-b.w/b.n)||b.n-a.n:(b.w/b.n-a.w/a.n)||b.n-a.n).slice(0,6);
     const b=document.getElementById(elId);b.innerHTML="";
     if(!list.length){b.append(el("div","empty",games.some(g=>g[key])?"Not enough games yet (2+ against the same champion).":"Builds up after the next update."));return}
-    list.forEach(e=>{const r=el("div","mrow");const im=el("img");im.src=icon(e.c);im.alt="";r.append(im,el("b",null,e.c));
+    list.forEach(e=>{const r=el("div","mrow"+(cFilter!=="all"?" go":""));const im=el("img");im.src=icon(e.c);im.alt="";r.append(im,el("b",null,e.c));
+      if(cFilter!=="all"){r.title=`Show these games`;r.onclick=()=>goMatches(cFilter,key==="vs"?{vs:e.c}:{with:e.c})}
       const s=el("span","num",`${Math.round(e.w/e.n*100)}% · ${e.w}W ${e.n-e.w}L`);s.style.color=wrCol(e.w/e.n);r.append(s);b.append(r)})};
   mu("vs","nemesis",true);mu("vs","victims",false);mu("with","allies",false);
 }
@@ -1192,7 +1257,8 @@ function renderRecords(){
     const c=el("div","scard"),h=el("div","shead"),net=s.robbed.length-s.carried.length;h.append(dot(p.color),el("b",null,short(p.riotId)));
     h.append(el("span","streak "+(net>0?"down":net<0?"up":""),net>0?"Unlucky":net<0?"Lucky":"Fair"));c.append(h);
     const bar=el("div","luckbar");const a=el("span","lr"),b=el("span","lc"),tot=Math.max(1,s.robbed.length+s.carried.length);a.style.width=s.robbed.length/tot*100+"%";b.style.width=s.carried.length/tot*100+"%";bar.append(a,b);
-    const dl=el("dl"),add=(k,v)=>dl.append(el("dt",null,k),el("dd","num",v));add("Robbed",s.robbed.length);add("Carried",s.carried.length);
+    const dl=el("dl"),add=(k,v,tag)=>{const dd=el("dd","num");if(tag&&v){const b=el("button","lnkn",v);b.title=`Show ${short(p.riotId)}'s ${TAGS[tag].label.toLowerCase()} games`;b.onclick=e=>{e.stopPropagation();goMatches(p.riotId,{tag})};dd.append(b)}else dd.append(v);dl.append(el("dt",null,k),dd)};
+    add("Robbed",s.robbed.length,"robbed");add("Got carried",s.carried.length,"gotcarried");add("Carries",s.carries.length,"carries");
     const worst=[...s.robbed].sort((x,y)=>y.rating-x.rating)[0];add("Most robbed",worst?`${worst.rating.toFixed(1)} on ${worst.champ}, lost`:"–");
     c.append(dl,bar);if(worst){c.style.cursor="pointer";c.title="Open that game";c.onclick=()=>openMatch(worst)}lk.append(c)});
   // Teammates table
