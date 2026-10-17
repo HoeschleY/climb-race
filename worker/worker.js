@@ -4,7 +4,7 @@
 // as a secret in Cloudflare (RIOT_API_KEY) and never leaves this worker.
 //   GET /player?id=Name%23TAG   rank + last 10 ranked Solo/Duo games
 //   GET /match?id=EUW1_123      full scoreboard of one game (same shape as the site's saved games)
-// Answers are cached (players 10 min, games 7 days) so repeated clicks cost no Riot requests.
+// Answers are cached (players 10 min, games 7 days), so repeated clicks cost no Riot requests.
 const PLATFORM = "euw1", REGION = "europe";
 const ALLOWED = ["https://hoeschley.github.io"];
 const GAMES = 10;
