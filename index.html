@@ -295,6 +295,26 @@ dd button.lnkn{font:inherit;background:none;border:0;padding:0;color:inherit;cur
 dd button.lnkn:hover{color:var(--gold2)}
 .cdet span.go{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}.cdet span.go:hover{color:var(--gold2)}
 .mrow.go{cursor:pointer}.mrow.go:hover b{color:var(--gold2)}
+.bpick{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap;margin-bottom:14px}
+.bsearch{display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:99px;padding:7px 14px;color:var(--muted)}.bsearch:focus-within{border-color:var(--gold)}
+.bsearch svg{width:15px;height:15px}.bsearch input{background:none;border:0;outline:0;color:var(--fg);font:500 .9rem var(--body);width:170px}
+.bfav{margin:0;flex:1}.bfav button{padding:4px 12px 4px 4px}.bfav button img{width:24px;height:24px;border-radius:50%}
+.bhead{display:flex;gap:16px;align-items:center;margin-bottom:10px}.bhead>img{width:72px;height:72px;border-radius:14px;border:1px solid var(--line)}.bhead h2{margin:0 0 8px}.bhead .chips{margin:0}.bhead>a{margin-left:auto}
+.bvars{display:flex;gap:8px;margin:4px 0 10px}.bvars button{flex:0 1 200px;cursor:pointer;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px 12px;color:var(--muted);text-align:left;font:inherit}
+.bvars button b{display:block;font-size:1.05rem;color:var(--fg)}.bvars button small{font-size:.78rem}.bvars button.on{border-color:var(--gold);background:linear-gradient(180deg,#c8aa6e22,transparent)}
+.bgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.bcard{padding:14px 16px}.bcard h3{margin:0 0 10px}
+.brunes{display:grid;grid-template-columns:1fr 1fr;gap:12px}.btree .btn{font:600 .75rem var(--body);text-transform:uppercase;letter-spacing:.07em;color:var(--gold);margin-bottom:6px}
+.brune{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:.88rem}.brune img{width:30px;height:30px;border-radius:50%;background:#0b0f15}.brune.key img{width:44px;height:44px;box-shadow:0 0 0 2px var(--gold)}.brune.key span{font-weight:700}
+.bstat{color:var(--muted);font-size:.8rem;margin-left:8px}.balt{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;font-size:.8rem}.bchip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:99px;padding:2px 9px 2px 3px}.bchip img.sm{width:20px;height:20px;border-radius:50%}
+.brow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 0;border-top:1px solid var(--line)}.brow:first-of-type{border-top:0}.blbl{width:60px;color:var(--muted);font:600 .75rem var(--body);text-transform:uppercase;letter-spacing:.06em}
+img.bit{width:34px;height:34px;border-radius:6px;border:1px solid var(--line);background:#0b0f15}.bar2{color:var(--muted);font-weight:700}
+.bitem{display:flex;flex-direction:column;align-items:center;gap:1px}.bitem small{font-size:.7rem;color:var(--muted)}.bord{display:flex;align-items:center;gap:4px;margin-right:12px}.bord img.bit{width:26px;height:26px}.bord small{color:var(--muted);font-size:.75rem}
+.bmax{display:flex;align-items:center;gap:8px;margin-bottom:10px}.bmax b{font-size:1.3rem}.bskg{display:grid;grid-template-columns:52px repeat(18,1fr);gap:2px}
+.bskg .bk{display:flex;align-items:center;gap:4px}.bskg .bk img{width:26px;height:26px;border-radius:5px}.bskg .bk b{font-size:.8rem;color:var(--muted)}
+.bskg i{height:26px;border-radius:3px;background:var(--panel2,#ffffff0a);font:600 .75rem/26px var(--body);text-align:center;font-style:normal;color:#0b0f15}
+.skQ{background:#0ac8b9!important;color:#0ac8b9}.skW{background:#c8aa6e!important}.skE{background:#9b7cf0!important}.skR{background:#e5555f!important}.bmax b.skQ,.bmax b.skW,.bmax b.skE,.bmax b.skR{background:none!important}.bmax b.skQ{color:#0ac8b9}.bmax b.skW{color:#c8aa6e}.bmax b.skE{color:#9b7cf0}.bmax b.skR{color:#e5555f}
+.bskg i.skQ{color:#0b0f15}.bgrp{display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--line)}.bgrp:first-of-type{border-top:0}.bgrp .lnk{margin-left:auto}
+@media (max-width:900px){.bgrid{grid-template-columns:1fr}}
 .pfhead{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
 .pfhead .pfn{font:700 1.6rem var(--display,inherit)}.pfhead .pfn small{color:var(--muted);font-size:.9rem;font-weight:500}
 .pfrank{display:flex;gap:10px;align-items:center}.pfrank b{font-size:1.05rem}
@@ -422,6 +442,7 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
       <button role="tab" data-tab="graph" aria-selected="false">LP graph</button>
       <button role="tab" data-tab="matches" aria-selected="false">Match history</button>
       <button role="tab" data-tab="champions" aria-selected="false">Champions</button>
+      <button role="tab" data-tab="builds" aria-selected="false">Builds</button>
       <button role="tab" data-tab="h2h" aria-selected="false">Duos &amp; rivalries</button>
       <button role="tab" data-tab="records" aria-selected="false">Records</button>
     </nav>
@@ -488,6 +509,11 @@ footer{color:var(--muted);font-size:.78rem;border-top:1px solid var(--line);padd
   </div>
 </section>
 
+<section id="builds" hidden>
+  <div class="bpick" id="bpick"><label class="bsearch"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="bq" list="bql" placeholder="Any champion…" aria-label="Champion"><datalist id="bql"></datalist></label><div class="chips bfav" id="bfav"></div></div>
+  <div id="bview"></div>
+</section>
+
 <section id="h2h" hidden>
   <h2>Duo partners</h2>
   <p class="note" style="margin:-6px 0 12px">Games two of you played on the same team.</p>
@@ -550,16 +576,16 @@ const splash=c=>`https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${c
 function perf(g){if(g.rating!=null)return g.rating*10+(g.win?.01:0);const m=Math.max(g.dur||1800,300)/60,kda=(g.k+g.a)/Math.max(1,g.d);
   return 2*Math.min(kda,10)+(g.kp||0)/12+(g.dmg||0)/m/180+(g.cs||0)/m*0.4+(g.vis||0)/m*1.2+(g.win?3:-1)+(g.multi>=3?2:0)+(g.penta||0)*6+(g.solo||0)*0.4-(g.d>=10?g.d-9:0)}
 
-const TABS=["home","live","standings","graph","matches","champions","h2h","records"];
+const TABS=["home","live","standings","graph","matches","champions","builds","h2h","records"];
 function show(tab){document.querySelectorAll("[role=tab]").forEach(b=>b.setAttribute("aria-selected",b.dataset.tab===tab));
-  TABS.forEach(id=>document.getElementById(id).hidden=id!==tab);window.scrollTo({top:0});history.replaceState(null,"","#"+tab);if(tab==="graph")renderGraph()}
+  TABS.forEach(id=>document.getElementById(id).hidden=id!==tab);window.scrollTo({top:0});history.replaceState(null,"","#"+tab);if(tab==="graph")renderGraph();if(tab==="builds")renderBuilds()}
 document.querySelectorAll("[role=tab]").forEach(b=>b.onclick=()=>show(b.dataset.tab));
 document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dataset.m;document.querySelectorAll("#gmode button").forEach(c=>c.setAttribute("aria-pressed",c===b));renderGraph()});
 
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610170716";
+const BUILD="202610170728";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/",RAW="https://raw.githubusercontent.com/HoeschleY/climb-race/data/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 // Data lives on the "data" branch. data.json: GitHub API with an ETag (unchanged checks are free), raw file as backup.
@@ -612,7 +638,7 @@ function renderAll(){
   const t0=Date.parse(DATA.raceStart),day=Math.round((dayKey(Date.now())-dayKey(t0))/864e5)+1;
   document.getElementById("daypill").textContent=`Day ${day}`;
   document.getElementById("sub").textContent=`Since ${new Date(t0).toLocaleDateString("en-GB",{day:"numeric",month:"long"})} · ${players.reduce((s,p)=>s+p.games.length,0)} games played · updated ${ago(Date.parse(DATA.updatedAt))} · ${Date.now()-Date.parse(DATA.updatedAt)>20*6e4?"updates are delayed":"updates every minute"}`;
-  for(const f of [renderLive,renderHome,renderSpotlight,renderStandings,renderGraph,renderMatches,renderH2H,renderRecords,renderChamps,fitAll]){try{f()}catch(e){console.error(f.name,e)}}
+  for(const f of [renderBuilds,renderLive,renderHome,renderSpotlight,renderStandings,renderGraph,renderMatches,renderH2H,renderRecords,renderChamps,fitAll]){try{f()}catch(e){console.error(f.name,e)}}
 }
 
 /* LP series, shared by graph, today and records */
@@ -744,6 +770,95 @@ function renderGraph(){
   svgEl.addEventListener("mouseleave",()=>{tip.hidden=true;cross.setAttribute("opacity",0)});
 }
 window.addEventListener("resize",()=>renderGraph());
+
+/* ---------- Builds tab: runes, items and skill order from Emerald+ games (meta.json) ---------- */
+let META=null,METAP=null,ITEMD=null,bChamp=null,bRole=null,bVar=null;
+const pct=(w,n)=>n?Math.round(w/n*100)+"%":"–";
+const TRINKETS=new Set([3340,3363,3364,3330]);
+function loadMeta(){if(METAP)return METAP;METAP=Promise.all([
+    fetch(RAW+"meta.json?t="+Math.floor(Date.now()/18e5),{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
+    fetch(`https://ddragon.leagueoflegends.com/cdn/${ddv}/data/en_US/item.json`).then(r=>r.json()).then(j=>j.data).catch(()=>({})),assets()])
+  .then(([m,it])=>{META=m;ITEMD=it||{};renderBuilds()});return METAP}
+const patchCmp=(a,b)=>{const[a1,a2]=a.split(".").map(Number),[b1,b2]=b.split(".").map(Number);return b1-a1||b2-a2};
+const metaKeyOf=c=>{if(!META)return null;const lc=c.toLowerCase();for(const P of Object.values(META.patches))for(const k of Object.keys(P)){const n=k.split("|")[0];if(n.toLowerCase()===lc)return n}return c};
+// all roles with data for a champion, most played first: [role, games, patch]
+function metaRoles(c){const out={};if(!META)return[];const key=metaKeyOf(c);
+  for(const p of Object.keys(META.patches).sort(patchCmp))for(const [k,a] of Object.entries(META.patches[p])){const [n,r,t]=k.split("|");if(n!==key||t!=="*"||!r)continue;if(!out[r]&&a.n>=15)out[r]=[r,a.n,p]}
+  return Object.values(out).sort((a,b)=>b[1]-a[1])}
+const sortC=m=>Object.entries(m||{}).map(([v,[n,w]])=>[v,n,w]).sort((a,b)=>b[1]-a[1]);
+const isDone=id=>{const it=ITEMD[id];return it&&!(it.into||[]).length&&(it.gold?.total||0)>=2000&&!(it.tags||[]).includes("Consumable")&&!(it.tags||[]).includes("Boots")};
+const isBootsI=id=>{const it=ITEMD[id];return it&&(it.tags||[]).includes("Boots")&&(it.gold?.total||0)>=900};
+function skillsFrom(m){const rows=sortC(m);if(!rows.length)return null;const tot=rows.reduce((s,r)=>s+r[1],0),cnt=(f)=>{const c={};rows.forEach(([q,n])=>{const k=f(q);c[k]=(c[k]||0)+n});return Object.entries(c).sort((a,b)=>b[1]-a[1])[0]};
+  const start=cnt(q=>q.slice(0,3)),max=cnt(q=>{const c={Q:0,W:0,E:0},done=[];for(const ch of q){if(ch==="R")continue;c[ch]++;if(c[ch]===5)done.push(ch)}for(const ch of Object.entries(c).sort((a,b)=>b[1]-a[1]).map(e=>e[0]))if(!done.includes(ch))done.push(ch);return done.join("")});
+  const lv={Q:0,W:0,E:0,R:0};let seq="";for(let L=1;L<=18;L++){let p=L<=3?start[0][L-1]:null;if([6,11,16].includes(L))p="R";
+    if(!p||(p!=="R"&&(lv[p]>=5||lv[p]+1>Math.floor((L+1)/2))))p=[...max[0]].find(c=>lv[c]<5&&lv[c]+1<=Math.floor((L+1)/2))||[...max[0]].find(c=>lv[c]<5);lv[p]++;seq+=p}
+  return{start:start[0],max:max[0],seq,n:tot,maxShare:max[1]/tot}}
+function goBuild(champ,role){bChamp=champ;bRole=role||null;bVar=null;show("builds");renderBuilds()}
+function renderBuilds(){
+  const box=document.getElementById("bview");if(!box||document.getElementById("builds").hidden)return;
+  if(!META){box.innerHTML="";box.append(el("div","empty","Loading high-elo build data…"));loadMeta();return}
+  // champion picker: input + the group's most played champions
+  const pick=document.getElementById("bpick");if(!pick.dataset.ready){pick.dataset.ready=1;
+    const inp=document.getElementById("bq"),dl=document.getElementById("bql");Object.values(CHAMP).sort((a,b)=>a.name.localeCompare(b.name)).forEach(c=>dl.append(new Option(c.name)));
+    const go=()=>{const v=inp.value.trim().toLowerCase();const c=Object.values(CHAMP).find(x=>x.name.toLowerCase()===v||x.id.toLowerCase()===v)||Object.values(CHAMP).find(x=>x.name.toLowerCase().startsWith(v));if(c){goBuild(c.id);inp.value=""}};
+    inp.addEventListener("change",go);inp.addEventListener("keydown",e=>{if(e.key==="Enter")go()})}
+  const fav=document.getElementById("bfav");fav.innerHTML="";const cnt={};players.forEach(p=>p.games.forEach(g=>cnt[g.champ]=(cnt[g.champ]||0)+1));
+  Object.entries(cnt).sort((a,b)=>b[1]-a[1]).slice(0,14).forEach(([c])=>{const b=el("button");const im=el("img");im.src=icon(c);im.alt="";b.append(im,c);b.setAttribute("aria-pressed",bChamp===c);b.onclick=()=>goBuild(c);fav.append(b)});
+  box.innerHTML="";
+  if(!bChamp){if(!players.length){box.append(el("div","empty","Loading…"));return}bChamp=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0]?.[0]||"Ahri"}
+  const roles=metaRoles(bChamp),key=metaKeyOf(bChamp),cname2=Object.values(CHAMP).find(x=>x.id===bChamp)?.name||bChamp;
+  const head=el("div","bhead");const im=el("img");im.src=icon(bChamp);im.alt="";const t=el("div");t.append(el("h2",null,cname2));
+  const rc=el("div","chips");roles.forEach(([r,n])=>{const b=el("button",null,role(r)||r);b.append(el("small","num",n));b.setAttribute("aria-pressed",(bRole||roles[0][0])===r);b.onclick=()=>{bRole=r;bVar=null;renderBuilds()};rc.append(b)});
+  t.append(rc);head.append(im,t);box.append(head);
+  const ug=el("a","lnk","u.gg ↗");ug.href=`https://u.gg/lol/champions/${bChamp.toLowerCase()}/build`;ug.target="_blank";ug.rel="noopener";head.append(ug);
+  if(!roles.length){box.append(el("div","empty",`Not enough Emerald+ games on ${cname2} yet (15 needed per role). The tracker adds about 4,000 games a day.`));return}
+  const R0=bRole&&roles.find(x=>x[0]===bRole)||roles[0],[r,,patch]=R0;bRole=r;
+  const P=META.patches[patch],base=P[`${key}|${r}|*`];
+  const vars=["AD","AP","Tank"].map(tp=>[tp,P[`${key}|${r}|${tp}`]]).filter(([,a])=>a&&a.n>=8);{const typed=vars.reduce((s,v)=>s+v[1].n,0);for(let i=vars.length-1;i>=0;i--)if(vars[i][1].n<typed*.15)vars.splice(i,1)}vars.sort((a,b)=>b[1].n-a[1].n);
+  let A=base,label="All builds";
+  if(vars.length>=2){if(!bVar||!vars.some(v=>v[0]===bVar))bVar=vars[0][0];A=vars.find(v=>v[0]===bVar)[1];label=bVar+" build";
+    const vb=el("div","bvars");vars.forEach(([tp,a])=>{const b=el("button",tp===bVar?"on":"");b.append(el("b",null,tp),el("small",null,`${a.n.toLocaleString("en")} games · ${pct(a.w,a.n)} wins`));b.onclick=()=>{bVar=tp;renderBuilds()};vb.append(b)});box.append(vb)}
+  box.append(el("p","note",`${label}: ${A.n.toLocaleString("en")} Emerald I to Master games · patch ${patch} · ${pct(A.w,A.n)} wins. Collected from Riot's API by the tracker; percentages are pick rate and win rate.`));
+  const grid=el("div","bgrid");box.append(grid);
+  const A_=ASSETS||{runes:{},spells:{}},runeImg=(id,cls)=>{const i=el("img",cls||"");const a=A_.runes[id];if(a){i.src=`https://ddragon.leagueoflegends.com/cdn/img/${a.icon}`;i.title=a.name}i.alt="";return i};
+  const itImg=(id,tip)=>{const i=el("img","bit");i.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/item/${id}.png`;i.alt="";i.title=tip||ITEMD[id]?.name||id;return i};
+  const card=(title)=>{const c=el("div","panel bcard");c.append(el("h3",null,title));grid.append(c);return c};
+  const pr=(n)=>Math.round(n/A.n*100)+"%";
+  // runes
+  {const c=card("Runes"),pages=sortC(A.pages);
+   if(pages[0]){const [pg,n,w]=pages[0],ids=pg.split(",").map(Number),tree=id=>{for(const st of (RUNETREE||[]))if(st.ids.has(id))return st;return null};
+     const row=el("div","brunes");const prim=el("div","btree"),sec=el("div","btree");const t1=tree(ids[0]),t2=tree(ids[4]);
+     prim.append(el("div","btn",t1?.name||"Primary"));ids.slice(0,4).forEach((id,i)=>{const r2=el("div","brune"+(i===0?" key":""));r2.append(runeImg(id),el("span",null,A_.runes[id]?.name||id));prim.append(r2)});
+     sec.append(el("div","btn",t2?.name||"Secondary"));ids.slice(4).forEach(id=>{const r2=el("div","brune");r2.append(runeImg(id),el("span",null,A_.runes[id]?.name||id));sec.append(r2)});
+     row.append(prim,sec);c.append(row,el("div","bstat",`${pr(n)} pick · ${pct(w,n)} wins`));
+     const alts=sortC(A.keys).slice(0,3);if(alts.length>1){const al=el("div","balt");al.append(el("span","muted","Keystones: "));alts.forEach(([id,n2,w2])=>{const s=el("span","bchip");s.append(runeImg(+id,"sm"),`${A_.runes[id]?.name||id} ${pr(n2)} · ${pct(w2,n2)}`);al.append(s)});c.append(al)}}
+   else c.append(el("p","note","No full rune pages yet."))}
+  // items
+  {const c=card("Items"),sec=(lbl)=>{const r2=el("div","brow");r2.append(el("span","blbl",lbl));c.append(r2);return r2};
+   const starts={};sortC(A.starts).forEach(([v,n,w])=>{const k=v.split(",").map(Number).filter(x=>!TRINKETS.has(x)).sort((a,b)=>a-b).join(",");if(!k)return;const e=starts[k]=starts[k]||[k,0,0];e[1]+=n;e[2]+=w});
+   const st=Object.values(starts).sort((a,b)=>b[1]-a[1])[0];if(st){const r2=sec("Start");st[0].split(",").forEach(id=>r2.append(itImg(id)));r2.append(el("span","bstat",`${pr(st[1])} · ${pct(st[2],st[1])}`))}
+   const ords=sortC(A.orders),o3=ords.filter(o=>o[0].split(",").length>=3),ord=(o3[0]&&o3[0][1]>=5?o3[0]:ords[0]);
+   const items=sortC(A.items).map(([id,n,w])=>[+id,n,w]),boots=items.find(([id])=>isBootsI(id));
+   if(ord){const r2=sec("Core");const ids=ord[0].split(",").map(Number);ids.forEach((id,i)=>{if(i)r2.append(el("span","bar2","›"));r2.append(itImg(id,`${i+1}. ${ITEMD[id]?.name||id}`))});r2.append(el("span","bstat",`${ord[1]} games · ${pct(ord[2],ord[1])}`));
+     if(boots){const b2=sec("Boots");b2.append(itImg(boots[0]),el("span","bstat",`${pr(boots[1])} · ${pct(boots[2],boots[1])}`))}
+     const rest=items.filter(([id])=>isDone(id)&&!ids.includes(id)).slice(0,6);if(rest.length){const r3=sec("Then");rest.forEach(([id,n,w])=>{const d=el("div","bitem");d.append(itImg(id,`${ITEMD[id]?.name||id}: ${pr(n)} of games, ${pct(w,n)} wins`),el("small","num",pr(n)));r3.append(d)})}
+     const alt=ords.filter(o=>o!==ord&&o[0].split(",").length>=3).slice(0,2);if(alt.length){const r4=sec("Also");alt.forEach(o=>{const d=el("div","bord");o[0].split(",").forEach((id,i)=>{if(i)d.append(el("span","bar2","›"));d.append(itImg(id))});d.append(el("small","num",` ${o[1]}g · ${pct(o[2],o[1])}`));r4.append(d)})}}
+   const sp=sortC(A.spells)[0];if(sp){const r2=sec("Spells");sp[0].split("+").forEach(id=>{const a=A_.spells[id];const i=el("img","bit");if(a){i.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/spell/${a.img}`;i.title=a.name}i.alt="";r2.append(i)});r2.append(el("span","bstat",`${pr(sp[1])} · ${pct(sp[2],sp[1])}`))}}
+  // skills
+  {const c=card("Skill order"),S=skillsFrom(A.skills);
+   if(!S)c.append(el("p","note","No skill data yet."));
+   else{const ln=el("div","bmax");[...S.max].forEach((k,i)=>{if(i)ln.append(el("span","bar2","›"));ln.append(el("b","sk"+k,k))});ln.append(el("span","bstat",`max order · ${Math.round(S.maxShare*100)}% of games · start ${S.start}`));c.append(ln);
+     const g=el("div","bskg");const ic=SKICONS[bChamp];if(!ic)loadSkillIcons(bChamp);
+     ["Q","W","E","R"].forEach((k,ri)=>{const h=el("div","bk");if(Array.isArray(ic)&&ic[ri]){const i=el("img");i.src=ic[ri].img;i.title=`${k}: ${ic[ri].name}`;i.alt=k;h.append(i)}h.append(el("b",null,k));g.append(h);
+       [...S.seq].forEach((ch,L)=>{const cell=el("i",ch===k?"sk"+k:"");if(ch===k)cell.textContent=L+1;g.append(cell)})});c.append(g)}}
+  // the group on this champion
+  {const mine=players.map(p=>({p,gs:p.games.filter(g=>g.champ===bChamp)})).filter(x=>x.gs.length);
+   if(mine.length){const c=card("Your group on "+cname2);mine.sort((a,b)=>b.gs.length-a.gs.length).forEach(({p,gs})=>{const w=gs.filter(g=>g.win).length,rt=gs.filter(g=>g.rating!=null);
+     const r2=el("div","bgrp");r2.append(dot(p.color),el("b",null,short(p.riotId)),el("span","num",`${gs.length} game${gs.length>1?"s":""} · ${pct(w,gs.length)} wins${rt.length?` · ${(rt.reduce((s,g)=>s+g.rating,0)/rt.length).toFixed(1)} avg rating`:""}`));
+     const go=el("button","lnk","games ›");go.onclick=()=>goMatches(p.riotId,{champ:bChamp});r2.append(go);c.append(r2)})}}
+}
+let RUNETREE=null;const SKICONS={};
+function loadSkillIcons(c){if(SKICONS[c])return;SKICONS[c]="…";fetch(`https://ddragon.leagueoflegends.com/cdn/${ddv}/data/en_US/champion/${c}.json`).then(r=>r.json()).then(j=>{const d=Object.values(j.data)[0];SKICONS[c]=d.spells.map(s=>({img:`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/spell/${s.image.full}`,name:s.name}));renderBuilds()}).catch(()=>{})}
 
 /* Match history */
 // Game tags, shared by the filters, the clickable counts and the luck meter
@@ -955,6 +1070,7 @@ let ASSETS=null;
 async function assets(){if(ASSETS)return ASSETS;ASSETS={spells:{},runes:{}};
   try{const [s,r]=await Promise.all([fetch(`https://ddragon.leagueoflegends.com/cdn/${ddv}/data/en_US/summoner.json`).then(x=>x.json()),fetch(`https://ddragon.leagueoflegends.com/cdn/${ddv}/data/en_US/runesReforged.json`).then(x=>x.json())]);
     for(const v of Object.values(s.data))ASSETS.spells[v.key]={img:v.image.full,name:v.name};
+    RUNETREE=r.map(st=>({name:st.name,ids:new Set(st.slots.flatMap(sl=>sl.runes.map(x=>x.id)))}));
     for(const st of r){ASSETS.runes[st.id]={icon:st.icon,name:st.name};for(const sl of st.slots)for(const ru of sl.runes)ASSETS.runes[ru.id]={icon:ru.icon,name:ru.name}}}catch{}
   return ASSETS}
 const modal=document.getElementById("modal"),mbody=document.getElementById("mbody");
@@ -1261,6 +1377,7 @@ function renderChamps(){
     if(cOpen===e.k){const d=el("div","cdet");
       Object.entries(e.by).sort((a,b)=>b[1].n-a[1].n).forEach(([id,b])=>{const sp=el("span","num go",`${short(id)}: ${b.n} game${b.n>1?"s":""}, ${Math.round(b.w/b.n*100)}% win rate${b.rn?`, ${(b.rs/b.rn).toFixed(1)} avg rating`:""} ›`);
         sp.title=`Show ${short(id)}'s games on ${e.k}`;sp.onclick=x=>{x.stopPropagation();goMatches(id,{champ:e.k})};d.append(sp)});
+      {const bb=el("button","lnk",`High-elo build for ${e.k} ›`);bb.onclick=x=>{x.stopPropagation();goBuild(e.k)};d.append(bb)}
       if(e.best){const bg=el("button","lnk",`Best game: ${short(e.best.riotId)} ${e.best.k}/${e.best.d}/${e.best.a} ›`);bg.onclick=x=>{x.stopPropagation();openMatch(e.best)};d.append(bg)}
       box.append(d)}});
   // matchups

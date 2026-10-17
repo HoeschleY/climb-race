@@ -168,12 +168,14 @@ async function formPass(live, g) {
 // Kept as running totals per champion/role/build type and patch. Saved to meta.json every 30 minutes; in between,
 // new games wait in a local file on the runner (not committed) so the data branch doesn't grow every minute.
 const PENDING = "crawl-pending.json";
-let META = null, pending = [];
+let META = null, pending = [], pendingSeen = [];
 async function loadMeta() {
   if (META) return;
+  await loadItems();   // build types (AD/AP/Tank) need item stats before games are added
   try { META = JSON.parse(await readFile(`${D}/meta.json`, "utf8")); } catch { META = { at: 0, patches: {}, seen: [] }; }
-  try { pending = JSON.parse(await readFile(PENDING, "utf8")); } catch { pending = []; }
-  pending.forEach(addMetaRow);
+  // Each round is a new process: games fetched since the last save (and their ids, so they're never fetched twice) come from the local file
+  try { const pf = JSON.parse(await readFile(PENDING, "utf8")); pending = Array.isArray(pf) ? pf : pf.rows || []; pendingSeen = Array.isArray(pf) ? [] : pf.seen || []; } catch { pending = []; pendingSeen = []; }
+  pending.forEach(addMetaRow); META.seen.push(...pendingSeen.filter(id => !META.seen.includes(id)));
 }
 function addMetaRow(row) {
   const P = META.patches[row.v] = META.patches[row.v] || {}, t = buildType(row);
@@ -227,7 +229,7 @@ async function crawl() {
     for (const id of ids) {
       if (got >= 3 || DEADLINE - Date.now() < 25e3) break;
       if (META.seen.includes(id)) continue;
-      const md = await riot(cfg.region, `/lol/match/v5/matches/${id}`); META.seen.push(id);
+      const md = await riot(cfg.region, `/lol/match/v5/matches/${id}`); META.seen.push(id); pendingSeen.push(id);
       if (!md?.info || md.info.gameDuration < 600) continue;
       const tl = await riot(cfg.region, `/lol/match/v5/matches/${id}/timeline`);
       const rows = rowsFromGame(md, tl); rows.forEach(addMetaRow); pending.push(...rows); got++;
@@ -235,9 +237,9 @@ async function crawl() {
   } catch (e) { console.error("crawl: " + e.message); }
   if (Date.now() - META.at > 30 * 60e3) {
     pruneMeta(); META.at = Date.now(); META.games = (META.games || 0) + pending.length / 10;
-    await writeFile(`${D}/meta.json`, JSON.stringify(META)); pending = [];
+    await writeFile(`${D}/meta.json`, JSON.stringify(META)); pending = []; pendingSeen = [];
   }
-  await writeFile(PENDING, JSON.stringify(pending));
+  await writeFile(PENDING, JSON.stringify({ rows: pending, seen: pendingSeen }));
 }
 // Turn the totals into the same shape as our own suggestions; null when there aren't enough high-elo games yet
 function metaRec(champ, role) {
@@ -252,8 +254,8 @@ function metaRec(champ, role) {
         page: top(a.pages, 1)[0] || null, order: top(a.orders, 1)[0] || null, start: top(a.starts, 1)[0] || null,
         skills: sk ? { ...skillsOf(top(a.skills, 8).flatMap(([q, n]) => Array(n).fill({ sk: q }))), n: Object.values(a.skills).reduce((x, y) => x + y[0], 0) } : null };
     };
-    const main = conv(base, null);
-    const variants = ["AD", "AP", "Tank"].map(t => P[`${champ}|${role}|${t}`]).map((a, i) => a && a.n >= 8 && a.n >= base.n * .15 ? conv(a, ["AD", "AP", "Tank"][i]) : null).filter(Boolean)
+    const main = conv(base, null), typed = ["AD", "AP", "Tank"].reduce((s, t) => s + (P[`${champ}|${role}|${t}`]?.n || 0), 0);
+    const variants = ["AD", "AP", "Tank"].map(t => P[`${champ}|${role}|${t}`]).map((a, i) => a && a.n >= 8 && a.n >= typed * .15 ? conv(a, ["AD", "AP", "Tank"][i]) : null).filter(Boolean)
       .sort((a, b) => b.n - a.n);
     return variants.length >= 2 ? { ...main, variants } : main;
   }
