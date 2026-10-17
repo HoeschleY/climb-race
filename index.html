@@ -553,7 +553,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610170632";
+const BUILD="202610170649";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/",RAW="https://raw.githubusercontent.com/HoeschleY/climb-race/data/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 // Data lives on the "data" branch. data.json: GitHub API with an ETag (unchanged checks are free), raw file as backup.
@@ -959,7 +959,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!modal.hidden)close
 const PROXY=()=>DATA?.proxy||null,LOOK={};
 async function lookup(riotId){
   const k=riotId.toLowerCase(),c=LOOK[k];if(c&&Date.now()-c.t<5*6e4)return c.p;
-  const p=(async()=>{const r=await fetch(`${PROXY()}/player?id=${encodeURIComponent(riotId)}`);const j=await r.json().catch(()=>({error:"Lookup failed"}));if(!r.ok)throw new Error(j.error||("Error "+r.status));return j})();
+  const p=(async()=>{let r;try{r=await fetch(`${PROXY()}/player?id=${encodeURIComponent(riotId)}`)}catch{throw new Error("Live lookup isn't reachable right now.")}const j=await r.json().catch(()=>({error:"Lookup failed"}));if(!r.ok)throw new Error(j.error||("Error "+r.status));return j})();
   LOOK[k]={t:Date.now(),p};p.catch(()=>delete LOOK[k]);return p}
 // Modal history so a profile opened from a game (and a game opened from a profile) can go back
 let MSTACK=[];
