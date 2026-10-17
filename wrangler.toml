@@ -1,0 +1,5 @@
+# Cloudflare Worker for live player lookups (see worker/README.md).
+# Lets Cloudflare build the worker from the repo root too; worker/wrangler.toml is used when the root directory is set to "worker".
+name = "climb-race"
+main = "worker/worker.js"
+compatibility_date = "2024-09-23"
