@@ -2,6 +2,7 @@
   "platform": "euw1",
   "region": "europe",
   "raceStart": "2026-10-01T14:06:00+02:00",
+  "proxy": "",
   "players": [
     { "riotId": "Kohmira#44160", "start": { "tier": "SILVER", "division": "II", "lp": 55 } },
     { "riotId": "Ymine#000", "start": { "tier": "GOLD", "division": "II", "lp": 14 } },

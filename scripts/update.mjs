@@ -321,7 +321,7 @@ const rankName = r => TIERS.indexOf(r.tier) >= 7 ? r.tier[0] + r.tier.slice(1).t
 let build = null;
 try { build = (await readFile("index.html", "utf8")).match(/const BUILD="(\d+)"/)?.[1] ?? null; } catch {}
 
-const out = { updatedAt: new Date().toISOString(), build, raceStart: cfg.raceStart, players: {} };
+const out = { updatedAt: new Date().toISOString(), build, raceStart: cfg.raceStart, proxy: cfg.proxy || null, players: {} };
 
 for (const p of cfg.players) {
   const [name, tag] = p.riotId.split("#");

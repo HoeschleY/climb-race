@@ -290,6 +290,19 @@ dd button.lnkn{font:inherit;background:none;border:0;padding:0;color:inherit;cur
 dd button.lnkn:hover{color:var(--gold2)}
 .cdet span.go{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}.cdet span.go:hover{color:var(--gold2)}
 .mrow.go{cursor:pointer}.mrow.go:hover b{color:var(--gold2)}
+.pfhead{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.pfhead .pfn{font:700 1.6rem var(--display,inherit)}.pfhead .pfn small{color:var(--muted);font-size:.9rem;font-weight:500}
+.pfrank{display:flex;gap:10px;align-items:center}.pfrank b{font-size:1.05rem}
+.pfstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:6px 0 14px}
+.pfstats div{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 10px}.pfstats span{display:block;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.06em}.pfstats b{font-size:1.15rem}
+.pfchamps{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}.pfchamps div{display:flex;gap:7px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:5px 10px 5px 5px;font-size:.85rem}.pfchamps img{width:30px;height:30px;border-radius:6px}
+.pfg{display:grid;grid-template-columns:6px 40px minmax(110px,1.2fr) 90px 80px 70px 80px 1fr;gap:10px;align-items:center;padding:7px 10px;border:1px solid var(--line);border-radius:10px;margin-bottom:6px;background:var(--panel);cursor:pointer}
+.pfg:hover{border-color:var(--gold)}.pfg .bar{height:100%;border-radius:3px}.pfg.w .bar{background:var(--win)}.pfg.l .bar{background:var(--loss)}
+.pfg img.c{width:40px;height:40px;border-radius:8px}.pfg small{display:block;color:var(--muted);font-size:.75rem}.pfg .its{display:flex;gap:2px}.pfg .its img{width:22px;height:22px;border-radius:4px}
+.mback{position:static;display:inline-block;margin:0 0 12px;font:600 .85rem var(--body);background:none;border:1px solid var(--line);color:var(--muted);border-radius:99px;padding:4px 12px;cursor:pointer;z-index:2}.mback:hover{color:var(--text)}
+.ppform{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:.82rem;color:var(--muted)}
+.ppform .wl{display:flex;gap:2px}.ppform .wl i{width:9px;height:9px;border-radius:2px;background:var(--loss)}.ppform .wl i.w{background:var(--win)}
+.lname b.plink{cursor:pointer}.lname b.plink:hover{color:var(--gold2);text-decoration:underline}
 .pplinks{margin-left:auto;display:flex;gap:8px;align-items:center}
 .pplinks button,.pplinks a{font:600 .8rem var(--body);padding:6px 12px;border-radius:99px;border:1px solid var(--gold);background:none;color:var(--gold2);cursor:pointer;text-decoration:none;white-space:nowrap}
 .pplinks button:hover,.pplinks a:hover{background:var(--gold);color:#16120a}
@@ -540,7 +553,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610170322";
+const BUILD="202610170632";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/",RAW="https://raw.githubusercontent.com/HoeschleY/climb-race/data/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 // Data lives on the "data" branch. data.json: GitHub API with an ETag (unchanged checks are free), raw file as backup.
@@ -939,14 +952,60 @@ async function assets(){if(ASSETS)return ASSETS;ASSETS={spells:{},runes:{}};
     for(const st of r){ASSETS.runes[st.id]={icon:st.icon,name:st.name};for(const sl of st.slots)for(const ru of sl.runes)ASSETS.runes[ru.id]={icon:ru.icon,name:ru.name}}}catch{}
   return ASSETS}
 const modal=document.getElementById("modal"),mbody=document.getElementById("mbody");
-function closeModal(){modal.hidden=true;document.body.style.overflow=""}
+function closeModal(){modal.hidden=true;document.body.style.overflow="";MSTACK=[];modal._cur=null}
 modal.addEventListener("click",e=>{if(e.target===modal||e.target.closest(".mclose"))closeModal()});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!modal.hidden)closeModal()});
-async function openMatch(g){
+// ---------- Live lookups through the Climb Race proxy (Cloudflare Worker holding the Riot key) ----------
+const PROXY=()=>DATA?.proxy||null,LOOK={};
+async function lookup(riotId){
+  const k=riotId.toLowerCase(),c=LOOK[k];if(c&&Date.now()-c.t<5*6e4)return c.p;
+  const p=(async()=>{const r=await fetch(`${PROXY()}/player?id=${encodeURIComponent(riotId)}`);const j=await r.json().catch(()=>({error:"Lookup failed"}));if(!r.ok)throw new Error(j.error||("Error "+r.status));return j})();
+  LOOK[k]={t:Date.now(),p};p.catch(()=>delete LOOK[k]);return p}
+// Modal history so a profile opened from a game (and a game opened from a profile) can go back
+let MSTACK=[];
+function modalShow(render,push){if(push&&!modal.hidden&&modal._cur)MSTACK.push(modal._cur);if(!push)MSTACK=[];modal._cur=render;modal.hidden=false;document.body.style.overflow="hidden";render();
+  if(MSTACK.length){const b=el("button","mback","‹ Back");b.onclick=()=>{const prev=MSTACK.pop();modal._cur=prev;prev();if(MSTACK.length)addBack()};mbody.prepend(b)}}
+function addBack(){const b=el("button","mback","‹ Back");b.onclick=()=>{const prev=MSTACK.pop();modal._cur=prev;prev();if(MSTACK.length)addBack()};mbody.prepend(b)}
+function openProfile(riotId){
+  const friend=players.find(q=>q.riotId.toLowerCase()===riotId.toLowerCase());if(friend){goMatches(friend.riotId);return}
+  if(!PROXY()){window.open(`https://www.op.gg/summoners/euw/${riotId.replace("#","-")}`,"_blank","noopener");return}
+  modalShow(()=>{mbody.innerHTML="";mbody.append(el("div","empty",`Looking up ${riotId.split("#")[0]}…`));
+    const mine=modal._cur;
+    lookup(riotId).then(async pf=>{if(modal._cur!==mine)return;const A=await assets();mbody.innerHTML="";if(MSTACK.length)addBack();renderProfile(pf,A)})
+      .catch(e=>{if(modal._cur!==mine)return;mbody.innerHTML="";if(MSTACK.length)addBack();mbody.append(el("div","empty",e.message))})},true)}
+function renderProfile(pf,A){
+  const [gn,tg]=pf.riotId.split("#"),G=pf.games||[],n=G.length,w=G.filter(g=>g.win).length,sum=k=>G.reduce((s,g)=>s+(g[k]||0),0),rt=G.filter(g=>g.rating!=null);
+  const head=el("div","pfhead");const nm=el("div","pfn",gn+" ");nm.append(el("small",null,"#"+tg+(pf.level?` · level ${pf.level}`:"")));head.append(nm);
+  const rk=el("div","pfrank");if(pf.rank){const gms=pf.rank.wins+pf.rank.losses;rk.append(emblem(pf.rank.tier,36));const t=el("div");t.append(el("b",null,fmt(pf.rank)),el("div","muted num",`${pf.rank.wins}W ${pf.rank.losses}L · ${Math.round(pf.rank.wins/Math.max(1,gms)*100)}% this season`+(pf.rank.hot?" · on a win streak":"")));rk.append(t)}
+  else rk.append(el("b",null,"Unranked in Solo/Duo"));head.append(rk);
+  const op=el("a","lnk",`op.gg ↗`);op.href=`https://www.op.gg/summoners/euw/${encodeURIComponent(gn)}-${encodeURIComponent(tg)}`;op.target="_blank";op.rel="noopener";op.style.marginLeft="auto";op.style.marginRight="44px";head.append(op);
+  mbody.append(head);
+  if(!n){mbody.append(el("div","empty","No recent ranked Solo/Duo games."));return}
+  const roles={};G.forEach(g=>{if(g.role)roles[g.role]=(roles[g.role]||0)+1});const mainRole=Object.entries(roles).sort((a,b)=>b[1]-a[1])[0];
+  const st=el("div","pfstats");[["Last "+n,`${w}W ${n-w}L`],["KDA",sum("d")?((sum("k")+sum("a"))/sum("d")).toFixed(2):"Perfect"],["Avg rating",rt.length?(rt.reduce((s,g)=>s+g.rating,0)/rt.length).toFixed(1):"–"],
+    ["CS/min",(sum("cs")/(sum("dur")/60)).toFixed(1)],["Kill part.",Math.round(sum("kp")/n)+"%"],["Main role",mainRole?`${role(mainRole[0])} (${mainRole[1]})`:"–"]]
+    .forEach(([k,v])=>{const d=el("div");d.append(el("span",null,k),el("b","num",v));st.append(d)});mbody.append(st);
+  const ch={};G.forEach(g=>{const e=ch[g.champ]=ch[g.champ]||{n:0,w:0};e.n++;if(g.win)e.w++});
+  const cc=el("div","pfchamps");Object.entries(ch).sort((a,b)=>b[1].n-a[1].n).slice(0,5).forEach(([c,e])=>{const d=el("div");const im=el("img");im.src=icon(c);im.alt="";d.append(im,el("span","num",`${c} · ${e.n}g · ${Math.round(e.w/e.n*100)}%`));cc.append(d)});mbody.append(cc);
+  G.forEach(g=>{const r=el("div","pfg "+(g.win?"w":"l"));r.title="Open the scoreboard";r.onclick=()=>openMatch({id:g.id,riotId:pf.riotId,win:g.win,champ:g.champ,ext:true},true);
+    const im=el("img","c");im.src=icon(g.champ);im.alt="";
+    const a=el("div");a.append(el("b",null,`${g.win?"Victory":"Defeat"} · ${g.champ}`),el("small",null,`${role(g.role)||"?"} · ${ago(g.at)} · ${Math.round(g.dur/60)} min`));
+    const k=el("div","num");k.append(el("b",null,`${g.k}/${g.d}/${g.a}`),el("small",null,g.d?((g.k+g.a)/g.d).toFixed(2)+" KDA":"Perfect"));
+    const rr=el("div","num");if(g.rating!=null){const b=el("b",null,g.rating.toFixed(1));b.style.color=ratingCol(g.rating);rr.append(b,el("small",null,placeTxt(g.place)))}else rr.append("–");
+    const cs=el("div","num");cs.append(el("b",null,g.cs),el("small",null,(g.cs/(g.dur/60)).toFixed(1)+"/min"));
+    const kp=el("div","num");kp.append(el("b",null,g.kp+"%"),el("small",null,"kill part."));
+    const its=el("div","its");(g.items||[]).slice(0,6).forEach(id=>{const i=el("img");if(id){i.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/item/${id}.png`}i.alt="";its.append(i)});
+    r.append(el("span","bar"),im,a,k,rr,cs,kp,its);mbody.append(r)});
+  mbody.append(el("p","note",`Fetched live from Riot ${ago(pf.at)}. Click a game for its scoreboard.`));
+}
+async function openMatch(g,push){if(push||g.ext){modalShow(()=>openMatchBody(g),!!push);return}MSTACK=[];modal._cur=()=>openMatchBody(g);return openMatchBody(g)}
+async function openMatchBody(g){
   modal.hidden=false;document.body.style.overflow="hidden";mbody.innerHTML="";mbody.append(el("div","empty","Loading the scoreboard…"));
-  let m;try{m=await getFile(`matches/${g.id}.json`)}
-  catch{mbody.innerHTML="";mbody.append(el("div","empty","The full scoreboard for this game isn't available yet. It's saved with the next update."));return}
-  const A=await assets();mbody.innerHTML="";
+  let m;try{if(g.ext)throw 0;m=await getFile(`matches/${g.id}.json`)}
+  catch{try{if(!PROXY())throw 0;const r=await fetch(`${PROXY()}/match?id=${encodeURIComponent(g.id)}`);if(!r.ok)throw 0;m=await r.json();
+      m.players.forEach(x=>{const f=players.find(q=>q.riotId.toLowerCase()===x.name.toLowerCase());if(f)x.tracked=f.riotId;else if(x.name.toLowerCase()===String(g.riotId).toLowerCase())x.tracked=g.riotId})}
+    catch{mbody.innerHTML="";if(MSTACK.length)addBack();mbody.append(el("div","empty","The full scoreboard for this game isn't available yet. It's saved with the next update."));return}}
+  const A=await assets();mbody.innerHTML="";if(MSTACK.length)addBack();
   const me=m.players.find(x=>x.tracked===g.riotId)||{},myTeam=me.team;
   const head=el("div","mhead");const t=el("div");t.append(el("div","eyebrow",`Ranked Solo/Duo · patch ${m.patch}`));
   const h=el("h2",null,`${g.win?"Victory":"Defeat"} · ${short(g.riotId)} on ${g.champ}`);h.className=g.win?"up":"down";t.append(h);
@@ -1026,6 +1085,10 @@ function selectSbPlayer(m,pi,g,initial){
   head.append(im,t);
   {const links=el("div","pplinks"),[gn,tg]=x.name.split("#");
    if(x.tracked&&players.some(q=>q.riotId===x.tracked)){const b=el("button",null,`${short(x.tracked)}'s match history ›`);b.onclick=()=>goMatches(x.tracked);links.append(b)}
+   else if(tg&&PROXY()){const f=el("div","ppform","Loading rank and recent games…");links.append(f);const b=el("button",null,"Full profile ›");b.onclick=()=>openProfile(x.name);links.append(b);
+     lookup(x.name).then(pf=>{f.innerHTML="";f.append(el("b",null,pf.rank?fmt(pf.rank)+` · ${Math.round(pf.rank.wins/Math.max(1,pf.rank.wins+pf.rank.losses)*100)}%`:"Unranked"));
+       const G=pf.games||[],wl=el("div","wl");G.slice().reverse().forEach(q=>{const i=el("i",q.win?"w":"");i.title=`${q.win?"Win":"Loss"} · ${q.champ} ${q.k}/${q.d}/${q.a}`;wl.append(i)});
+       f.append(wl,el("span","num",G.length?`last ${G.length}: ${G.filter(q=>q.win).length}W ${G.filter(q=>!q.win).length}L`:"no recent ranked games"))}).catch(e=>{f.textContent=e.message})}
    else if(tg){const a=el("a",null,"Match history on op.gg ↗");a.href=`https://www.op.gg/summoners/euw/${encodeURIComponent(gn)}-${encodeURIComponent(tg)}`;a.target="_blank";a.rel="noopener";links.append(a)}
    head.append(links)}
   panel.append(head);
@@ -1048,7 +1111,7 @@ function selectSbPlayer(m,pi,g,initial){
     if(b){const s2=el("span");const i2=el("i");i2.style.background="#e5555f";s2.append(i2,opp.champ);lg.append(s2);
       const d15=a[15]!=null&&b[15]!=null?a[15]-b[15]:null,dEnd=a[n]-b[n];lg.append(el("span","num",`${d15!=null?`at 15': ${kfmt(d15)} · `:""}end: ${kfmt(dEnd)}`))}
     gbox.append(lg)}
-  else gbox.append(el("p","note","Gold by minute for this game is being added, a dozen games per minute."));
+  else gbox.append(el("p","note",m.live?"Gold by minute isn't available for looked-up games.":"Gold by minute for this game is being added, a dozen games per minute."));
   row.append(gbox);
   // kills and deaths on the map, shown from the viewer's side
   const mbox=el("div","ppmap");mbox.append(el("h3",null,"Kills and deaths"));
@@ -1058,7 +1121,7 @@ function selectSbPlayer(m,pi,g,initial){
     const map=riftMap(kills,240,[K[0]]);const extra=riftMap(deaths,240,[K[1]]).querySelector(".riftdots");map.append(extra);
     mbox.append(map);const lg=el("div","rlegend");K.forEach(f=>{const sp=el("span");const i=el("i");i.style.background=f[2];sp.append(i,`${f[3]}s: ${f[3]==="Kill"?kills.length:deaths.length}`);lg.append(sp)});
     mbox.append(lg,el("p","note",`${x.champ} was on the ${x.team===100?"blue side (base bottom left)":"red side (base top right)"}. Hover a dot for details.`))}
-  else mbox.append(el("p","note","Map positions for this game are being added."));
+  else mbox.append(el("p","note",m.live?"Map positions aren't available for looked-up games.":"Map positions for this game are being added."));
   row.append(mbox);panel.append(row);
   if(!initial)panel.scrollIntoView({behavior:"smooth",block:"nearest"});
 }
@@ -1090,7 +1153,7 @@ function renderLive(){
         const ci=el("img","lchamp");ci.src=icon(champKey(x.champId));ci.alt=champName(x.champId);r.append(ci);
         const sp=el("div","sbs");x.spells.forEach(s=>{const a2=ASSETS?.spells[s];const i=el("img");if(a2){i.src=`https://ddragon.leagueoflegends.com/cdn/${ddv}/img/spell/${a2.img}`;i.title=a2.name}i.alt="";sp.append(i)});
         [x.rune,x.sub].forEach(id=>{const a2=ASSETS?.runes[id];const i=el("img","rn");if(a2){i.src=`https://ddragon.leagueoflegends.com/cdn/img/${a2.icon}`;i.title=a2.name}i.alt="";sp.append(i)});r.append(sp);
-        const nm=el("div","lname");nm.append(el("b",null,(x.name||"Player").split("#")[0]));
+        const nm=el("div","lname");{const b=el("b",x.name&&x.name.includes("#")?"plink":null,(x.name||"Player").split("#")[0]);if(x.name&&x.name.includes("#")){b.title="Look up this player";b.onclick=()=>openProfile(x.tracked||x.name)}nm.append(b)}
         const sub=el("div","ltags");sub.append(el("span","muted",champName(x.champId)+(x.role?" · "+role(x.role):"")));
         if(x.party){const t=el("span","ltag duo p"+((x.party-1)%3),"Duo");t.title="Queued together: "+live.players.filter(y=>y.party===x.party&&y!==x).map(y=>(y.name||"").split("#")[0]).join(", ");sub.append(t)}
         if(x.rank?.hot)sub.append(el("span","ltag hot","Win streak"));
