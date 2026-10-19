@@ -306,7 +306,7 @@ dd button.lnkn:hover{color:var(--gold2)}
 .brunes{display:grid;grid-template-columns:1fr 1fr;gap:12px}.btree .btn{font:600 .75rem var(--body);text-transform:uppercase;letter-spacing:.07em;color:var(--gold);margin-bottom:6px}
 .brune{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:.88rem}.brune img{width:30px;height:30px;border-radius:50%;background:#0b0f15}.brune.key img{width:44px;height:44px;box-shadow:0 0 0 2px var(--gold)}.brune.key span{font-weight:700}
 .bstat{color:var(--muted);font-size:.8rem;margin-left:8px}.balt{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px;font-size:.8rem}.bchip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:99px;padding:2px 9px 2px 3px}.bchip img.sm{width:20px;height:20px;border-radius:50%}
-.brow{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 0;border-top:1px solid var(--line)}.brow:first-of-type{border-top:0}.blbl{width:60px;color:var(--muted);font:600 .75rem var(--body);text-transform:uppercase;letter-spacing:.06em}
+.bline{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 0;border-top:1px solid var(--line)}.bline:first-of-type{border-top:0}.blbl{width:60px;color:var(--muted);font:600 .75rem var(--body);text-transform:uppercase;letter-spacing:.06em}
 img.bit{width:34px;height:34px;border-radius:6px;border:1px solid var(--line);background:#0b0f15}.bar2{color:var(--muted);font-weight:700}
 .bitem{display:flex;flex-direction:column;align-items:center;gap:1px}.bitem small{font-size:.7rem;color:var(--muted)}.bord{display:flex;align-items:center;gap:4px;margin-right:12px}.bord img.bit{width:26px;height:26px}.bord small{color:var(--muted);font-size:.75rem}
 .bmax{display:flex;align-items:center;gap:8px;margin-bottom:10px}.bmax b{font-size:1.3rem}.bskg{display:grid;grid-template-columns:52px repeat(18,1fr);gap:2px}
@@ -326,7 +326,7 @@ img.bit{width:34px;height:34px;border-radius:6px;border:1px solid var(--line);ba
 .pfg img.c{width:40px;height:40px;border-radius:8px}.pfg small{display:block;color:var(--muted);font-size:.75rem}.pfg .its{display:flex;gap:2px}.pfg .its img{width:22px;height:22px;border-radius:4px}
 .mback{position:static;display:inline-block;margin:0 0 12px;font:600 .85rem var(--body);background:none;border:1px solid var(--line);color:var(--muted);border-radius:99px;padding:4px 12px;cursor:pointer;z-index:2}.mback:hover{color:var(--text)}
 .ppform{display:flex;flex-direction:column;align-items:flex-end;gap:4px;font-size:.82rem;color:var(--muted)}
-.ppform .wl{display:flex;gap:2px}.ppform .wl i{width:9px;height:9px;border-radius:2px;background:var(--loss)}.ppform .wl i.w{background:var(--win)}
+.ppform .wlsq{display:flex;gap:2px}.ppform .wlsq i{width:9px;height:9px;border-radius:2px;background:var(--loss)}.ppform .wlsq i.w{background:var(--win)}
 .lname b.plink{cursor:pointer}.lname b.plink:hover{color:var(--gold2);text-decoration:underline}
 .pplinks{margin-left:auto;display:flex;gap:8px;align-items:center}
 .pplinks button,.pplinks a{font:600 .8rem var(--body);padding:6px 12px;border-radius:99px;border:1px solid var(--gold);background:none;color:var(--gold2);cursor:pointer;text-decoration:none;white-space:nowrap}
@@ -585,7 +585,7 @@ document.querySelectorAll("#gmode button").forEach(b=>b.onclick=()=>{gmode=b.dat
 // Data comes straight from the repo through GitHub's API (always current). Unchanged checks use an
 // ETag and return 304, which doesn't count against GitHub's rate limit. If the API is unavailable,
 // fall back to the GitHub Pages copy for 10 minutes.
-const BUILD="202610171645";
+const BUILD="202610192035";
 const API="https://api.github.com/repos/HoeschleY/climb-race/contents/",RAW="https://raw.githubusercontent.com/HoeschleY/climb-race/data/";
 let etag=null,apiOffUntil=0,lastCheck=0,lastChange=0;
 // Data lives on the "data" branch. data.json: GitHub API with an ETag (unchanged checks are free), raw file as backup.
@@ -851,7 +851,7 @@ function renderBuilds(){
      const alts=sortC(A.keys).slice(0,3);if(alts.length>1){const al=el("div","balt");al.append(el("span","muted","Keystones: "));alts.forEach(([id,n2,w2])=>{const s=el("span","bchip");s.append(runeImg(+id,"sm"),`${A_.runes[id]?.name||id} ${pr(n2)} · ${pct(w2,n2)}`);al.append(s)});c.append(al)}}
    else c.append(el("p","note","No full rune pages yet."))}
   // items
-  {const c=card("Items"),sec=(lbl)=>{const r2=el("div","brow");r2.append(el("span","blbl",lbl));c.append(r2);return r2};
+  {const c=card("Items"),sec=(lbl)=>{const r2=el("div","bline");r2.append(el("span","blbl",lbl));c.append(r2);return r2};
    const starts={};sortC(A.starts).forEach(([v,n,w])=>{const k=v.split(",").map(Number).filter(x=>!TRINKETS.has(x)).sort((a,b)=>a-b).join(",");if(!k)return;const e=starts[k]=starts[k]||[k,0,0];e[1]+=n;e[2]+=w});
    const st=Object.values(starts).sort((a,b)=>b[1]-a[1])[0];if(st){const r2=sec("Start");st[0].split(",").forEach(id=>r2.append(itImg(id)));r2.append(el("span","bstat",`${pr(st[1])} · ${pct(st[2],st[1])}`))}
    const ords=sortC(A.orders),o3=ords.filter(o=>o[0].split(",").length>=3),ord=(o3[0]&&o3[0][1]>=5?o3[0]:ords[0]);
@@ -1236,7 +1236,7 @@ function selectSbPlayer(m,pi,g,initial){
    if(x.tracked&&players.some(q=>q.riotId===x.tracked)){const b=el("button",null,`${short(x.tracked)}'s match history ›`);b.onclick=()=>goMatches(x.tracked);links.append(b)}
    else if(tg&&PROXY()){const f=el("div","ppform","Loading rank and recent games…");links.append(f);const b=el("button",null,"Full profile ›");b.onclick=()=>openProfile(x.name);links.append(b);
      lookup(x.name).then(pf=>{f.innerHTML="";f.append(el("b",null,pf.rank?fmt(pf.rank)+` · ${Math.round(pf.rank.wins/Math.max(1,pf.rank.wins+pf.rank.losses)*100)}%`:"Unranked"));
-       const G=pf.games||[],wl=el("div","wl");G.slice().reverse().forEach(q=>{const i=el("i",q.win?"w":"");i.title=`${q.win?"Win":"Loss"} · ${q.champ} ${q.k}/${q.d}/${q.a}`;wl.append(i)});
+       const G=pf.games||[],wl=el("div","wlsq");G.slice().reverse().forEach(q=>{const i=el("i",q.win?"w":"");i.title=`${q.win?"Win":"Loss"} · ${q.champ} ${q.k}/${q.d}/${q.a}`;wl.append(i)});
        f.append(wl,el("span","num",G.length?`last ${G.length}: ${G.filter(q=>q.win).length}W ${G.filter(q=>!q.win).length}L`:"no recent ranked games"))}).catch(e=>{f.textContent=e.message})}
    else if(tg){const a=el("a",null,"Match history on op.gg ↗");a.href=`https://www.op.gg/summoners/euw/${encodeURIComponent(gn)}-${encodeURIComponent(tg)}`;a.target="_blank";a.rel="noopener";links.append(a)}
    head.append(links)}
